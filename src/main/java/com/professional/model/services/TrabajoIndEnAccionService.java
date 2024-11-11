@@ -1,5 +1,6 @@
 package com.professional.model.services;
 
+import com.professional.model.entities.Cliente;
 import com.professional.model.entities.EstadoTrabajo;
 import com.professional.model.entities.TrabajoIndEnAccion;
 import com.professional.model.entities.TrabajoIndependiente;
@@ -23,7 +24,6 @@ public interface TrabajoIndEnAccionService {
      */
     TrabajoIndEnAccion getTrabajoEnAccionById(Long id);
 
-
     /**
      * Actualizar el estadoTrabajo de un TrabajoIndEnAccion existente.
      *
@@ -32,6 +32,7 @@ public interface TrabajoIndEnAccionService {
      * @return TrabajoIndEnAccion actualizado.
      */
     TrabajoIndEnAccion updateEstadoTrabajo(Long id, EstadoTrabajo estadoTrabajo);
+
     /**
      * Crear una nueva TrabajoIndEnAccion.
      *
@@ -50,7 +51,7 @@ public interface TrabajoIndEnAccionService {
     TrabajoIndEnAccion updateTrabajoEnAccion(Long id, TrabajoIndEnAccion trabajoEnAccionDetalles);
 
     /**
-     * Eliminar una TrabajoIndEnAccion por su ID.
+     * Eliminar lógicamente una TrabajoIndEnAccion por su ID.
      *
      * @param id ID de la TrabajoIndEnAccion a eliminar.
      */
@@ -63,5 +64,34 @@ public interface TrabajoIndEnAccionService {
      * @return Lista de TrabajoIndEnAccion asociadas.
      */
     List<TrabajoIndEnAccion> getTrabajosEnAccionByTrabajoIndependiente(TrabajoIndependiente trabajoIndependiente);
-}
 
+    /**
+     * Obtener todas las acciones activas.
+     *
+     * @return Lista de TrabajoIndEnAccion activos.
+     */
+    List<TrabajoIndEnAccion> getAllTrabajosEnAccionActivos();
+
+    /**
+     * Obtener todas las acciones inactivas.
+     *
+     * @return Lista de TrabajoIndEnAccion inactivos.
+     */
+    List<TrabajoIndEnAccion> getAllTrabajosEnAccionInactivos();
+
+    /**
+     * Buscar trabajos en acción por estado de trabajo.
+     *
+     * @param estadoTrabajo Estado de trabajo.
+     * @return Lista de trabajos que coinciden con el estado.
+     */
+    List<TrabajoIndEnAccion> findByEstadoTrabajo(EstadoTrabajo estadoTrabajo);
+
+    /**
+     * Obtener todas las acciones asociadas a un Cliente específico.
+     *
+     * @param cliente Cliente del cual se desean las acciones.
+     * @return Lista de TrabajoIndEnAccion asociadas al cliente.
+     */
+    List<TrabajoIndEnAccion> getTrabajosEnAccionByCliente(Cliente cliente);
+}

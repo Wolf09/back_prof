@@ -35,16 +35,23 @@ public class TrabajoEmpEnAccion implements Serializable {
     @Transient
     private EstadoTrabajo estadoTrabajoAnterior;
 
+    // Campo para manejo lógico de eliminación
+    @Column(name = "activo", nullable = false)
+    private Boolean activo;
+
     @PrePersist
     protected void onCreate() {
         if (this.estadoTrabajo == null) {
             this.estadoTrabajo = EstadoTrabajo.PENDIENTE;
         }
         this.fechaCambio = LocalDateTime.now();
+        this.activo = true;
     }
 
     public TrabajoEmpEnAccion() {
+
         this.estadoTrabajoAnterior = estadoTrabajo;
+        this.activo = true;
     }
 
     public Long getId() {
@@ -77,6 +84,14 @@ public class TrabajoEmpEnAccion implements Serializable {
 
     public void setTrabajoEmpresa(TrabajoEmpresa trabajoEmpresa) {
         this.trabajoEmpresa = trabajoEmpresa;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
     }
 
     // Método para inicializar el estado anterior después de cargar la entidad

@@ -1,5 +1,6 @@
 package com.professional.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -26,6 +27,7 @@ public class CalificacionEmpresas implements Serializable {
     @NotNull(message = "El cliente es obligatorio")
     @JsonIgnore
     private Cliente cliente;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trabajo_id", nullable = false)
     @NotNull(message = "El trabajo es obligatorio")
@@ -38,6 +40,7 @@ public class CalificacionEmpresas implements Serializable {
     @Max(value = 5, message = "La calificación máxima es 5 estrellas")
     private Integer rating;
 
+    @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
     @Column(name = "fecha_calificacion", nullable = false, updatable = false)
     private LocalDateTime fechaCalificacion;
     private String comentarios;

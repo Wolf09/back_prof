@@ -74,8 +74,16 @@ public class TrabajoIndependienteServiceImpl implements TrabajoIndependienteServ
     public void deleteTrabajoIndependiente(Long id) {
         TrabajoIndependiente existente = trabajoIndependienteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Trabajo Independiente no encontrado con ID: " + id));
-        trabajoIndependienteRepository.delete(existente);
+        existente.setActivo(false);
+        trabajoIndependienteRepository.save(existente);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoIndependiente> getAllTrabajosIndependientesActivos() {
+        return trabajoIndependienteRepository.findByActivo(true);
+    }
+
     @Override
     @Transactional
     public TrabajoIndependiente saveTrabajoIndependiente(TrabajoIndependiente trabajoIndependiente) {

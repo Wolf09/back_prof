@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
-// TODO ESTE SERVICIO YA ESTA, SOLO FALTAN LOGICAS ADICIONALES REFERENTES A LAS RELACIONES CON LOS OTROS ENTITIES
 @Service
 public class IndependienteServiceImpl implements IndependienteService {
 
@@ -34,8 +32,9 @@ public class IndependienteServiceImpl implements IndependienteService {
     @Override
     @Transactional(readOnly = true)
     public List<Independiente> getAllIndependientes() {
-        return independienteRepository.findAll();
+        return independienteRepository.findByActivoTrue();
     }
+
 
     /**
      * {@inheritDoc}
@@ -43,9 +42,16 @@ public class IndependienteServiceImpl implements IndependienteService {
     @Override
     @Transactional(readOnly = true)
     public Independiente getIndependienteById(Long id) {
-        return independienteRepository.findById(id)
+        Independiente independiente = independienteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Independiente no encontrado con ID: " + id));
+
+        if (!independiente.getActivo()) {
+            throw new IllegalStateException("El usuario con ID: " + id + " está deshabilitado.");
+        }
+
+        return independiente;
     }
+
 
     /**
      * {@inheritDoc}
@@ -53,14 +59,14 @@ public class IndependienteServiceImpl implements IndependienteService {
     @Override
     @Transactional
     public Independiente createIndependiente(Independiente independiente) {
-        // Puedes agregar validaciones adicionales aquí si es necesario.
-        // Por ejemplo, verificar si el correo ya existe
         if (independienteRepository.existsByCorreo(independiente.getCorreo())){
             throw new IllegalStateException("El correo electrónico ya está en uso.");
         }
         independiente.setPassword(passwordEncoder.encode(independiente.getPassword()));
+        independiente.setActivo(true); // Asegurar que activo sea true al crear
         return independienteRepository.save(independiente);
     }
+
 
     /**
      * {@inheritDoc}
@@ -142,7 +148,16 @@ public class IndependienteServiceImpl implements IndependienteService {
     public void deleteIndependiente(Long id) {
         Independiente existente = independienteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Independiente no encontrado con ID: " + id));
-        independienteRepository.delete(existente);
+        existente.setActivo(false); // Establecer activo a false
+        independienteRepository.save(existente); // Guardar el cambio
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Independiente> getAllIndependientesTodos() {
+        return independienteRepository.findAll();
+    }
+
+
 }
 

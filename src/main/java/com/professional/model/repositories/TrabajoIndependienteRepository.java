@@ -1,5 +1,4 @@
 package com.professional.model.repositories;
-
 import com.professional.model.entities.TrabajoIndependiente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -26,6 +25,13 @@ public interface TrabajoIndependienteRepository extends JpaRepository<TrabajoInd
      */
     Optional<TrabajoIndependiente> findById(Long id);
 
+    /**
+     * Buscar trabajos de empresa que están activos.
+     *
+     * @param activo Estado de actividad.
+     * @return Lista de trabajos que coinciden con el estado.
+     */
+    List<TrabajoIndependiente> findByActivo(Boolean activo);
     /**
      * Verificar si existe un trabajo independiente con un nombre específico.
      *

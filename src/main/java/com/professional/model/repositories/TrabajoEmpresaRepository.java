@@ -28,7 +28,21 @@ public interface TrabajoEmpresaRepository extends JpaRepository<TrabajoEmpresa, 
      */
     List<TrabajoEmpresa> findByEmpresa(Empresa empresa);
 
+    /**
+     * Buscar trabajos de empresa por cliente.
+     *
+     * @param cliente Cliente asociado a los trabajos.
+     * @return Lista de trabajos asociados al cliente.
+     */
     List<TrabajoEmpresa> findByCliente(Cliente cliente);
+
+    /**
+     * Buscar trabajos de empresa que están activos.
+     *
+     * @param activo Estado de actividad.
+     * @return Lista de trabajos que coinciden con el estado.
+     */
+    List<TrabajoEmpresa> findByActivo(Boolean activo);
     /**
      * Buscar un trabajo de empresa por su ID.
      *

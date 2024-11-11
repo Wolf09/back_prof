@@ -1,5 +1,6 @@
 package com.professional.model.services;
 
+import com.professional.model.entities.Cliente;
 import com.professional.model.entities.EstadoTrabajo;
 import com.professional.model.entities.TrabajoEmpEnAccion;
 import com.professional.model.entities.TrabajoEmpresa;
@@ -41,7 +42,7 @@ public interface TrabajoEmpEnAccionService {
     TrabajoEmpEnAccion updateTrabajoEmpEnAccion(Long id, TrabajoEmpEnAccion trabajoEmpEnAccionDetalles);
 
     /**
-     * Eliminar un TrabajoEmpEnAccion por su ID.
+     * Eliminar lógicamente un TrabajoEmpEnAccion por su ID.
      *
      * @param id ID del TrabajoEmpEnAccion a eliminar.
      */
@@ -63,5 +64,28 @@ public interface TrabajoEmpEnAccionService {
      * @return TrabajoEmpEnAccion actualizado.
      */
     TrabajoEmpEnAccion updateEstadoTrabajo(Long id, EstadoTrabajo estadoTrabajo);
-}
 
+    /**
+     * Buscar trabajos en acción que están activos.
+     *
+     * @param activo Estado de actividad.
+     * @return Lista de trabajos en acción que coinciden con el estado.
+     */
+    List<TrabajoEmpEnAccion> findByActivo(Boolean activo);
+
+    /**
+     * Buscar trabajos en acción por estado de trabajo.
+     *
+     * @param estadoTrabajo Estado de trabajo.
+     * @return Lista de trabajos que coinciden con el estado.
+     */
+    List<TrabajoEmpEnAccion> findByEstadoTrabajo(EstadoTrabajo estadoTrabajo);
+
+    /**
+     * Obtener todas las acciones asociadas a un Cliente específico.
+     *
+     * @param cliente Cliente del cual se desean las acciones.
+     * @return Lista de TrabajoEmpEnAccion asociados al cliente.
+     */
+    List<TrabajoEmpEnAccion> getTrabajosEmpEnAccionByCliente(Cliente cliente);
+}

@@ -117,7 +117,7 @@ public class CalificacionIndependientesServiceImpl implements CalificacionIndepe
     private void actualizarPromedioCalificacion(TrabajoIndependiente trabajoIndependiente) {
         Double promedio = calificacionRepository.findAverageRatingByTrabajo(trabajoIndependiente);
         if (promedio == null) {
-            promedio = 0.0; // Puedes establecer un valor por defecto si no hay calificaciones
+            promedio = 5.0; // Puedes establecer un valor por defecto si no hay calificaciones
         }
         trabajoIndependiente.setAverageRating(promedio);
         trabajoIndependienteService.saveTrabajoIndependiente(trabajoIndependiente);

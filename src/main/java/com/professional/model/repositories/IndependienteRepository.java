@@ -4,6 +4,7 @@ import com.professional.model.entities.Independiente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -25,6 +26,10 @@ public interface IndependienteRepository extends JpaRepository<Independiente, Lo
      */
     boolean existsByCorreo(String correo);
 
-    // Agrega métodos de consulta personalizados aquí si es necesario.
+    // Método para encontrar todos los Independientes activos
+    List<Independiente> findByActivoTrue();
+
+    // Método para encontrar todos los Independientes (independientemente de activo)
+    List<Independiente> findAll();
 }
 

@@ -45,6 +45,7 @@ public interface TrabajoIndependienteService {
      */
     void deleteTrabajoIndependiente(Long id);
 
+    List<TrabajoIndependiente> getAllTrabajosIndependientesActivos();
 
     /**
      * Guardar o actualizar un TrabajoIndependiente.

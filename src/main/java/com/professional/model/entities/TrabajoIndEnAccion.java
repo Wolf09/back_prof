@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
+// TODO estoy en esta clase la eliminacion tambien debe ser logica y no fisica cambiando el nuevo valor en el entity activo a false
 @Entity
 @Table(name = "trabajos_ind_en_accion")
 public class TrabajoIndEnAccion implements Serializable {
@@ -34,17 +34,24 @@ public class TrabajoIndEnAccion implements Serializable {
     @Transient
     private EstadoTrabajo estadoTrabajoAnterior;
 
+    // Nuevo campo para manejo lógico de eliminación
+    @Column(name = "activo", nullable = false)
+    private Boolean activo;
+
     @PrePersist
     protected void onCreate() {
         if (this.estadoTrabajo == null) {
             this.estadoTrabajo = EstadoTrabajo.PENDIENTE;
         }
         this.fechaCambio = LocalDateTime.now();
+        this.activo = true; // Establecer activo en true al crear
     }
 
     // Constructor por defecto
     public TrabajoIndEnAccion() {
+
         this.estadoTrabajoAnterior = estadoTrabajo;
+        this.activo=true;
     }
 
     // Getters y Setters
@@ -84,6 +91,14 @@ public class TrabajoIndEnAccion implements Serializable {
 
     public void setFechaCambio(LocalDateTime fechaCambio) {
         this.fechaCambio = fechaCambio;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
     }
 
     // Método para inicializar el estado anterior después de cargar la entidad

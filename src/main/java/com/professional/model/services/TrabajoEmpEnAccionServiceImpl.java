@@ -55,6 +55,7 @@ public class TrabajoEmpEnAccionServiceImpl implements TrabajoEmpEnAccionService 
     @Transactional
     public TrabajoEmpEnAccion createTrabajoEmpEnAccion(TrabajoEmpEnAccion trabajoEmpEnAccion) {
         // Puedes agregar validaciones adicionales aquí si es necesario.
+        trabajoEmpEnAccion.setActivo(true); // Asegurar que el registro sea activo al crear
         return trabajoEmpEnAccionRepository.save(trabajoEmpEnAccion);
     }
 
@@ -85,7 +86,9 @@ public class TrabajoEmpEnAccionServiceImpl implements TrabajoEmpEnAccionService 
     public void deleteTrabajoEmpEnAccion(Long id) {
         TrabajoEmpEnAccion existente = trabajoEmpEnAccionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TrabajoEmpEnAccion no encontrado con ID: " + id));
-        trabajoEmpEnAccionRepository.delete(existente);
+        // Eliminación lógica: establecer 'activo' a false
+        existente.setActivo(false);
+        trabajoEmpEnAccionRepository.save(existente);
     }
 
     /**
@@ -97,6 +100,9 @@ public class TrabajoEmpEnAccionServiceImpl implements TrabajoEmpEnAccionService 
         return trabajoEmpEnAccionRepository.findByTrabajoEmpresa(trabajoEmpresa);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public TrabajoEmpEnAccion updateEstadoTrabajo(Long id, EstadoTrabajo estadoTrabajo) {
@@ -112,12 +118,11 @@ public class TrabajoEmpEnAccionServiceImpl implements TrabajoEmpEnAccionService 
         if (estadoTrabajo == EstadoTrabajo.FINALIZADO && oldEstado != EstadoTrabajo.FINALIZADO) {
             // Crear un nuevo HistorialEmpresas
             TrabajoEmpresa trabajoEmpresa = trabajoEmpEnAccion.getTrabajoEmpresa();
-            Cliente cliente = trabajoEmpresa.getCliente(); // Asume que Empresa tiene un campo Cliente
+            Cliente cliente = trabajoEmpresa.getCliente(); // Asume que TrabajoEmpresa tiene un campo Cliente
 
             HistorialEmpresas historial = new HistorialEmpresas();
             historial.setCliente(cliente);
             historial.setTrabajo(trabajoEmpresa);
-            historial.setEstado("FINALIZADO");
             historial.setComentarios("Trabajo finalizado exitosamente"); // Puedes ajustar los comentarios según necesidad
 
             historialService.createHistorialEmpresas(historial);
@@ -125,5 +130,31 @@ public class TrabajoEmpEnAccionServiceImpl implements TrabajoEmpEnAccionService 
 
         return actualizado;
     }
-}
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoEmpEnAccion> findByActivo(Boolean activo) {
+        return trabajoEmpEnAccionRepository.findByActivo(activo);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoEmpEnAccion> findByEstadoTrabajo(EstadoTrabajo estadoTrabajo) {
+        return trabajoEmpEnAccionRepository.findByEstadoTrabajo(estadoTrabajo);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoEmpEnAccion> getTrabajosEmpEnAccionByCliente(Cliente cliente) {
+        return trabajoEmpEnAccionRepository.findByTrabajoEmpresa_Cliente(cliente);
+    }
+}

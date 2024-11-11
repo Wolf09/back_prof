@@ -3,7 +3,6 @@ package com.professional.model.services;
 import com.professional.model.entities.Cliente;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ClienteService {
 
@@ -14,6 +13,12 @@ public interface ClienteService {
      */
     List<Cliente> getAllClientes();
 
+    /**
+     * Obtener todos los clientes.
+     *
+     * @return Lista de Cliente.
+     */
+    List<Cliente> getAllClientesTodos();
     /**
      * Obtener un Cliente por su ID.
      *
@@ -29,6 +34,7 @@ public interface ClienteService {
      * @return Cliente encontrado.
      */
     Cliente findClienteByCorreo(String correo);
+
     /**
      * Crear un nuevo Cliente.
      *
@@ -40,7 +46,7 @@ public interface ClienteService {
     /**
      * Actualizar un Cliente existente.
      *
-     * @param id           ID del Cliente a actualizar.
+     * @param id              ID del Cliente a actualizar.
      * @param clienteDetalles Datos actualizados del Cliente.
      * @return Cliente actualizado.
      */
@@ -85,4 +91,3 @@ public interface ClienteService {
      */
     List<Cliente> findByActivo(Boolean activo);
 }
-

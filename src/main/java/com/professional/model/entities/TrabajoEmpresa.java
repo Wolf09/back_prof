@@ -24,6 +24,10 @@ public class TrabajoEmpresa implements Serializable {
     @Column(name = "average_rating", nullable = false)
     private Double averageRating;
 
+    // Nuevo campo para manejo lógico de eliminación
+    @Column(name = "activo", nullable = false)
+    private Boolean activo;
+
     // Relación Muchos a Uno con Empresa
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa_id", nullable = false)
@@ -58,7 +62,10 @@ public class TrabajoEmpresa implements Serializable {
         this.historialEmpresas = new ArrayList<>();
         this.calificaciones = new ArrayList<>();
         this.trabajoEmpEnAccions = new ArrayList<>();
-        this.averageRating = 5.0; // Establecer promedio inicial en 5.0
+    }
+    @PrePersist
+    public void establecerAverage(){
+        this.averageRating = 5.0;
     }
 
     // Getters y Setters
@@ -125,6 +132,14 @@ public class TrabajoEmpresa implements Serializable {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
     }
 
     // Métodos para gestionar las relaciones

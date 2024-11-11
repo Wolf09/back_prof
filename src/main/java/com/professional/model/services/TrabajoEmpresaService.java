@@ -23,6 +23,8 @@ public interface TrabajoEmpresaService {
      */
     TrabajoEmpresa getTrabajoEmpresaById(Long id);
 
+    List<TrabajoEmpresa> getAllTrabajosEmpresaActivos();
+
     /**
      * Guardar o actualizar un TrabajoEmpresa.
      *

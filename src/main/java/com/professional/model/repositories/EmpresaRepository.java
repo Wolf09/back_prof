@@ -34,6 +34,13 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
      */
     boolean existsByCorreo(String correo);
     /**
+     * Buscar una Empresa por su correo electrónico.
+     *
+     * @param correo El correo electrónico de la Empresa.
+     * @return Un Optional que contiene la Empresa si se encuentra, o vacío si no.
+     */
+    Optional<Empresa> findByCorreo(String correo);
+    /**
      * Buscar Empresas por área de trabajo.
      *
      * @param areaTrabajo El área de trabajo de la Empresa.
@@ -56,7 +63,11 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
      * @return Lista de Empresas que coinciden con la licencia comercial.
      */
     List<Empresa> findByLicenciaComercial(String licenciaComercial);
+    // Método para encontrar todos los Independientes activos
+    List<Empresa> findByActivoTrue();
 
-    // Agrega métodos de consulta personalizados aquí si los necesitas.
+    // Método para encontrar todos los Independientes (independientemente de activo)
+    List<Empresa> findAll();
+
 }
 

@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-// TODO SOLO FALTAN LAS CLASES CALIFICACIONINDEPENDIENTES Y CALIFICACIONEMPRESAS @VALIDACIONES EN LOS ENTITY
+
 @Entity
 @Table(name = "historial_solicitudes")
 public class HistorialIndependientes implements Serializable {

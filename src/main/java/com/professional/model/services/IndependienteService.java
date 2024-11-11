@@ -7,12 +7,16 @@ import java.util.List;
 public interface IndependienteService {
 
     /**
-     * Obtener todos los Independientes.
+     * Obtener todos los Independientes. solo cuando activo sea true
      *
      * @return Lista de Independientes.
      */
     List<Independiente> getAllIndependientes();
 
+    /**
+     * Obtener todos los independientes esten activos o no
+     */
+    List<Independiente> getAllIndependientesTodos();
     /**
      * Obtener un Independiente por su ID.
      *

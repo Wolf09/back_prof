@@ -53,10 +53,14 @@ public class TrabajoIndEnAccionServiceImpl implements TrabajoIndEnAccionService 
     @Transactional
     public TrabajoIndEnAccion createTrabajoEnAccion(TrabajoIndEnAccion trabajoEnAccion) {
         // Establecer estadoTrabajo en PENDIENTE automáticamente
-        trabajoEnAccion.setEstadoTrabajo(com.professional.model.entities.EstadoTrabajo.PENDIENTE);
+        trabajoEnAccion.setEstadoTrabajo(EstadoTrabajo.PENDIENTE);
+        trabajoEnAccion.setActivo(true); // Establecer activo en true al crear
         return trabajoIndEnAccionRepository.save(trabajoEnAccion);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public TrabajoIndEnAccion updateEstadoTrabajo(Long id, EstadoTrabajo estadoTrabajo) {
@@ -77,7 +81,6 @@ public class TrabajoIndEnAccionServiceImpl implements TrabajoIndEnAccionService 
             HistorialIndependientes historial = new HistorialIndependientes();
             historial.setCliente(cliente);
             historial.setTrabajo(trabajoIndependiente);
-            historial.setEstado("FINALIZADO");
             historial.setComentarios("Trabajo finalizado exitosamente"); // Puedes ajustar los comentarios según necesidad
 
             historialService.createHistorialIndependientes(historial);
@@ -85,6 +88,7 @@ public class TrabajoIndEnAccionServiceImpl implements TrabajoIndEnAccionService 
 
         return actualizado;
     }
+
     /**
      * {@inheritDoc}
      *
@@ -99,8 +103,6 @@ public class TrabajoIndEnAccionServiceImpl implements TrabajoIndEnAccionService 
 
         // Actualizar campos permitidos
         existente.setTrabajoIndependiente(trabajoEnAccionDetalles.getTrabajoIndependiente());
-
-        // Solo permitir cambiar estadoTrabajo si el usuario tiene el rol INDEPENDIENTE
         existente.setEstadoTrabajo(trabajoEnAccionDetalles.getEstadoTrabajo());
 
         // Nota: fechaCambio es updatable = false en la entidad, así que no se actualiza.
@@ -116,7 +118,9 @@ public class TrabajoIndEnAccionServiceImpl implements TrabajoIndEnAccionService 
     public void deleteTrabajoEnAccion(Long id) {
         TrabajoIndEnAccion existente = trabajoIndEnAccionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TrabajoIndEnAccion no encontrado con ID: " + id));
-        trabajoIndEnAccionRepository.delete(existente);
+        // Eliminación lógica: establecer 'activo' a false
+        existente.setActivo(false);
+        trabajoIndEnAccionRepository.save(existente);
     }
 
     /**
@@ -128,5 +132,39 @@ public class TrabajoIndEnAccionServiceImpl implements TrabajoIndEnAccionService 
         return trabajoIndEnAccionRepository.findByTrabajoIndependiente(trabajoIndependiente);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoIndEnAccion> getAllTrabajosEnAccionActivos() {
+        return trabajoIndEnAccionRepository.findByActivo(true);
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoIndEnAccion> getAllTrabajosEnAccionInactivos() {
+        return trabajoIndEnAccionRepository.findByActivo(false);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoIndEnAccion> findByEstadoTrabajo(EstadoTrabajo estadoTrabajo) {
+        return trabajoIndEnAccionRepository.findByEstadoTrabajo(estadoTrabajo);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoIndEnAccion> getTrabajosEnAccionByCliente(Cliente cliente) {
+        return trabajoIndEnAccionRepository.findByTrabajoIndependiente_Cliente(cliente);
+    }
 }

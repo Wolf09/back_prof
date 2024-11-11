@@ -29,6 +29,13 @@ public class TrabajoEmpresaServiceImpl implements TrabajoEmpresaService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoEmpresa> getAllTrabajosEmpresaActivos() {
+        return trabajoEmpresaRepository.findByActivo(true);
+    }
+
+
+    @Override
     @Transactional
     public TrabajoEmpresa saveTrabajoEmpresa(TrabajoEmpresa trabajoEmpresa) {
         return trabajoEmpresaRepository.save(trabajoEmpresa);
@@ -43,7 +50,8 @@ public class TrabajoEmpresaServiceImpl implements TrabajoEmpresaService {
     @Override
     @Transactional
     public TrabajoEmpresa createTrabajoEmpresa(TrabajoEmpresa trabajoEmpresa) {
-        // Puedes agregar lógica adicional si es necesario
+        // Establecer 'activo' en true al crear
+        trabajoEmpresa.setActivo(true);
         return trabajoEmpresaRepository.save(trabajoEmpresa);
     }
 
@@ -56,6 +64,7 @@ public class TrabajoEmpresaServiceImpl implements TrabajoEmpresaService {
         // Actualizar campos permitidos
         existente.setTrabajo(trabajoEmpresaDetalles.getTrabajo());
         existente.setEmpresa(trabajoEmpresaDetalles.getEmpresa());
+        existente.setCliente(trabajoEmpresaDetalles.getCliente());
         // El averageRating no se actualiza directamente, se recalcula mediante las calificaciones
 
         return trabajoEmpresaRepository.save(existente);
@@ -66,7 +75,9 @@ public class TrabajoEmpresaServiceImpl implements TrabajoEmpresaService {
     public void deleteTrabajoEmpresa(Long id) {
         TrabajoEmpresa existente = trabajoEmpresaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TrabajoEmpresa no encontrado con ID: " + id));
-        trabajoEmpresaRepository.delete(existente);
+        // Eliminación lógica: establecer 'activo' a false
+        existente.setActivo(false);
+        trabajoEmpresaRepository.save(existente);
     }
 
     @Override
@@ -79,6 +90,7 @@ public class TrabajoEmpresaServiceImpl implements TrabajoEmpresaService {
         }
         return trabajos;
     }
+
     /**
      * {@inheritDoc}
      */
@@ -106,4 +118,3 @@ public class TrabajoEmpresaServiceImpl implements TrabajoEmpresaService {
         return trabajoEmpresaRepository.findByEmpresa(empresa);
     }
 }
-

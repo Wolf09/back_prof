@@ -32,6 +32,13 @@ public class EmpresaServiceImpl implements EmpresaService {
     @Override
     @Transactional(readOnly = true)
     public List<Empresa> getAllEmpresas() {
+
+        return empresaRepository.findByActivoTrue();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Empresa> getAllEmpresasTodos() {
         return empresaRepository.findAll();
     }
 
@@ -41,8 +48,14 @@ public class EmpresaServiceImpl implements EmpresaService {
     @Override
     @Transactional(readOnly = true)
     public Empresa getEmpresaById(Long id) {
-        return empresaRepository.findById(id)
+        Empresa empresa= empresaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Empresa no encontrada con ID: " + id));
+
+        if (!empresa.getActivo()){
+            throw new IllegalStateException("El usuario con ID: " + id + " está deshabilitado.");
+        }
+        return empresa;
+
     }
 
     /**
@@ -57,6 +70,7 @@ public class EmpresaServiceImpl implements EmpresaService {
             throw new IllegalStateException("El correo electrónico ya está en uso.");
         }
         empresa.setPassword(passwordEncoder.encode(empresa.getPassword()));
+        empresa.setActivo(true);
         return empresaRepository.save(empresa);
     }
 
@@ -151,7 +165,9 @@ public class EmpresaServiceImpl implements EmpresaService {
     public void deleteEmpresa(Long id) {
         Empresa existente = empresaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Empresa no encontrada con ID: " + id));
-        empresaRepository.delete(existente);
+        existente.setActivo(false);
+        empresaRepository.save(existente);
     }
+
 }
 

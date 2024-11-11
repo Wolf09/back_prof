@@ -28,10 +28,21 @@ public class ClienteServiceImpl implements ClienteService {
 
     /**
      * {@inheritDoc}
+     * Retorna solo clientes activos.
      */
     @Override
     @Transactional(readOnly = true)
     public List<Cliente> getAllClientes() {
+        return clienteRepository.findByActivo(true);
+    }
+
+    /**
+     * {@inheritDoc}
+     * Retorna todos los clientes, incluyendo inactivos.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Cliente> getAllClientesTodos() {
         return clienteRepository.findAll();
     }
 
@@ -41,15 +52,15 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional(readOnly = true)
     public Cliente getClienteById(Long id) {
-        return clienteRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con ID: " + id));
+        return clienteRepository.findByIdAndActivo(id,true)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado o dado de Baja con ID: " + id));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Cliente findClienteByCorreo(String correo) {
-        return clienteRepository.findByCorreo(correo)
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con correo: " + correo));
+        return clienteRepository.findByCorreoAndActivo(correo,true)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado o dado de Baja con correo: " + correo));
     }
 
     /**
@@ -64,6 +75,7 @@ public class ClienteServiceImpl implements ClienteService {
             throw new IllegalStateException("El correo electrónico ya está en uso.");
         }
         cliente.setPassword(passwordEncoder.encode(cliente.getPassword()));
+        cliente.setActivo(true); // Asegurar que el cliente sea activo al crear
         return clienteRepository.save(cliente);
     }
 
@@ -73,9 +85,8 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional
     public Cliente updateCliente(Long id, Cliente clienteDetalles) {
-        Cliente existente = clienteRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con ID: " + id));
-
+        Cliente existente = clienteRepository.findByIdAndActivo(id,true)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado o dado de Baja con ID: " + id));
 
         // Obtener el usuario autenticado
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -85,6 +96,7 @@ public class ClienteServiceImpl implements ClienteService {
         if (!existente.getCorreo().equals(currentUsername)) {
             throw new AccessDeniedException("No tienes permiso para actualizar esta cuenta");
         }
+
         // Actualizar campos existentes
         existente.setNombres(clienteDetalles.getNombres());
         existente.setApellidos(clienteDetalles.getApellidos());
@@ -96,21 +108,21 @@ public class ClienteServiceImpl implements ClienteService {
         if (clienteDetalles.getPassword() != null && !clienteDetalles.getPassword().isEmpty()) {
             existente.setPassword(passwordEncoder.encode(clienteDetalles.getPassword()));
         }
-        // Actualizar relaciones si es necesario
-        // Por ejemplo, agregar o eliminar historial, calificaciones, etc.
 
         return clienteRepository.save(existente);
     }
 
     /**
      * {@inheritDoc}
+     * Realiza una eliminación lógica cambiando 'activo' a false.
      */
     @Override
     @Transactional
     public void deleteCliente(Long id) {
         Cliente existente = clienteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con ID: " + id));
-        clienteRepository.delete(existente);
+        existente.setActivo(false);
+        clienteRepository.save(existente);
     }
 
     /**
@@ -119,8 +131,8 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional(readOnly = true)
     public Cliente getClienteByCorreo(String correo) {
-        return clienteRepository.findByCorreo(correo)
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con correo: " + correo));
+        return clienteRepository.findByCorreoAndActivo(correo,true)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado o dado de Baja con correo: " + correo));
     }
 
     /**
@@ -129,7 +141,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional(readOnly = true)
     public boolean existsByCorreo(String correo) {
-        return clienteRepository.existsByCorreo(correo);
+        return clienteRepository.existsByCorreoAndActivo(correo,true);
     }
 
     /**
@@ -138,7 +150,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional(readOnly = true)
     public List<Cliente> findByNombresContainingIgnoreCase(String nombres) {
-        return clienteRepository.findByNombresContainingIgnoreCase(nombres);
+        return clienteRepository.findByNombresContainingIgnoreCaseAndActivo(nombres,true);
     }
 
     /**
@@ -150,4 +162,3 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteRepository.findByActivo(activo);
     }
 }
-
