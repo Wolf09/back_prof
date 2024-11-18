@@ -1,6 +1,8 @@
 package com.professional.model.services;
 
+import com.professional.controller.exceptions.ResourceAlreadyExistsException;
 import com.professional.model.entities.Independiente;
+import com.professional.model.entities.TrabajoIndependiente;
 import com.professional.model.exceptions.ResourceNotFoundException;
 import com.professional.model.repositories.IndependienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +20,14 @@ public class IndependienteServiceImpl implements IndependienteService {
 
     private final IndependienteRepository independienteRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TrabajoIndependienteService trabajoIndependienteService;
 
     @Autowired
     public IndependienteServiceImpl(IndependienteRepository independienteRepository,
-                                    PasswordEncoder passwordEncoder) {
+                                    PasswordEncoder passwordEncoder, TrabajoIndependienteService trabajoIndependienteService) {
         this.independienteRepository = independienteRepository;
         this.passwordEncoder = passwordEncoder;
+        this.trabajoIndependienteService = trabajoIndependienteService;
     }
 
     /**
@@ -42,7 +46,7 @@ public class IndependienteServiceImpl implements IndependienteService {
     @Override
     @Transactional(readOnly = true)
     public Independiente getIndependienteById(Long id) {
-        Independiente independiente = independienteRepository.findById(id)
+        Independiente independiente = independienteRepository.findByIdAndActivoTrue(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Independiente no encontrado con ID: " + id));
 
         if (!independiente.getActivo()) {
@@ -55,16 +59,21 @@ public class IndependienteServiceImpl implements IndependienteService {
 
     /**
      * {@inheritDoc}
+     * TODO, estoy aqui: d. Repositorio ClienteRepository
      */
     @Override
     @Transactional
     public Independiente createIndependiente(Independiente independiente) {
-        if (independienteRepository.existsByCorreo(independiente.getCorreo())){
-            throw new IllegalStateException("El correo electrónico ya está en uso.");
-        }
-        independiente.setPassword(passwordEncoder.encode(independiente.getPassword()));
-        independiente.setActivo(true); // Asegurar que activo sea true al crear
-        return independienteRepository.save(independiente);
+        return (Independiente) independienteRepository.findByCorreoAndActivoTrue(independiente.getCorreo())
+                .map(indDB -> {
+                    throw new ResourceAlreadyExistsException("Independiente con correo " + independiente.getCorreo() + " ya existe.");
+                })
+                .orElseGet(() ->{
+                    independiente.setPassword(passwordEncoder.encode(independiente.getPassword()));
+                    independiente.setActivo(true); // Asegurar que activo sea true al crear
+                    return independienteRepository.save(independiente);
+        });
+
     }
 
 
@@ -147,7 +156,8 @@ public class IndependienteServiceImpl implements IndependienteService {
     @Transactional
     public void deleteIndependiente(Long id) {
         Independiente existente = independienteRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Independiente no encontrado con ID: " + id));
+                .filter(Independiente::getActivo)
+                .orElseThrow(() -> new ResourceNotFoundException("Independiente no encontrado con ID: " + id+ " o el cliente ya esta Inactivo, puede actualizarlo para cambiar esto"));
         existente.setActivo(false); // Establecer activo a false
         independienteRepository.save(existente); // Guardar el cambio
     }
@@ -158,6 +168,12 @@ public class IndependienteServiceImpl implements IndependienteService {
         return independienteRepository.findAll();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoIndependiente> getTrabajosIndependientesByIndependiente(Long independienteId) {
+        Independiente independiente = getIndependienteById(independienteId);
+        return trabajoIndependienteService.getTrabajosIndependientesByIndependiente(independiente);
+    }
 
 }
 

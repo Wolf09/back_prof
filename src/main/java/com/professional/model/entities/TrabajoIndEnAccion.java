@@ -1,12 +1,13 @@
 package com.professional.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-// TODO estoy en esta clase la eliminacion tambien debe ser logica y no fisica cambiando el nuevo valor en el entity activo a false
+
 @Entity
 @Table(name = "trabajos_ind_en_accion")
 public class TrabajoIndEnAccion implements Serializable {
@@ -27,14 +28,21 @@ public class TrabajoIndEnAccion implements Serializable {
     @Column(name = "estado_trabajo", nullable = false)
     private EstadoTrabajo estadoTrabajo;
 
+    @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
     @Column(name = "fecha_cambio", nullable = false, updatable = false)
     private LocalDateTime fechaCambio;
+
+    // Relación Muchos a Uno con Cliente (creador del TrabajoIndEnAccion)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cliente_id", nullable = false)
+    @NotNull(message = "El cliente es obligatorio")
+    @JsonIgnore
+    private Cliente cliente;
 
     // Campo para almacenar el estado anterior
     @Transient
     private EstadoTrabajo estadoTrabajoAnterior;
 
-    // Nuevo campo para manejo lógico de eliminación
     @Column(name = "activo", nullable = false)
     private Boolean activo;
 
@@ -49,9 +57,8 @@ public class TrabajoIndEnAccion implements Serializable {
 
     // Constructor por defecto
     public TrabajoIndEnAccion() {
-
         this.estadoTrabajoAnterior = estadoTrabajo;
-        this.activo=true;
+        this.activo = true;
     }
 
     // Getters y Setters
@@ -101,6 +108,13 @@ public class TrabajoIndEnAccion implements Serializable {
         this.activo = activo;
     }
 
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
     // Método para inicializar el estado anterior después de cargar la entidad
     @PostLoad
     public void init() {

@@ -76,7 +76,7 @@ public class TrabajoIndEnAccionServiceImpl implements TrabajoIndEnAccionService 
         if (estadoTrabajo == EstadoTrabajo.FINALIZADO && oldEstado != EstadoTrabajo.FINALIZADO) {
             // Crear un nuevo HistorialIndependientes
             TrabajoIndependiente trabajoIndependiente = trabajoIndEnAccion.getTrabajoIndependiente();
-            Cliente cliente = trabajoIndependiente.getCliente(); // Asegúrate de que TrabajoIndependiente tiene un campo Cliente
+            Cliente cliente = trabajoIndEnAccion.getCliente();
 
             HistorialIndependientes historial = new HistorialIndependientes();
             historial.setCliente(cliente);

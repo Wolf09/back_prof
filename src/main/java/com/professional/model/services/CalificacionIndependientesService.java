@@ -1,11 +1,21 @@
 package com.professional.model.services;
 
 import com.professional.model.entities.CalificacionIndependientes;
+import com.professional.model.entities.TrabajoIndEnAccion;
 import com.professional.model.entities.TrabajoIndependiente;
 import com.professional.model.entities.Cliente;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+/*
+TODO LA consulta ya esta hecha al chatgpt es la ultima consulta
+esta es una nueva consulta a la Basede Datos
+1.	Hay detalles que no se están tomando en cuenta la entidad: Independiente, que representa a una persona independiente,
+tiene su lista de TrabajoIndependiente, donde puede ver todos sus TrabajoIndependiente y las calificaciones relacionadas a este
+TrabajoIndependiente, es decir puede ver quien califico es decir puede ver el Cliente que califico su TrabajoIndependiente.
+2.	La entidad CalificacionIndependiente tiene una eliminación física, es decir si se elimina de la base de datos
 
+ */
 public interface CalificacionIndependientesService {
 
     /**
@@ -47,21 +57,10 @@ public interface CalificacionIndependientesService {
      */
     void deleteCalificacion(Long id);
 
-    /**
-     * Obtener una CalificacionIndependientes por Cliente y TrabajoIndependiente.
-     *
-     * @param cliente          Cliente que realizó la calificación.
-     * @param trabajoIndependiente TrabajoIndependiente calificado.
-     * @return CalificacionIndependientes encontrada.
-     */
-    CalificacionIndependientes getCalificacionByClienteAndTrabajo(Cliente cliente, TrabajoIndependiente trabajoIndependiente);
 
-    /**
-     * Verificar si existe una CalificacionIndependientes para un Cliente y TrabajoIndependiente específicos.
-     *
-     * @param cliente          Cliente que realizó la calificación.
-     * @param trabajoIndependiente TrabajoIndependiente calificado.
-     * @return true si existe, false de lo contrario.
-     */
-    boolean existsCalificacionByClienteAndTrabajo(Cliente cliente, TrabajoIndependiente trabajoIndependiente);
+    @Transactional(readOnly = true)
+    CalificacionIndependientes getCalificacionByClienteAndTrabajo(Cliente cliente, TrabajoIndEnAccion trabajoIndEnAccion);
+
+    @Transactional(readOnly = true)
+    boolean existsCalificacionByClienteAndTrabajo(Cliente cliente, TrabajoIndEnAccion trabajoIndEnAccion);
 }

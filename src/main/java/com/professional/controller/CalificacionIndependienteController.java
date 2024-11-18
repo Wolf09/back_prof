@@ -3,10 +3,11 @@ package com.professional.controller;
 import com.professional.model.dto.Error;
 import com.professional.model.entities.CalificacionIndependientes;
 import com.professional.model.entities.Cliente;
+import com.professional.model.entities.TrabajoIndEnAccion;
 import com.professional.model.entities.TrabajoIndependiente;
 import com.professional.model.services.CalificacionIndependientesService;
 import com.professional.model.services.ClienteService;
-import com.professional.model.services.TrabajoIndependienteService;
+import com.professional.model.services.TrabajoIndEnAccionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,14 +28,15 @@ public class CalificacionIndependienteController {
 
     private final CalificacionIndependientesService calificacionService;
     private final ClienteService clienteService;
-
-    private final TrabajoIndependienteService trabajoIndependienteService;
+    private final TrabajoIndEnAccionService trabajoIndEnAccionService;
 
     @Autowired
-    public CalificacionIndependienteController(CalificacionIndependientesService calificacionService, ClienteService clienteService, TrabajoIndependienteService trabajoIndependienteService) {
+    public CalificacionIndependienteController(CalificacionIndependientesService calificacionService,
+                                               ClienteService clienteService,
+                                               TrabajoIndEnAccionService trabajoIndEnAccionService) {
         this.calificacionService = calificacionService;
         this.clienteService = clienteService;
-        this.trabajoIndependienteService = trabajoIndependienteService;
+        this.trabajoIndEnAccionService = trabajoIndEnAccionService;
     }
 
     /**
@@ -134,31 +136,29 @@ public class CalificacionIndependienteController {
     public ResponseEntity<CalificacionIndependientes> buscarCalificacionPorClienteYTrabajo(
             @RequestParam Long clienteId,
             @RequestParam Long trabajoId) {
-        // Asumiendo que tienes métodos para obtener Cliente y TrabajoIndependiente por ID.
-        // Estos métodos deberían lanzar excepciones si no se encuentran.
         Cliente cliente = clienteService.getClienteById(clienteId);
-        TrabajoIndependiente trabajo = trabajoIndependienteService.getTrabajoIndependienteById(trabajoId);
+        TrabajoIndEnAccion trabajoIndEnAccion = trabajoIndEnAccionService.getTrabajoEnAccionById(trabajoId);
 
-        CalificacionIndependientes calificacion = calificacionService.getCalificacionByClienteAndTrabajo(cliente, trabajo);
+        CalificacionIndependientes calificacion = calificacionService.getCalificacionByClienteAndTrabajo(cliente, trabajoIndEnAccion);
         return new ResponseEntity<>(calificacion, HttpStatus.OK);
     }
 
     /**
-     * Verificar si existe una CalificacionIndependientes para un Cliente y TrabajoIndependiente específicos.
+     * Verificar si existe una CalificacionIndependientes para un Cliente y TrabajoIndEnAccion específicos.
      *
-     * @param clienteId  ID del Cliente que realizó la calificación.
-     * @param trabajoId  ID del TrabajoIndependiente calificado.
+     * @param clienteId              ID del Cliente que realizó la calificación.
+     * @param trabajoIndEnAccionId   ID del TrabajoIndEnAccion calificado.
      * @return ResponseEntity con un indicador booleano.
      */
     @Transactional(readOnly = true)
     @GetMapping("/existe")
     public ResponseEntity<Boolean> existeCalificacionPorClienteYTrabajo(
             @RequestParam Long clienteId,
-            @RequestParam Long trabajoId) {
+            @RequestParam Long trabajoIndEnAccionId) {
         Cliente cliente = clienteService.getClienteById(clienteId);
-        TrabajoIndependiente trabajo = trabajoIndependienteService.getTrabajoIndependienteById(trabajoId);
+        TrabajoIndEnAccion trabajoIndEnAccion = trabajoIndEnAccionService.getTrabajoEnAccionById(trabajoIndEnAccionId);
 
-        boolean existe = calificacionService.existsCalificacionByClienteAndTrabajo(cliente, trabajo);
+        boolean existe = calificacionService.existsCalificacionByClienteAndTrabajo(cliente, trabajoIndEnAccion);
         return new ResponseEntity<>(existe, HttpStatus.OK);
     }
 }

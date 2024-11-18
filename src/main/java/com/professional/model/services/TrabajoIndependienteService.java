@@ -1,5 +1,6 @@
 package com.professional.model.services;
 
+import com.professional.model.entities.Independiente;
 import com.professional.model.entities.TrabajoIndependiente;
 
 import java.util.List;
@@ -46,6 +47,9 @@ public interface TrabajoIndependienteService {
     void deleteTrabajoIndependiente(Long id);
 
     List<TrabajoIndependiente> getAllTrabajosIndependientesActivos();
+
+    List<TrabajoIndependiente> getTrabajosIndependientesByIndependiente(Independiente independiente);
+
 
     /**
      * Guardar o actualizar un TrabajoIndependiente.

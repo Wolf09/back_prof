@@ -42,7 +42,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
      * @param correo El correo electrónico del cliente.
      * @return Un Optional que contiene el cliente si se encuentra, o vacío si no.
      */
-    Optional<Cliente> findByCorreo(String correo);
+    Optional<Cliente> findByCorreoAndActivoTrue(String correo);
 
     /**
      * Verificar si existe un cliente con un correo electrónico específico.

@@ -10,13 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 
-/*
-TODO volver a dar la orden a la IA porque no esta entendiendo esty aqui:
-no me estas entendiendo un Cliente crea un TrabajoIndEnAccion el cual tiene un estado que actualiza el Independiente,
-una vezque el TrabajoIndEnAccion en su estadoTrabajo pase a estar finalizadorecien el Cliente puede calificar
-estte trabajoIndEnAccion que el mismo creo y fue aprobado por un independiente
-*/
-
 @Repository
 public interface TrabajoIndEnAccionRepository extends JpaRepository<TrabajoIndEnAccion, Long> {
 
@@ -27,6 +20,7 @@ public interface TrabajoIndEnAccionRepository extends JpaRepository<TrabajoIndEn
      * @return Lista de acciones asociadas al trabajo independiente.
      */
     List<TrabajoIndEnAccion> findByTrabajoIndependiente(TrabajoIndependiente trabajoIndependiente);
+
 
     /**
      * Buscar trabajos en acción que están activos.
@@ -43,6 +37,14 @@ public interface TrabajoIndEnAccionRepository extends JpaRepository<TrabajoIndEn
      * @return Lista de trabajos en acción que coinciden con el estado.
      */
     List<TrabajoIndEnAccion> findByEstadoTrabajo(EstadoTrabajo estadoTrabajo);
+
+    /**
+     * Buscar trabajos en acción asociados a un cliente específico.
+     *
+     * @param cliente Cliente asociado a los trabajos en acción.
+     * @return Lista de trabajos en acción asociados al cliente.
+     */
+    List<TrabajoIndEnAccion> findByClienteAndActivoTrue(Cliente cliente);
 
     /**
      * Buscar trabajos en acción asociados a un cliente específico.

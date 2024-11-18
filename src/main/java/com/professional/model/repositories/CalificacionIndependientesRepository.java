@@ -1,7 +1,7 @@
 package com.professional.model.repositories;
 
 import com.professional.model.entities.CalificacionIndependientes;
-import com.professional.model.entities.TrabajoIndependiente;
+import com.professional.model.entities.TrabajoIndEnAccion;
 import com.professional.model.entities.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,37 +15,37 @@ import java.util.List;
 public interface CalificacionIndependientesRepository extends JpaRepository<CalificacionIndependientes, Long> {
 
     /**
-     * Buscar una calificación por Cliente y TrabajoIndependiente.
+     * Buscar una calificación por Cliente y TrabajoIndEnAccion, solo si está activa.
      *
      * @param cliente El Cliente que realizó la calificación.
-     * @param trabajo El TrabajoIndependiente calificado.
-     * @return Optional que contiene la calificación si existe.
+     * @param trabajoIndEnAccion El TrabajoIndEnAccion calificado.
+     * @return Optional que contiene la calificación si existe y está activa.
      */
-    Optional<CalificacionIndependientes> findByClienteAndTrabajo(Cliente cliente, TrabajoIndependiente trabajo);
+    Optional<CalificacionIndependientes> findByClienteAndTrabajoIndEnAccion(Cliente cliente, TrabajoIndEnAccion trabajoIndEnAccion);
 
     /**
-     * Verificar si existe una calificación para un Cliente y TrabajoIndependiente específicos.
+     * Verificar si existe una calificación para un Cliente y TrabajoIndEnAccion específicos y está activa.
      *
      * @param cliente El Cliente que realizó la calificación.
-     * @param trabajo El TrabajoIndependiente calificado.
-     * @return true si existe, false de lo contrario.
+     * @param trabajoIndEnAccion El TrabajoIndEnAccion calificado.
+     * @return true si existe y está activa, false de lo contrario.
      */
-    boolean existsByClienteAndTrabajo(Cliente cliente, TrabajoIndependiente trabajo);
+    boolean existsByClienteAndTrabajoIndEnAccion(Cliente cliente, TrabajoIndEnAccion trabajoIndEnAccion);
 
     /**
-     * Calcular el promedio de calificaciones para un TrabajoIndependiente específico.
+     * Calcular el promedio de calificaciones para un TrabajoIndEnAccion específico, solo considerando calificaciones activas.
      *
-     * @param trabajo El TrabajoIndependiente para el cual se calculará el promedio.
+     * @param trabajoIndEnAccion El TrabajoIndEnAccion para el cual se calculará el promedio.
      * @return El promedio de calificaciones como Double.
      */
-    @Query("SELECT AVG(c.rating) FROM CalificacionIndependientes c WHERE c.trabajo = :trabajo")
-    Double findAverageRatingByTrabajo(@Param("trabajo") TrabajoIndependiente trabajo);
+    @Query("SELECT AVG(c.rating) FROM CalificacionIndependientes c WHERE c.trabajoIndEnAccion = :trabajoIndEnAccion")
+    Double findAverageRatingByTrabajoIndEnAccion(@Param("trabajoIndEnAccion") TrabajoIndEnAccion trabajoIndEnAccion);
 
     /**
-     * Obtener todas las calificaciones asociadas a un TrabajoIndependiente.
+     * Obtener todas las calificaciones activas asociadas a un TrabajoIndEnAccion.
      *
-     * @param trabajo El TrabajoIndependiente.
-     * @return Lista de CalificacionIndependientes.
+     * @param trabajoIndEnAccion El TrabajoIndEnAccion.
+     * @return Lista de CalificacionIndependientes activas.
      */
-    List<CalificacionIndependientes> findByTrabajo(TrabajoIndependiente trabajo);
+    List<CalificacionIndependientes> findByTrabajoIndEnAccion(TrabajoIndEnAccion trabajoIndEnAccion);
 }

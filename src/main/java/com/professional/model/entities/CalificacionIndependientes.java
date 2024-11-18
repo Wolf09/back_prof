@@ -11,8 +11,12 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 @Entity
 @Table(name = "calificacion_independientes", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"cliente_id", "trabajo_id"})
+        @UniqueConstraint(columnNames = {"cliente_id", "trabajo_ind_en_accion_id"})
 })
+/*
+a. Repositorio CalificacionIndependientesRepository
+Cambios Realizados: Actualizar métodos para trabajar con TrabajoIndEnAccion.
+ */
 public class CalificacionIndependientes implements Serializable {
 
     @Id
@@ -26,12 +30,12 @@ public class CalificacionIndependientes implements Serializable {
     @JsonIgnore
     private Cliente cliente;
 
-    // Relación Muchos a Uno con TrabajoIndependiente
+    // Relación Muchos a Uno con TrabajoIndEnAccion
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trabajo_id", nullable = false)
-    @NotNull(message = "El trabajo es obligatorio")
+    @JoinColumn(name = "trabajo_ind_en_accion_id", nullable = false)
+    @NotNull(message = "El trabajo en acción es obligatorio")
     @JsonIgnore
-    private TrabajoIndependiente trabajo;
+    private TrabajoIndEnAccion trabajoIndEnAccion;
 
     @Column(name = "rating", nullable = false)
     @NotNull(message = "La calificación es obligatoria")
@@ -40,10 +44,11 @@ public class CalificacionIndependientes implements Serializable {
     private Integer rating;
 
     @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
-    @Column(name = "fecha_calificacion", nullable = false, updatable = false)
+    @Column(name = "fecha_calificacion", nullable = false)
     private LocalDateTime fechaCalificacion;
 
     private String comentarios;
+
 
     public void setId(Long id) {
         this.id = id;
@@ -66,6 +71,10 @@ public class CalificacionIndependientes implements Serializable {
     protected void onCreate() {
         this.fechaCalificacion = LocalDateTime.now();
     }
+    @PreUpdate
+    protected void onUpdate(){
+        this.fechaCalificacion = LocalDateTime.now();
+    }
 
     public Long getId() {
         return id;
@@ -79,13 +88,6 @@ public class CalificacionIndependientes implements Serializable {
         this.cliente = cliente;
     }
 
-    public TrabajoIndependiente getTrabajo() {
-        return trabajo;
-    }
-
-    public void setTrabajo(TrabajoIndependiente trabajo) {
-        this.trabajo = trabajo;
-    }
 
     public Integer getRating() {
         return rating;
@@ -93,6 +95,14 @@ public class CalificacionIndependientes implements Serializable {
 
     public void setRating(Integer rating) {
         this.rating = rating;
+    }
+
+    public TrabajoIndEnAccion getTrabajoIndEnAccion() {
+        return trabajoIndEnAccion;
+    }
+
+    public void setTrabajoIndEnAccion(TrabajoIndEnAccion trabajoIndEnAccion) {
+        this.trabajoIndEnAccion = trabajoIndEnAccion;
     }
 
     public LocalDateTime getFechaCalificacion() {

@@ -19,7 +19,7 @@ public class TrabajoIndependiente implements Serializable {
     private Long id;
 
     @NotBlank(message = "La descripción del trabajo es obligatoria")
-    private String trabajo;
+    private String descripcion;
 
     // Nuevo campo para almacenar el promedio de calificaciones
     @Column(name = "average_rating", nullable = false)
@@ -35,12 +35,6 @@ public class TrabajoIndependiente implements Serializable {
     @JsonIgnore
     private Independiente independiente;
 
-    // Relación Muchos a Uno con Cliente
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id", nullable = false)
-    @NotNull(message = "El cliente es obligatorio")
-    @JsonIgnore
-    private Cliente cliente;
 
     // Relación Uno a Muchos con HistorialIndependientes
     @OneToMany(mappedBy = "trabajo", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -67,6 +61,7 @@ public class TrabajoIndependiente implements Serializable {
     @PrePersist
     public void establecerAverage(){
         this.averageRating = 5.0;
+        this.activo=true;
     }
 
     // Getters y Setters
@@ -75,12 +70,12 @@ public class TrabajoIndependiente implements Serializable {
         return id;
     }
 
-    public String getTrabajo() {
-        return trabajo;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setTrabajo(String trabajo) {
-        this.trabajo = trabajo;
+    public void setDescripcion(String trabajo) {
+        this.descripcion = trabajo;
     }
 
     public Double getAverageRating() {
@@ -99,13 +94,6 @@ public class TrabajoIndependiente implements Serializable {
         this.independiente = independiente;
     }
 
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
 
 
     public Boolean getActivo() {
@@ -156,6 +144,7 @@ public class TrabajoIndependiente implements Serializable {
         trabajoIndEnAccion.setTrabajoIndependiente(null);
     }
 
+
     public void addHistorialIndependientes(HistorialIndependientes historial) {
         historialIndependientes.add(historial);
         historial.setTrabajo(this);
@@ -166,15 +155,6 @@ public class TrabajoIndependiente implements Serializable {
         historial.setTrabajo(null);
     }
 
-    public void addCalificacionIndependientes(CalificacionIndependientes calificacionIndependientes) {
-        calificaciones.add(calificacionIndependientes);
-        calificacionIndependientes.setTrabajo(this);
-    }
-
-    public void removeCalificacionIndependientes(CalificacionIndependientes calificacionIndependientes) {
-        calificaciones.remove(calificacionIndependientes);
-        calificacionIndependientes.setTrabajo(null);
-    }
 
     // toString (opcional)
 
@@ -182,7 +162,7 @@ public class TrabajoIndependiente implements Serializable {
     public String toString() {
         return "TrabajoIndependiente{" +
                 "id=" + id +
-                ", trabajo='" + trabajo + '\'' +
+                ", trabajo='" + descripcion + '\'' +
                 ", averageRating=" + averageRating +
                 '}';
     }

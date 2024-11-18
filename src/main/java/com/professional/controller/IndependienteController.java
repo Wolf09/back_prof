@@ -2,6 +2,7 @@ package com.professional.controller;
 
 import com.professional.model.dto.Error;
 import com.professional.model.entities.Independiente;
+import com.professional.model.entities.TrabajoIndependiente;
 import com.professional.model.services.IndependienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,18 @@ public class IndependienteController {
         return new ResponseEntity<>(independiente, HttpStatus.OK);
     }
 
+    /**
+     * Obtener todos los TrabajosIndependiente de un Independiente, incluyendo las calificaciones y los Clientes que las realizaron.
+     *
+     * @param id ID del Independiente.
+     * @return ResponseEntity con la lista de TrabajosIndependiente y sus calificaciones.
+     */
+    @Transactional(readOnly = true)
+    @GetMapping("/{id}/trabajos")
+    public ResponseEntity<List<TrabajoIndependiente>> obtenerTrabajosIndependientes(@PathVariable Long id) {
+        List<TrabajoIndependiente> trabajos = independienteService.getTrabajosIndependientesByIndependiente(id);
+        return new ResponseEntity<>(trabajos, HttpStatus.OK);
+    }
 
     @Transactional
     @PutMapping("/actualizar/{id}")

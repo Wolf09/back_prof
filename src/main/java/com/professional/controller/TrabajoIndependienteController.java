@@ -1,7 +1,9 @@
 package com.professional.controller;
 
 import com.professional.model.dto.Error;
+import com.professional.model.entities.Independiente;
 import com.professional.model.entities.TrabajoIndependiente;
+import com.professional.model.services.IndependienteService;
 import com.professional.model.services.TrabajoIndependienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.*;
@@ -18,10 +20,13 @@ import java.util.List;
 @RequestMapping("/trabajo-independiente")
 public class TrabajoIndependienteController {
     private final TrabajoIndependienteService trabajoIndependienteService;
+    private final IndependienteService independienteService;
 
     @Autowired
-    public TrabajoIndependienteController(TrabajoIndependienteService trabajoIndependienteService) {
+    public TrabajoIndependienteController(TrabajoIndependienteService trabajoIndependienteService,
+                                          IndependienteService independienteService) {
         this.trabajoIndependienteService = trabajoIndependienteService;
+        this.independienteService = independienteService;
     }
 
     @Transactional
@@ -36,6 +41,11 @@ public class TrabajoIndependienteController {
             return new ResponseEntity<>(errores, HttpStatus.BAD_REQUEST);
         }
 
+        // Asegurarse de que el Independiente existe y está activo
+        Independiente independiente = independienteService.getIndependienteById(trabajoIndependiente.getIndependiente().getId());
+
+        // Asignar el Independiente al TrabajoIndependiente
+        trabajoIndependiente.setIndependiente(independiente);
         trabajoIndependiente.setActivo(true);
         TrabajoIndependiente creado= trabajoIndependienteService.createTrabajoIndependiente(trabajoIndependiente);
         return new ResponseEntity<>(creado, HttpStatus.CREATED);
@@ -53,6 +63,7 @@ public class TrabajoIndependienteController {
 
     @Transactional(readOnly = true)
     @GetMapping("/{id}")
+    //toda la logica esta en el servico y las interfaces que implementa, siempre va a validar que activo=true antes de devolver la lista
     public ResponseEntity<TrabajoIndependiente> obtenerTrabajoIndependientePorId(@PathVariable Long id){
         TrabajoIndependiente trabajoIndependiente= trabajoIndependienteService.getTrabajoIndependienteById(id);
         return new ResponseEntity<>(trabajoIndependiente,HttpStatus.OK);
@@ -69,6 +80,12 @@ public class TrabajoIndependienteController {
                 errores.add(new Error(err.getDefaultMessage()));
             });
             return new ResponseEntity<>(errores, HttpStatus.BAD_REQUEST);
+        }
+
+        // Si se está actualizando el Independiente, asegurarse de que existe
+        if (trabajoIndependiente.getIndependiente() != null) {
+            Independiente independiente = independienteService.getIndependienteById(trabajoIndependiente.getIndependiente().getId());
+            trabajoIndependiente.setIndependiente(independiente);
         }
         TrabajoIndependiente actualizado= trabajoIndependienteService.updateTrabajoIndependiente(id, trabajoIndependiente);
         return new ResponseEntity<>(actualizado,HttpStatus.OK);
@@ -89,6 +106,18 @@ public class TrabajoIndependienteController {
         return new ResponseEntity<>(listaActivos, HttpStatus.OK);
     }
 
+    /**
+     * Obtener todos los TrabajosIndependientes de un Independiente específico, incluyendo las calificaciones y los Clientes que las realizaron.
+     *
+     * @param independiente
+     * @return ResponseEntity con la lista de TrabajosIndependientes y sus calificaciones.
+     */
+    @Transactional(readOnly = true)
+    @GetMapping("/independiente/{independienteId}")
+    public ResponseEntity<List<TrabajoIndependiente>> obtenerTrabajosPorIndependiente(@RequestBody Independiente independiente) {
+        List<TrabajoIndependiente> trabajos = trabajoIndependienteService.getTrabajosIndependientesByIndependiente(independiente);
+        return new ResponseEntity<>(trabajos, HttpStatus.OK);
+    }
 
     @Transactional
     @PostMapping("/save-crear")

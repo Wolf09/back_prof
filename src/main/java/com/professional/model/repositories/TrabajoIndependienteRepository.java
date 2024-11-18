@@ -32,6 +32,14 @@ public interface TrabajoIndependienteRepository extends JpaRepository<TrabajoInd
      * @return Lista de trabajos que coinciden con el estado.
      */
     List<TrabajoIndependiente> findByActivo(Boolean activo);
+
+    /**
+     * Buscar un TrabajoIndependiente por su ID y que esté activo.
+     *
+     * @param id ID del TrabajoIndependiente.
+     * @return Optional de TrabajoIndependiente.
+     */
+    Optional<TrabajoIndependiente> findByIdAndActivoTrue(Long id);
     /**
      * Verificar si existe un trabajo independiente con un nombre específico.
      *

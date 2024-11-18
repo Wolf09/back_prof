@@ -11,6 +11,16 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/*
+TODO: SE DEBE REALIZAR LA CONSULTA A CHATGPT: Un Cliente crea un TrabajoEmpEnAccion el cual tiene un campo estadoTrabajo que actualiza el Independiente,
+una vez que el TrabajoEmpEnAccion en su estadoTrabajo pase a estar finalizado entonces y solo entonces el Cliente puede calificar
+este trabajoIndEnAccion que el mismo creo y fue aprobado por un independiente
+1.	Hay detalles que no se están tomando en cuenta la entidad: Independiente, que representa a una persona independiente,
+tiene su lista de TrabajoIndependiente, donde puede ver todos sus TrabajoIndependiente y las calificaciones relacionadas a este
+TrabajoIndependiente, es decir puede ver quien califico es decir puede ver el Cliente que califico su TrabajoIndependiente.
+2.	La entidad CalificacionIndependiente tiene una eliminación física, es decir si se elimina de la base de datos
+3. ademas la eliminacion en: CalificacionIndependientes deberia ser fisica y no logica
+ */
 @Entity
 @Table(name = "calificaciones", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"cliente_id", "trabajo_id"})

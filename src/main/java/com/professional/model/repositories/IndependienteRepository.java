@@ -16,7 +16,7 @@ public interface IndependienteRepository extends JpaRepository<Independiente, Lo
      * @param correo El correo electrónico del Independiente.
      * @return Un Optional que contiene el Independiente si se encuentra, o vacío si no.
      */
-    Optional<Independiente> findByCorreo(String correo);
+    Optional<Independiente> findByCorreoAndActivoTrue(String correo);
 
     /**
      * Verificar si existe un Independiente con un correo electrónico específico.
@@ -24,10 +24,12 @@ public interface IndependienteRepository extends JpaRepository<Independiente, Lo
      * @param correo El correo electrónico a verificar.
      * @return true si existe, false de lo contrario.
      */
-    boolean existsByCorreo(String correo);
+    boolean existsByCorreoAndActivoTrue(String correo);
 
     // Método para encontrar todos los Independientes activos
     List<Independiente> findByActivoTrue();
+
+    Optional<Independiente> findByIdAndActivoTrue(Long id);
 
     // Método para encontrar todos los Independientes (independientemente de activo)
     List<Independiente> findAll();

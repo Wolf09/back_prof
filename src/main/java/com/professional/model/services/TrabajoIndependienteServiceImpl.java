@@ -1,5 +1,6 @@
 package com.professional.model.services;
 
+import com.professional.model.entities.Independiente;
 import com.professional.model.entities.TrabajoIndependiente;
 import com.professional.model.exceptions.ResourceNotFoundException;
 import com.professional.model.repositories.TrabajoIndependienteRepository;
@@ -34,7 +35,7 @@ public class TrabajoIndependienteServiceImpl implements TrabajoIndependienteServ
     @Override
     @Transactional(readOnly = true)
     public TrabajoIndependiente getTrabajoIndependienteById(Long id) {
-        return trabajoIndependienteRepository.findById(id)
+        return trabajoIndependienteRepository.findByIdAndActivoTrue(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Trabajo Independiente no encontrado con ID: " + id));
     }
 
@@ -44,7 +45,7 @@ public class TrabajoIndependienteServiceImpl implements TrabajoIndependienteServ
     @Override
     @Transactional
     public TrabajoIndependiente createTrabajoIndependiente(TrabajoIndependiente trabajoIndependiente) {
-        // Puedes agregar validaciones adicionales aquí si es necesario.
+        trabajoIndependiente.setActivo(true);
         return trabajoIndependienteRepository.save(trabajoIndependiente);
     }
 
@@ -54,14 +55,14 @@ public class TrabajoIndependienteServiceImpl implements TrabajoIndependienteServ
     @Override
     @Transactional
     public TrabajoIndependiente updateTrabajoIndependiente(Long id, TrabajoIndependiente trabajoIndependienteDetalles) {
-        TrabajoIndependiente existente = trabajoIndependienteRepository.findById(id)
+        TrabajoIndependiente existente = trabajoIndependienteRepository.findByIdAndActivoTrue(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TrabajoIndependiente no encontrado con ID: " + id));
 
         // Actualizar campos permitidos
-        existente.setTrabajo(trabajoIndependienteDetalles.getTrabajo());
-        existente.setIndependiente(trabajoIndependienteDetalles.getIndependiente());
-        existente.setCliente(trabajoIndependienteDetalles.getCliente());
-        // El averageRating no se actualiza directamente, se recalcula mediante las calificaciones
+        existente.setDescripcion(trabajoIndependienteDetalles.getDescripcion());
+        if (trabajoIndependienteDetalles.getIndependiente() != null) {
+            existente.setIndependiente(trabajoIndependienteDetalles.getIndependiente());
+        }
 
         return trabajoIndependienteRepository.save(existente);
     }
@@ -72,7 +73,7 @@ public class TrabajoIndependienteServiceImpl implements TrabajoIndependienteServ
     @Override
     @Transactional
     public void deleteTrabajoIndependiente(Long id) {
-        TrabajoIndependiente existente = trabajoIndependienteRepository.findById(id)
+        TrabajoIndependiente existente = trabajoIndependienteRepository.findByIdAndActivoTrue(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Trabajo Independiente no encontrado con ID: " + id));
         existente.setActivo(false);
         trabajoIndependienteRepository.save(existente);
@@ -88,6 +89,14 @@ public class TrabajoIndependienteServiceImpl implements TrabajoIndependienteServ
     @Transactional
     public TrabajoIndependiente saveTrabajoIndependiente(TrabajoIndependiente trabajoIndependiente) {
         return trabajoIndependienteRepository.save(trabajoIndependiente);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoIndependiente> getTrabajosIndependientesByIndependiente(Independiente independiente) {
+        return trabajoIndependienteRepository.findAll().stream()
+                .filter(trabajo -> trabajo.getIndependiente().getId().equals(independiente.getId()) && trabajo.getActivo())
+                .toList();
     }
 }
 

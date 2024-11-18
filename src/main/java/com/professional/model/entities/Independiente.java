@@ -29,6 +29,7 @@ public class Independiente extends Profesional implements Serializable {
 
     public Independiente() {
         this.trabajosIndependientes=new ArrayList<>();
+        this.setActivo(true);
     }
 
     public Long getId() {

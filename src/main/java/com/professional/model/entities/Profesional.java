@@ -55,7 +55,8 @@ public abstract class Profesional {
     @Column(name = "fecha_pago_fin")
     private LocalDateTime fechaPagoFin;
     @NotNull
-    private Boolean activo;
+    @Column(name = "activo", nullable = false)
+    protected Boolean activo;
     @NotNull
     private Boolean pagado;
 

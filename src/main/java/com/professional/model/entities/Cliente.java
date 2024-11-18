@@ -11,6 +11,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+TODO la pregunta ya fue hecha a la IA y es la mejor hasta ahora
+vuelvo a repetir porque no me entiendes, Un Cliente crea un TrabajoIndEnAccion, el TrabajoIndEnAccion que no es mas que un TrabajoIndependiente abierto o iniciado
+el cual tiene un campo estadoTrabajo que actualiza el Independiente,
+una vezque el TrabajoIndEnAccion en su estadoTrabajo pase a estar finalizado entonces y solo entonces el Cliente puede calificar
+este trabajoIndEnAccion que el mismo creo y fue aprobado y actualizado por un Independiente
+ */
 @Entity
 @Table(name = "clientes")
 public class Cliente implements Serializable {
