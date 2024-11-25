@@ -35,14 +35,34 @@ public class HistorialIndependientes implements Serializable {
 
     @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
     @Column(name = "fecha_solicitud", nullable = false, updatable = false)
-    private LocalDateTime fechaSolicitud;
+    private LocalDateTime fechaCreacion;
 
     @Column(name = "comentarios")
     private String comentarios;
 
+    @NotNull
+    private Boolean activo;
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
+    // Constructor por defecto
+    public HistorialIndependientes() {
+        // Inicializar activo como true por defecto
+        this.activo = true;
+    }
+
     @PrePersist
     protected void onCreate() {
-        this.fechaSolicitud = LocalDateTime.now();
+        this.fechaCreacion = LocalDateTime.now();
+        if (this.activo == null) {
+            this.activo = true;
+        }
     }
 
 // Getters y Setters
@@ -56,10 +76,10 @@ public class HistorialIndependientes implements Serializable {
     }
 
     public LocalDateTime getFechaSolicitud() {
-        return fechaSolicitud;
+        return fechaCreacion;
     }
     public void setFechaSolicitud(LocalDateTime fechaSolicitud) {
-        this.fechaSolicitud = fechaSolicitud;
+        this.fechaCreacion = fechaSolicitud;
     }
     public Cliente getCliente() {
         return cliente;

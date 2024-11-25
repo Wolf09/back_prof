@@ -1,5 +1,6 @@
 package com.professional.model.services;
 
+import com.professional.model.dto.TrabajoEnAccionDTO;
 import com.professional.model.entities.Cliente;
 import com.professional.model.entities.EstadoTrabajo;
 import com.professional.model.entities.TrabajoEmpEnAccion;
@@ -63,7 +64,7 @@ public interface TrabajoEmpEnAccionService {
      * @param estadoTrabajo Nuevo estadoTrabajo.
      * @return TrabajoEmpEnAccion actualizado.
      */
-    TrabajoEmpEnAccion updateEstadoTrabajo(Long id, EstadoTrabajo estadoTrabajo);
+    TrabajoEnAccionDTO updateEstadoTrabajo(Long id, EstadoTrabajo estadoTrabajo);
 
     /**
      * Buscar trabajos en acción que están activos.

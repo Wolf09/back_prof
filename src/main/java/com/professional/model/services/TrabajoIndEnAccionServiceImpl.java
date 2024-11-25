@@ -1,5 +1,7 @@
 package com.professional.model.services;
 
+import com.professional.model.dto.HistorialDTO;
+import com.professional.model.dto.TrabajoEnAccionDTO;
 import com.professional.model.entities.*;
 import com.professional.model.exceptions.ResourceNotFoundException;
 import com.professional.model.repositories.TrabajoIndEnAccionRepository;
@@ -59,11 +61,16 @@ public class TrabajoIndEnAccionServiceImpl implements TrabajoIndEnAccionService 
     }
 
     /**
-     * {@inheritDoc}
+     * Actualiza el estado de un TrabajoIndEnAccion y crea un HistorialIndependientes si el estado es FINALIZADO.
+     *
+     * @param id            ID del TrabajoIndEnAccion a actualizar.
+     * @param estadoTrabajo Nuevo estado a establecer.
+     * @return TrabajoEnAccionDTO actualizado.
+     * TODO Solo usuarios con rol INDEPENDIENTE pueden cambiar el estadoTrabajo.
      */
     @Override
     @Transactional
-    public TrabajoIndEnAccion updateEstadoTrabajo(Long id, EstadoTrabajo estadoTrabajo) {
+    public TrabajoEnAccionDTO updateEstadoTrabajo(Long id, EstadoTrabajo estadoTrabajo) {
         TrabajoIndEnAccion trabajoIndEnAccion = trabajoIndEnAccionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TrabajoIndEnAccion no encontrado con ID: " + id));
 
@@ -72,21 +79,33 @@ public class TrabajoIndEnAccionServiceImpl implements TrabajoIndEnAccionService 
         trabajoIndEnAccion.setFechaCambio(LocalDateTime.now());
         TrabajoIndEnAccion actualizado = trabajoIndEnAccionRepository.save(trabajoIndEnAccion);
 
-        // Verificar si el estado se ha cambiado a FINALIZADO
+        HistorialDTO historialDTO = null;
         if (estadoTrabajo == EstadoTrabajo.FINALIZADO && oldEstado != EstadoTrabajo.FINALIZADO) {
-            // Crear un nuevo HistorialIndependientes
+            // Crear una nueva instancia de HistorialIndependientes
             TrabajoIndependiente trabajoIndependiente = trabajoIndEnAccion.getTrabajoIndependiente();
             Cliente cliente = trabajoIndEnAccion.getCliente();
 
             HistorialIndependientes historial = new HistorialIndependientes();
             historial.setCliente(cliente);
             historial.setTrabajo(trabajoIndependiente);
-            historial.setComentarios("Trabajo finalizado exitosamente"); // Puedes ajustar los comentarios según necesidad
+            historial.setFechaSolicitud(LocalDateTime.now());
+            historial.setActivo(true); // Asegurar que el historial está activo
 
-            historialService.createHistorialIndependientes(historial);
+            historialDTO = historialService.createHistorialIndependientesDTO(historial);
         }
 
-        return actualizado;
+        // Mapear la entidad actualizada a DTO
+        TrabajoEnAccionDTO trabajoDTO = new TrabajoEnAccionDTO();
+        trabajoDTO.setId(actualizado.getId());
+        trabajoDTO.setEstadoTrabajo(actualizado.getEstadoTrabajo());
+        trabajoDTO.setFechaCambio(actualizado.getFechaCambio());
+        trabajoDTO.setActivo(actualizado.getActivo());
+
+        if (historialDTO != null) {
+            trabajoDTO.setHistorial(historialDTO);
+        }
+
+        return trabajoDTO;
     }
 
     /**

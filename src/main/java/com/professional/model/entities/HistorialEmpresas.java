@@ -38,11 +38,20 @@ public class HistorialEmpresas implements Serializable {
     @Column(name = "comentarios")
     private String comentarios;
 
-    // Getters y Setters
+    @NotNull
+    private Boolean activo;
 
+    public HistorialEmpresas() {
+        this.activo=true;
+    }
+
+    // Getters y Setters
     @PrePersist
     protected void onCreate() {
         this.fechaSolicitud = LocalDateTime.now();
+        if (this.activo ==null){
+            this.activo=true;
+        }
     }
 
     public Long getId() {
@@ -84,6 +93,14 @@ public class HistorialEmpresas implements Serializable {
 
     public void setComentarios(String comentarios) {
         this.comentarios = comentarios;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
     }
 
     @Serial

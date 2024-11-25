@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface HistorialEmpresasRepository extends JpaRepository<HistorialEmpresas, Long> {
@@ -27,6 +28,12 @@ public interface HistorialEmpresasRepository extends JpaRepository<HistorialEmpr
      * @return Lista de registros de historial asociados al trabajo de empresa.
      */
     List<HistorialEmpresas> findByCliente(Cliente cliente);
+
+    List<HistorialEmpresas> findByActivoTrue();
+
+    Optional<HistorialEmpresas> findByIdAndActivoTrue(Long id);
+
+    List<HistorialEmpresas> findByClienteAndTrabajoAndActivoTrue(Cliente cliente, TrabajoEmpresa trabajoEmpresa);
 
     // Agrega métodos de consulta personalizados aquí si es necesario.
 }

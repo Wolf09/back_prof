@@ -1,6 +1,7 @@
 package com.professional.model.services;
 
 import com.professional.model.entities.CalificacionEmpresas;
+import com.professional.model.entities.EstadoTrabajo;
 import com.professional.model.entities.TrabajoEmpresa;
 import com.professional.model.entities.Cliente;
 import com.professional.model.exceptions.ResourceNotFoundException;
@@ -51,7 +52,16 @@ public class CalificacionEmpresasServiceImpl implements CalificacionEmpresasServ
         if (calificacionRepository.existsByClienteAndTrabajo(cliente, trabajo)) {
             throw new IllegalStateException("El cliente ya ha calificado este trabajo empresa");
         }
+        // Verificar que el Cliente es el creador del TrabajoEmpresa
+        if (!trabajo.getCliente().getId().equals(cliente.getId())) {
+            throw new ResourceNotFoundException("El cliente no es el creador de este TrabajoEmpresa");
+        }
 
+        boolean finalizado = trabajo.getTrabajoEmpEnAccions().stream()
+                .anyMatch(teea -> teea.getEstadoTrabajo() == EstadoTrabajo.FINALIZADO);
+        if (!finalizado) {
+            throw new ResourceNotFoundException("No se puede calificar un TrabajoEmpresa que no ha sido finalizado");
+        }
         calificacion.setCliente(cliente);
         calificacion.setTrabajo(trabajo);
 
@@ -74,6 +84,12 @@ public class CalificacionEmpresasServiceImpl implements CalificacionEmpresasServ
         existente.setComentarios(calificacionDetalles.getComentarios());
 
         // Asumimos que el Cliente y TrabajoEmpresa no se pueden cambiar en una calificación existente
+        if (calificacionDetalles.getRating() != null) {
+            existente.setRating(calificacionDetalles.getRating());
+        }
+        if (calificacionDetalles.getComentarios() != null) {
+            existente.setComentarios(calificacionDetalles.getComentarios());
+        }
 
         CalificacionEmpresas actualizado = calificacionRepository.save(existente);
 

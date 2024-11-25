@@ -12,15 +12,31 @@ import java.util.List;
 public interface HistorialIndependientesRepository extends JpaRepository<HistorialIndependientes, Long> {
 
     /**
-     * Buscar historiales por TrabajoIndependiente.
+     * Buscar historiales por TrabajoIndependiente y activo=true.
      *
      * @param trabajo El TrabajoIndependiente.
-     * @return Lista de HistorialIndependientes.
+     * @return Lista de HistorialIndependientes activos.
      */
-    List<HistorialIndependientes> findByTrabajo(TrabajoIndependiente trabajo);
+    List<HistorialIndependientes> findByTrabajoAndActivoTrue(TrabajoIndependiente trabajo);
 
     /**
-     * Buscar historiales por Cliente y TrabajoIndependiente.
+     * Buscar historiales por Cliente, TrabajoIndependiente y activo=true.
+     *
+     * @param cliente El Cliente.
+     * @param trabajo El TrabajoIndependiente.
+     * @return Lista de HistorialIndependientes activos.
+     */
+    List<HistorialIndependientes> findByClienteAndTrabajoAndActivoTrue(Cliente cliente, TrabajoIndependiente trabajo);
+
+    /**
+     * Obtener todos los historiales, sin filtrar por activo.
+     *
+     * @return Lista de todos los HistorialIndependientes.
+     */
+    List<HistorialIndependientes> findAll();
+
+    /**
+     * Buscar historiales por Cliente y TrabajoIndependiente, sin filtrar por activo.
      *
      * @param cliente El Cliente.
      * @param trabajo El TrabajoIndependiente.
@@ -28,5 +44,3 @@ public interface HistorialIndependientesRepository extends JpaRepository<Histori
      */
     List<HistorialIndependientes> findByClienteAndTrabajo(Cliente cliente, TrabajoIndependiente trabajo);
 }
-
-

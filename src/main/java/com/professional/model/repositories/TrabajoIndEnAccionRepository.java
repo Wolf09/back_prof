@@ -13,6 +13,7 @@ import java.util.List;
 @Repository
 public interface TrabajoIndEnAccionRepository extends JpaRepository<TrabajoIndEnAccion, Long> {
 
+
     /**
      * Obtener todas las acciones de un trabajo independiente específico.
      *

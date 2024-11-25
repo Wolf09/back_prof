@@ -23,7 +23,7 @@ import java.util.List;
  * Controlador para gestionar las operaciones CRUD de la entidad CalificacionIndependientes.
  */
 @RestController
-@RequestMapping("/calificaciones")
+@RequestMapping("/calificaciones-independientes")
 public class CalificacionIndependienteController {
 
     private final CalificacionIndependientesService calificacionService;

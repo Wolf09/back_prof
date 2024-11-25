@@ -2,6 +2,7 @@ package com.professional.model.repositories;
 
 import com.professional.model.entities.Cliente;
 import com.professional.model.entities.Empresa;
+import com.professional.model.entities.TrabajoEmpEnAccion;
 import com.professional.model.entities.TrabajoEmpresa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -58,6 +59,7 @@ public interface TrabajoEmpresaRepository extends JpaRepository<TrabajoEmpresa, 
      * @return true si existe, false de lo contrario.
      */
     boolean existsByTrabajo(String trabajo);
+    Optional<TrabajoEmpEnAccion> findByIdAndActivoTrue(Long id);
 
     // Agrega métodos de consulta personalizados aquí si es necesario.
 }

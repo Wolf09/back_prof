@@ -1,6 +1,8 @@
 package com.professional.controller;
 
+import com.professional.model.dto.ActualizarEstadoTrabajoDTO;
 import com.professional.model.dto.Error;
+import com.professional.model.dto.TrabajoEnAccionDTO;
 import com.professional.model.entities.Cliente;
 import com.professional.model.entities.EstadoTrabajo;
 import com.professional.model.entities.TrabajoIndEnAccion;
@@ -206,5 +208,39 @@ public class TrabajoIndEnAccionController {
     public ResponseEntity<List<TrabajoIndEnAccion>> buscarTodosTrabajosEnAccion() {
         List<TrabajoIndEnAccion> trabajos = trabajoIndEnAccionService.getAllTrabajosEnAccion();
         return new ResponseEntity<>(trabajos, HttpStatus.OK);
+    }
+
+    /**
+     * Actualizar el EstadoTrabajo de un TrabajoIndEnAccion específico.
+     *
+     * @param id                     ID del TrabajoIndEnAccion a actualizar.
+     * @param actualizarEstadoTrabajoDTO DTO que contiene el nuevo estado.
+     * @param result                 Resultado de la validación.
+     * @return ResponseEntity con el TrabajoEnAccionDTO actualizado o errores de validación.
+     */
+    @Transactional
+    @PutMapping("/actualizar-estado/{id}")
+    public ResponseEntity<?> actualizarEstadoTrabajo(@PathVariable Long id,
+                                                     @Valid @RequestBody ActualizarEstadoTrabajoDTO actualizarEstadoTrabajoDTO,
+                                                     BindingResult result) {
+        if (result.hasErrors()) {
+            List<Error> errores = new ArrayList<>();
+            result.getFieldErrors().forEach(err -> {
+                errores.add(new Error(err.getDefaultMessage()));
+            });
+            return new ResponseEntity<>(errores, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            TrabajoEnAccionDTO actualizado = trabajoIndEnAccionService.updateEstadoTrabajo(id, actualizarEstadoTrabajoDTO.getEstadoTrabajo());
+            return new ResponseEntity<>(actualizado, HttpStatus.OK);
+        } catch (Exception ex) {
+            List<Error> errores = new ArrayList<>();
+            errores.add(new Error(ex.getMessage()));
+            if (ex instanceof com.professional.model.exceptions.ResourceNotFoundException) {
+                return new ResponseEntity<>(errores, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(errores, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

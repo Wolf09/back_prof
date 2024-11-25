@@ -35,8 +35,14 @@ public class HistorialEmpresasServiceImpl implements HistorialEmpresasService {
     @Override
     @Transactional(readOnly = true)
     public List<HistorialEmpresas> getAllHistorialEmpresas() {
+        return historialEmpresasRepository.findByActivoTrue();
+    }
+
+    @Override
+    public List<HistorialEmpresas> getAllHistorialEmpresasIncludingInactive() {
         return historialEmpresasRepository.findAll();
     }
+
 
     /**
      * {@inheritDoc}
@@ -44,7 +50,7 @@ public class HistorialEmpresasServiceImpl implements HistorialEmpresasService {
     @Override
     @Transactional(readOnly = true)
     public HistorialEmpresas getHistorialEmpresasById(Long id) {
-        return historialEmpresasRepository.findById(id)
+        return historialEmpresasRepository.findByIdAndActivoTrue(id)
                 .orElseThrow(() -> new ResourceNotFoundException("HistorialEmpresas no encontrado con ID: " + id));
     }
 
@@ -66,14 +72,15 @@ public class HistorialEmpresasServiceImpl implements HistorialEmpresasService {
         return historialEmpresasRepository.save(historialEmpresas);
     }
 
+
     /**
      * {@inheritDoc}
      */
     @Override
     @Transactional
     public HistorialEmpresas updateHistorialEmpresas(Long id, HistorialEmpresas historialEmpresasDetalles) {
-        HistorialEmpresas existente = historialEmpresasRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("HistorialEmpresas no encontrado con ID: " + id));
+        HistorialEmpresas existente = historialEmpresasRepository.findByIdAndActivoTrue(id)
+                .orElseThrow(() -> new ResourceNotFoundException("HistorialEmpresas no encontrado con ID o esta inactivo: " + id));
 
         // Actualizar campos según sea necesario.
         existente.setComentarios(historialEmpresasDetalles.getComentarios());
@@ -100,12 +107,17 @@ public class HistorialEmpresasServiceImpl implements HistorialEmpresasService {
     /**
      * {@inheritDoc}
      */
-    @Override
-    @Transactional
     public void deleteHistorialEmpresas(Long id) {
         HistorialEmpresas existente = historialEmpresasRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("HistorialEmpresas no encontrado con ID: " + id));
-        historialEmpresasRepository.delete(existente);
+
+        if (!existente.getActivo()) {
+            throw new IllegalStateException("El HistorialEmpresas ya está inactivo.");
+        }
+
+        // Eliminación lógica: establecer 'activo' a false
+        existente.setActivo(false);
+        historialEmpresasRepository.save(existente);
     }
 
     /**
@@ -125,5 +137,21 @@ public class HistorialEmpresasServiceImpl implements HistorialEmpresasService {
     public List<HistorialEmpresas> getHistorialEmpresasByCliente(Cliente cliente) {
         return historialEmpresasRepository.findByCliente(cliente);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<HistorialEmpresas> findByClienteAndTrabajo(Long clienteId, Long trabajoId) {
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con ID: " + clienteId));
+
+        TrabajoEmpresa trabajoEmpresa = trabajoEmpresaRepository.findById(trabajoId)
+                .orElseThrow(() -> new ResourceNotFoundException("TrabajoEmpresa no encontrado con ID: " + trabajoId));
+
+        return historialEmpresasRepository.findByClienteAndTrabajoAndActivoTrue(cliente, trabajoEmpresa);
+    }
+
 }
 

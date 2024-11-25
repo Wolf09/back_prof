@@ -15,10 +15,13 @@ import java.util.List;
 public class TrabajoEmpresaServiceImpl implements TrabajoEmpresaService {
 
     private final TrabajoEmpresaRepository trabajoEmpresaRepository;
+    private final EmpresaService empresaService;
 
     @Autowired
-    public TrabajoEmpresaServiceImpl(TrabajoEmpresaRepository trabajoEmpresaRepository) {
+    public TrabajoEmpresaServiceImpl(TrabajoEmpresaRepository trabajoEmpresaRepository,
+                                     EmpresaService empresaService) {
         this.trabajoEmpresaRepository = trabajoEmpresaRepository;
+        this.empresaService = empresaService;
     }
 
     @Override
@@ -50,7 +53,11 @@ public class TrabajoEmpresaServiceImpl implements TrabajoEmpresaService {
     @Override
     @Transactional
     public TrabajoEmpresa createTrabajoEmpresa(TrabajoEmpresa trabajoEmpresa) {
-        // Establecer 'activo' en true al crear
+
+        Empresa empresa = empresaService.getEmpresaById(trabajoEmpresa.getEmpresa().getId());
+        trabajoEmpresa.setEmpresa(empresa);
+        trabajoEmpresa.setActivo(true);
+        trabajoEmpresa.setAverageRating(5.0);
         trabajoEmpresa.setActivo(true);
         return trabajoEmpresaRepository.save(trabajoEmpresa);
     }

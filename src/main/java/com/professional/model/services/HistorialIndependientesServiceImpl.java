@@ -1,6 +1,6 @@
 package com.professional.model.services;
 
-import com.professional.model.entities.CalificacionIndependientes;
+import com.professional.model.dto.HistorialDTO;
 import com.professional.model.entities.HistorialIndependientes;
 import com.professional.model.entities.TrabajoIndependiente;
 import com.professional.model.entities.Cliente;
@@ -37,6 +37,18 @@ public class HistorialIndependientesServiceImpl implements HistorialIndependient
     @Override
     @Transactional(readOnly = true)
     public List<HistorialIndependientes> getAllHistorialIndependientes() {
+        return historialIndependientesRepository.findAll()
+                .stream()
+                .filter(HistorialIndependientes::getActivo)
+                .toList();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<HistorialIndependientes> getAllHistorialIndependientesIncludingInactive() {
         return historialIndependientesRepository.findAll();
     }
 
@@ -47,7 +59,8 @@ public class HistorialIndependientesServiceImpl implements HistorialIndependient
     @Transactional(readOnly = true)
     public HistorialIndependientes getHistorialIndependientesById(Long id) {
         return historialIndependientesRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("HistorialIndependientes no encontrado con ID: " + id));
+                .filter(HistorialIndependientes::getActivo)
+                .orElseThrow(() -> new ResourceNotFoundException("HistorialIndependientes no encontrado o inactivo con ID: " + id));
     }
 
     /**
@@ -70,6 +83,7 @@ public class HistorialIndependientesServiceImpl implements HistorialIndependient
 
         return historialIndependientesRepository.save(historialIndependientes);
     }
+
 
     /**
      * {@inheritDoc}
@@ -107,7 +121,25 @@ public class HistorialIndependientesServiceImpl implements HistorialIndependient
     public void deleteHistorialIndependientes(Long id) {
         HistorialIndependientes existente = historialIndependientesRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("HistorialIndependientes no encontrado con ID: " + id));
-        historialIndependientesRepository.delete(existente);
+        if (!existente.getActivo()) {
+            throw new IllegalStateException("El HistorialIndependientes ya está inactivo.");
+        }
+        existente.setActivo(false);
+        historialIndependientesRepository.save(existente);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<HistorialIndependientes> findByClienteAndTrabajo(Long clienteId, Long trabajoId) {
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con ID: " + clienteId));
+
+        TrabajoIndependiente trabajo = trabajoIndependienteRepository.findById(trabajoId)
+                .orElseThrow(() -> new ResourceNotFoundException("TrabajoIndependiente no encontrado con ID: " + trabajoId));
+
+        return historialIndependientesRepository.findByClienteAndTrabajoAndActivoTrue(cliente, trabajo);
     }
 }
-

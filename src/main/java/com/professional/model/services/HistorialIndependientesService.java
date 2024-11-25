@@ -1,5 +1,6 @@
 package com.professional.model.services;
 
+import com.professional.model.dto.HistorialDTO;
 import com.professional.model.entities.HistorialIndependientes;
 
 import java.util.List;
@@ -7,11 +8,18 @@ import java.util.List;
 public interface HistorialIndependientesService {
 
     /**
-     * Obtener todos los Historiales de Independientes.
+     * Obtener todos los Historiales de Independientes activos.
      *
-     * @return Lista de HistorialIndependientes.
+     * @return Lista de HistorialIndependientes activos.
      */
     List<HistorialIndependientes> getAllHistorialIndependientes();
+
+    /**
+     * Obtener todos los Historiales de Independientes, incluyendo inactivos.
+     *
+     * @return Lista de todos los HistorialIndependientes.
+     */
+    List<HistorialIndependientes> getAllHistorialIndependientesIncludingInactive();
 
     /**
      * Obtener un HistorialIndependientes por su ID.
@@ -29,6 +37,7 @@ public interface HistorialIndependientesService {
      */
     HistorialIndependientes createHistorialIndependientes(HistorialIndependientes historialIndependientes);
 
+
     /**
      * Actualizar un HistorialIndependientes existente.
      *
@@ -39,10 +48,18 @@ public interface HistorialIndependientesService {
     HistorialIndependientes updateHistorialIndependientes(Long id, HistorialIndependientes historialIndependientesDetalles);
 
     /**
-     * Eliminar un HistorialIndependientes por su ID.
+     * Eliminar (lógicamente) un HistorialIndependientes por su ID.
      *
      * @param id ID del HistorialIndependientes a eliminar.
      */
     void deleteHistorialIndependientes(Long id);
-}
 
+    /**
+     * Buscar HistorialIndependientes por Cliente y TrabajoIndependiente activos.
+     *
+     * @param clienteId ID del Cliente.
+     * @param trabajoId ID del TrabajoIndependiente.
+     * @return Lista de HistorialIndependientes activos encontrados.
+     */
+    List<HistorialIndependientes> findByClienteAndTrabajo(Long clienteId, Long trabajoId);
+}
