@@ -10,6 +10,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/*
+TODO estoy en la pantalla de inicio, la seguiridad ya se hizo con los tokens, aunque hay un detalla que corregir
+ la consulta debe listar todos los TrabajoIndependiente y TrabajoEmpresa por la descripcion es recomendable usar like
+ y deben ser ordenados por su calificacion: averageRating se debe listar solamente los Activos=true
+ */
 @Entity
 @Table(name = "trabajos_independiente")
 public class TrabajoIndependiente implements Serializable {

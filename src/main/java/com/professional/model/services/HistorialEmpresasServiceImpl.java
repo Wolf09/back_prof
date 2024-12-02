@@ -1,5 +1,6 @@
 package com.professional.model.services;
 
+import com.professional.model.dto.HistorialDTO;
 import com.professional.model.entities.HistorialEmpresas;
 import com.professional.model.entities.TrabajoEmpresa;
 import com.professional.model.entities.Cliente;
@@ -137,6 +138,7 @@ public class HistorialEmpresasServiceImpl implements HistorialEmpresasService {
     public List<HistorialEmpresas> getHistorialEmpresasByCliente(Cliente cliente) {
         return historialEmpresasRepository.findByCliente(cliente);
     }
+
 
     /**
      * {@inheritDoc}

@@ -1,5 +1,6 @@
 package com.professional.model.services;
 
+import com.professional.model.dto.HistorialDTO;
 import com.professional.model.entities.Cliente;
 import com.professional.model.entities.HistorialEmpresas;
 import com.professional.model.entities.TrabajoEmpresa;

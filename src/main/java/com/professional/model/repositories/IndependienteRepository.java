@@ -33,5 +33,8 @@ public interface IndependienteRepository extends JpaRepository<Independiente, Lo
 
     // Método para encontrar todos los Independientes (independientemente de activo)
     List<Independiente> findAll();
+    // Optional<Independiente> findByCorreo(String correo);
+    Optional<Independiente> findByCorreo(String correo);
+
 }
 
