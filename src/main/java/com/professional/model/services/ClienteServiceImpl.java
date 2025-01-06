@@ -1,8 +1,14 @@
 package com.professional.model.services;
 
+import com.professional.model.dto.TrabajoDTO;
 import com.professional.model.entities.Cliente;
+import com.professional.model.entities.TrabajoEmpresa;
+import com.professional.model.entities.TrabajoIndependiente;
+import com.professional.model.enums.RangoCalificacion;
 import com.professional.model.exceptions.ResourceNotFoundException;
 import com.professional.model.repositories.ClienteRepository;
+import com.professional.model.repositories.TrabajoEmpresaRepository;
+import com.professional.model.repositories.TrabajoIndependienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -11,19 +17,29 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
+// todo Buscar el dudas backend profesional.word que esta en el escritorio
 @Service
 public class ClienteServiceImpl implements ClienteService {
 
     private final ClienteRepository clienteRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TrabajoIndependienteRepository trabajoIndependienteRepository;
+    private final TrabajoEmpresaRepository trabajoEmpresaRepository;
 
     @Autowired
     public ClienteServiceImpl(ClienteRepository clienteRepository,
-                              PasswordEncoder passwordEncoder) {
+                              PasswordEncoder passwordEncoder,
+                              TrabajoIndependienteRepository trabajoIndependienteRepository,
+                              TrabajoEmpresaRepository trabajoEmpresaRepository) {
         this.clienteRepository = clienteRepository;
         this.passwordEncoder = passwordEncoder;
+        this.trabajoIndependienteRepository = trabajoIndependienteRepository;
+        this.trabajoEmpresaRepository = trabajoEmpresaRepository;
     }
 
     /**
@@ -160,5 +176,250 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional(readOnly = true)
     public List<Cliente> findByActivo(Boolean activo) {
         return clienteRepository.findByActivo(activo);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoDTO> listarTrabajosPorDescripcionYRangoCalificacion(String descripcion, RangoCalificacion rango) {
+        // Validación de entrada
+        if (descripcion == null || descripcion.trim().isEmpty()) {
+            throw new IllegalArgumentException("La descripción no puede estar vacía.");
+        }
+        if (rango == null) {
+            throw new IllegalArgumentException("El rango de calificación no puede ser nulo.");
+        }
+
+        // Determinar los límites del rango
+        Double minRating;
+        Double maxRating;
+
+        switch (rango) {
+            case RANGO_0_3:
+                minRating = 0.0;
+                maxRating = 3.0;
+                break;
+            case RANGO_3_3_5:
+                minRating = 3.0;
+                maxRating = 3.5;
+                break;
+            case RANGO_3_5_4_0:
+                minRating = 3.5;
+                maxRating = 4.0;
+                break;
+            case RANGO_4_0_4_5:
+                minRating = 4.0;
+                maxRating = 4.5;
+                break;
+            case RANGO_4_5_5_0:
+                minRating = 4.5;
+                maxRating = 5.0;
+                break;
+            default:
+                throw new IllegalArgumentException("Rango de calificación no soportado.");
+        }
+
+        // Buscar trabajos independientes dentro del rango
+        List<TrabajoIndependiente> trabajosIndependientes = trabajoIndependienteRepository
+                .findByDescripcionContainingIgnoreCaseAndActivoTrueAndAverageRatingBetween(descripcion, minRating, maxRating);
+
+        // Buscar trabajos de empresas dentro del rango
+        List<TrabajoEmpresa> trabajosEmpresas = trabajoEmpresaRepository
+                .findByDescripcionContainingIgnoreCaseAndActivoTrueAndAverageRatingBetween(descripcion, minRating, maxRating);
+
+        // Convertir a TrabajoDTO y asignar tipoTrabajo
+        List<TrabajoDTO> dtoIndependientes = trabajosIndependientes.stream()
+                .map(t -> new TrabajoDTO(
+                        t.getId(),
+                        t.getDescripcion(),
+                        t.getAverageRating(),
+                        t.getActivo(),
+                        t.getPrecio(),
+                        t.getFechaCreacion(),
+                        "Independiente"
+                ))
+                .collect(Collectors.toList());
+
+        List<TrabajoDTO> dtoEmpresas = trabajosEmpresas.stream()
+                .map(t -> new TrabajoDTO(
+                        t.getId(),
+                        t.getDescripcion(),
+                        t.getAverageRating(),
+                        t.getActivo(),
+                        t.getPrecio(),
+                        t.getFechaCreacion(),
+                        "Empresa"
+                ))
+                .collect(Collectors.toList());
+
+        // Combinar las listas en una nueva lista para evitar modificar las listas originales
+        List<TrabajoDTO> trabajosCombinados = new ArrayList<>();
+        trabajosCombinados.addAll(dtoIndependientes);
+        trabajosCombinados.addAll(dtoEmpresas);
+
+        // Ordenar por averageRating descendente
+        trabajosCombinados.sort(Comparator.comparing(TrabajoDTO::getAverageRating).reversed());
+
+        return trabajosCombinados;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoDTO> listarTrabajosPorDescripcionOrdenadosPorPrecioAsc(String descripcion) {
+
+        if (descripcion == null || descripcion.trim().isEmpty()) {
+            throw new IllegalArgumentException("La descripción no puede estar vacía.");
+        }
+        // Buscar trabajos independientes
+        List<TrabajoIndependiente> trabajosIndependientes = trabajoIndependienteRepository
+                .findByDescripcionContainingIgnoreCaseAndActivoTrue(descripcion);
+
+        // Buscar trabajos de empresas
+        List<TrabajoEmpresa> trabajosEmpresas = trabajoEmpresaRepository
+                .findByDescripcionContainingIgnoreCaseAndActivoTrue(descripcion);
+
+        // Convertir a TrabajoDTO y asignar tipoTrabajo
+        List<TrabajoDTO> dtoIndependientes = trabajosIndependientes.stream()
+                .map(t -> new TrabajoDTO(
+                        t.getId(),
+                        t.getDescripcion(),
+                        t.getAverageRating(),
+                        t.getActivo(),
+                        t.getPrecio(),
+                        t.getFechaCreacion(),
+                        "Independiente"
+                ))
+                .collect(Collectors.toList());
+
+        List<TrabajoDTO> dtoEmpresas = trabajosEmpresas.stream()
+                .map(t -> new TrabajoDTO(
+                        t.getId(),
+                        t.getDescripcion(),
+                        t.getAverageRating(),
+                        t.getActivo(),
+                        t.getPrecio(),
+                        t.getFechaCreacion(),
+                        "Empresa"
+                ))
+                .collect(Collectors.toList());
+
+        // Combinar las listas
+        List<TrabajoDTO> trabajosCombinados = dtoIndependientes;
+        trabajosCombinados.addAll(dtoEmpresas);
+
+        // Ordenar por precio ascendente
+        trabajosCombinados.sort(Comparator.comparing(TrabajoDTO::getPrecio));
+
+        return trabajosCombinados;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoDTO> listarTrabajosPorDescripcionOrdenadosPorPrecioDesc(String descripcion) {
+        if (descripcion == null || descripcion.trim().isEmpty()) {
+            throw new IllegalArgumentException("La descripción no puede estar vacía.");
+        }
+        // Buscar trabajos independientes
+        List<TrabajoIndependiente> trabajosIndependientes = trabajoIndependienteRepository
+                .findByDescripcionContainingIgnoreCaseAndActivoTrue(descripcion);
+
+        // Buscar trabajos de empresas
+        List<TrabajoEmpresa> trabajosEmpresas = trabajoEmpresaRepository
+                .findByDescripcionContainingIgnoreCaseAndActivoTrue(descripcion);
+
+        // Convertir a TrabajoDTO y asignar tipoTrabajo
+        List<TrabajoDTO> dtoIndependientes = trabajosIndependientes.stream()
+                .map(t -> new TrabajoDTO(
+                        t.getId(),
+                        t.getDescripcion(),
+                        t.getAverageRating(),
+                        t.getActivo(),
+                        t.getPrecio(),
+                        t.getFechaCreacion(),
+                        "Independiente"
+                ))
+                .collect(Collectors.toList());
+
+        List<TrabajoDTO> dtoEmpresas = trabajosEmpresas.stream()
+                .map(t -> new TrabajoDTO(
+                        t.getId(),
+                        t.getDescripcion(),
+                        t.getAverageRating(),
+                        t.getActivo(),
+                        t.getPrecio(),
+                        t.getFechaCreacion(),
+                        "Empresa"
+                ))
+                .collect(Collectors.toList());
+
+        // Combinar las listas
+        List<TrabajoDTO> trabajosCombinados = dtoIndependientes;
+        trabajosCombinados.addAll(dtoEmpresas);
+
+        // Ordenar por precio descendente
+        trabajosCombinados.sort((t1, t2) -> t2.getPrecio().compareTo(t1.getPrecio()));
+
+        return trabajosCombinados;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoDTO> listarTrabajosPorDescripcionOrdenadosPorFechaCreacionAsc(String descripcion) {
+        if (descripcion == null || descripcion.trim().isEmpty()) {
+            throw new IllegalArgumentException("La descripción no puede estar vacía.");
+        }
+        // Buscar trabajos independientes
+        List<TrabajoIndependiente> trabajosIndependientes = trabajoIndependienteRepository
+                .findByDescripcionContainingIgnoreCaseAndActivoTrue(descripcion);
+
+        // Buscar trabajos de empresas
+        List<TrabajoEmpresa> trabajosEmpresas = trabajoEmpresaRepository
+                .findByDescripcionContainingIgnoreCaseAndActivoTrue(descripcion);
+
+        // Convertir a TrabajoDTO y asignar tipoTrabajo
+        List<TrabajoDTO> dtoIndependientes = trabajosIndependientes.stream()
+                .map(t -> new TrabajoDTO(
+                        t.getId(),
+                        t.getDescripcion(),
+                        t.getAverageRating(),
+                        t.getActivo(),
+                        t.getPrecio(),
+                        t.getFechaCreacion(),
+                        "Independiente"
+                ))
+                .collect(Collectors.toList());
+
+        List<TrabajoDTO> dtoEmpresas = trabajosEmpresas.stream()
+                .map(t -> new TrabajoDTO(
+                        t.getId(),
+                        t.getDescripcion(),
+                        t.getAverageRating(),
+                        t.getActivo(),
+                        t.getPrecio(),
+                        t.getFechaCreacion(),
+                        "Empresa"
+                ))
+                .collect(Collectors.toList());
+
+        // Combinar las listas
+        List<TrabajoDTO> trabajosCombinados = dtoIndependientes;
+        trabajosCombinados.addAll(dtoEmpresas);
+
+        // Ordenar por fechaCreacion ascendente
+        trabajosCombinados.sort((t1, t2) -> t1.getFechaCreacion().compareTo(t2.getFechaCreacion()));
+
+        return trabajosCombinados;
     }
 }

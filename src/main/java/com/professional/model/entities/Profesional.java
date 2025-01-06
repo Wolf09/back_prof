@@ -60,6 +60,10 @@ public abstract class Profesional {
     @NotNull
     private Boolean pagado;
 
+    @NotNull
+    @Column(name = "tipo_usuario", nullable = false)
+    private String tipoUsuario;
+
 
     @PrePersist
     protected void onCreate() {
@@ -195,4 +199,11 @@ public abstract class Profesional {
         this.pagado = pagado;
     }
 
+    public String getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(String tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
+    }
 }

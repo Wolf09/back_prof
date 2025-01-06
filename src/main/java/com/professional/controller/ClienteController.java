@@ -2,7 +2,9 @@ package com.professional.controller;
 
 import com.professional.model.dto.Error;
 import com.professional.model.entities.Cliente;
+import com.professional.model.enums.RangoCalificacion;
 import com.professional.model.services.ClienteService;
+import com.professional.model.dto.TrabajoDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -165,4 +167,63 @@ public class ClienteController {
         List<Cliente> clientes = clienteService.findByActivo(activo);
         return new ResponseEntity<>(clientes, HttpStatus.OK);
     }
+
+    /**
+     * Endpoint para listar trabajos por descripción y rango de calificación.
+     *
+     * @param descripcion Parte de la descripción a buscar.
+     * @param rango       Rango de calificación.
+     * @return Lista de TrabajoDTO que coinciden con los criterios.
+     */
+    @GetMapping("/trabajos/buscar")
+    public ResponseEntity<List<TrabajoDTO>> buscarTrabajosPorDescripcionYRango(
+            @RequestParam("descripcion") String descripcion,
+            @RequestParam("rango") RangoCalificacion rango) {
+
+        List<TrabajoDTO> trabajos = clienteService.listarTrabajosPorDescripcionYRangoCalificacion(descripcion, rango);
+        return new ResponseEntity<>(trabajos, HttpStatus.OK);
+    }
+
+    /**
+     * Endpoint para listar trabajos por descripción y precio Ascendente
+     *
+     * @param descripcion Parte de la descripción a buscar.
+     * @return Lista de TrabajoDTO que coinciden con los criterios.
+     */
+    @GetMapping("/trabajos/buscar/precio-asc")
+    public ResponseEntity<List<TrabajoDTO>> buscarTrabajosPorPrecioAsc(
+            @RequestParam("descripcion") String descripcion) {
+
+        List<TrabajoDTO> trabajos = clienteService.listarTrabajosPorDescripcionOrdenadosPorPrecioAsc(descripcion);
+        return new ResponseEntity<>(trabajos, HttpStatus.OK);
+    }
+
+    /**
+     * Endpoint para listar trabajos por descripción y precio Decendente
+     *
+     * @param descripcion Parte de la descripción a buscar.
+     * @return Lista de TrabajoDTO que coinciden con los criterios.
+     */
+    @GetMapping("/trabajos/buscar/precio-desc")
+    public ResponseEntity<List<TrabajoDTO>> buscarTrabajosPorPrecioDesc(
+            @RequestParam("descripcion") String descripcion) {
+
+        List<TrabajoDTO> trabajos = clienteService.listarTrabajosPorDescripcionOrdenadosPorPrecioDesc(descripcion);
+        return new ResponseEntity<>(trabajos, HttpStatus.OK);
+    }
+
+    /**
+     * Endpoint para listar trabajos por descripción y fecha Ascendente
+     *
+     * @param descripcion Parte de la descripción a buscar.
+     * @return Lista de TrabajoDTO que coinciden con los criterios.
+     */
+    @GetMapping("/trabajos/buscar/fecha-asc")
+    public ResponseEntity<List<TrabajoDTO>> buscarTrabajosPorFechaAsc(
+            @RequestParam("descripcion") String descripcion) {
+
+        List<TrabajoDTO> trabajos = clienteService.listarTrabajosPorDescripcionOrdenadosPorFechaCreacionAsc(descripcion);
+        return new ResponseEntity<>(trabajos, HttpStatus.OK);
+    }
+
 }

@@ -61,6 +61,24 @@ public interface TrabajoEmpresaRepository extends JpaRepository<TrabajoEmpresa, 
     boolean existsByTrabajo(String trabajo);
     Optional<TrabajoEmpEnAccion> findByIdAndActivoTrue(Long id);
 
-    // Agrega métodos de consulta personalizados aquí si es necesario.
+    /**
+     * Busca trabajos de empresas por descripción utilizando LIKE y filtra por activo=true.
+     *
+     * @param descripcion Parte de la descripción a buscar.
+     * @return Lista de trabajos de empresas que coinciden.
+     */
+    List<TrabajoEmpresa> findByDescripcionContainingIgnoreCaseAndActivoTrue(String descripcion);
+
+    /**
+     * Busca trabajos de empresa por descripción utilizando LIKE, activo=true, y dentro de un rango de calificación.
+     *
+     * @param descripcion Parte de la descripción a buscar.
+     * @param minRating  Calificación mínima (inclusive).
+     * @param maxRating  Calificación máxima (inclusive).
+     * @return Lista de trabajos de empresa que coinciden.
+     */
+    List<TrabajoEmpresa> findByDescripcionContainingIgnoreCaseAndActivoTrueAndAverageRatingBetween(
+            String descripcion, Double minRating, Double maxRating);
+
 }
 

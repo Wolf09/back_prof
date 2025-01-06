@@ -1,4 +1,4 @@
-package com.professional.model.entities;
+package com.professional.model.enums;
 
 public enum EstadoTrabajo {
     PENDIENTE,

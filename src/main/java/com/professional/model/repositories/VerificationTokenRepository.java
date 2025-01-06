@@ -19,5 +19,7 @@ public interface VerificationTokenRepository extends JpaRepository<VerificationT
      * @return Un Optional que contiene el VerificationToken si se encuentra, o vacío si no.
      */
     Optional<VerificationToken> findByToken(String token);
+
+    Optional<VerificationToken> findByCorreo(String correo);
 }
 

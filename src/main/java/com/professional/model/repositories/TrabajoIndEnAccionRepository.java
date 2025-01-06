@@ -1,6 +1,6 @@
 package com.professional.model.repositories;
 
-import com.professional.model.entities.EstadoTrabajo;
+import com.professional.model.enums.EstadoTrabajo;
 import com.professional.model.entities.TrabajoIndEnAccion;
 import com.professional.model.entities.TrabajoIndependiente;
 import com.professional.model.entities.Cliente; // Asegúrate de importar Cliente

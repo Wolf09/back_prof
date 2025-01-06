@@ -1,7 +1,7 @@
 package com.professional.model.repositories;
 
 import com.professional.model.entities.Cliente;
-import com.professional.model.entities.EstadoTrabajo;
+import com.professional.model.enums.EstadoTrabajo;
 import com.professional.model.entities.TrabajoEmpEnAccion;
 import com.professional.model.entities.TrabajoEmpresa;
 import org.springframework.data.jpa.repository.JpaRepository;

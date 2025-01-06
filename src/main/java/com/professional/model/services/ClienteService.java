@@ -1,9 +1,14 @@
 package com.professional.model.services;
 
+import com.professional.model.dto.TrabajoDTO;
 import com.professional.model.entities.Cliente;
+import com.professional.model.enums.RangoCalificacion;
 
 import java.util.List;
 
+/*
+todo la consulta ya esta hecha, solo buscar: 4. Implementar los Métodos en ClienteServiceImpl
+ */
 public interface ClienteService {
 
     /**
@@ -90,4 +95,40 @@ public interface ClienteService {
      * @return Lista de Clientes que coinciden.
      */
     List<Cliente> findByActivo(Boolean activo);
+
+    /**
+     * Lista los trabajos que tienen averageRating entre 0.0 y 3.0.
+     *
+     * @param descripcion Parte de la descripción a buscar.
+     * @return Lista de TrabajoDTO en el rango 0.0 - 3.0.
+     */
+    List<TrabajoDTO> listarTrabajosPorDescripcionYRangoCalificacion(String descripcion, RangoCalificacion rango);
+
+    /**
+     * Lista todos los trabajos independientes y de empresa que coinciden con la descripción,
+     * están activos y los ordena por precio ascendente.
+     *
+     * @param descripcion Parte de la descripción a buscar.
+     * @return Lista combinada de TrabajoDTO ordenados por precio ascendente.
+     */
+    List<TrabajoDTO> listarTrabajosPorDescripcionOrdenadosPorPrecioAsc(String descripcion);
+
+    /**
+     * Lista todos los trabajos independientes y de empresa que coinciden con la descripción,
+     * están activos y los ordena por precio descendente.
+     *
+     * @param descripcion Parte de la descripción a buscar.
+     * @return Lista combinada de TrabajoDTO ordenados por precio descendente.
+     */
+    List<TrabajoDTO> listarTrabajosPorDescripcionOrdenadosPorPrecioDesc(String descripcion);
+
+    /**
+     * Lista todos los trabajos independientes y de empresa que coinciden con la descripción,
+     * están activos y los ordena por fecha de creación ascendente.
+     *
+     * @param descripcion Parte de la descripción a buscar.
+     * @return Lista combinada de TrabajoDTO ordenados por fecha de creación ascendente.
+     */
+    List<TrabajoDTO> listarTrabajosPorDescripcionOrdenadosPorFechaCreacionAsc(String descripcion);
+
 }

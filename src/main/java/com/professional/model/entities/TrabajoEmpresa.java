@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,15 +19,20 @@ public class TrabajoEmpresa implements Serializable {
     private Long id;
 
     @NotBlank(message = "La descripción del trabajo es obligatoria")
-    private String trabajo;
+    private String descripcion;
 
-    // Nuevo campo para almacenar el promedio de calificaciones
+    // almacena el promedio de las calificaciones recibidas para este trabajo
     @Column(name = "average_rating", nullable = false)
     private Double averageRating;
 
     // Nuevo campo para manejo lógico de eliminación
     @Column(name = "activo", nullable = false)
     private Boolean activo;
+
+    @Column(name = "precio", nullable = false)
+    private Double precio;
+    @Column(name = "fecha_creacion", nullable = false, updatable = false)
+    private LocalDateTime fechaCreacion;
 
     // Relación Muchos a Uno con Empresa
     @ManyToOne(fetch = FetchType.LAZY)
@@ -65,7 +71,10 @@ public class TrabajoEmpresa implements Serializable {
     }
     @PrePersist
     public void establecerAverage(){
+
         this.averageRating = 5.0;
+        this.activo=true;
+        this.fechaCreacion = LocalDateTime.now();
     }
 
     // Getters y Setters
@@ -74,12 +83,12 @@ public class TrabajoEmpresa implements Serializable {
         return id;
     }
 
-    public String getTrabajo() {
-        return trabajo;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setTrabajo(String trabajo) {
-        this.trabajo = trabajo;
+    public void setDescripcion(String trabajo) {
+        this.descripcion = trabajo;
     }
 
     public Double getAverageRating() {
@@ -142,7 +151,14 @@ public class TrabajoEmpresa implements Serializable {
         this.activo = activo;
     }
 
-    // Métodos para gestionar las relaciones
+    public Double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(Double precio) {
+        this.precio = precio;
+    }
+// Métodos para gestionar las relaciones
 
     public void addTrabajoEmpEnAccion(TrabajoEmpEnAccion trabajoEmpEnAccion){
         trabajoEmpEnAccions.add(trabajoEmpEnAccion);
@@ -172,6 +188,14 @@ public class TrabajoEmpresa implements Serializable {
     public void removeCalificacionEmpresas(CalificacionEmpresas calificacionEmpresas){
         calificaciones.remove(calificacionEmpresas);
         calificacionEmpresas.setTrabajo(null);
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
 
     // Serial UID

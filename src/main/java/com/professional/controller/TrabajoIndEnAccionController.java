@@ -4,7 +4,7 @@ import com.professional.model.dto.ActualizarEstadoTrabajoDTO;
 import com.professional.model.dto.Error;
 import com.professional.model.dto.TrabajoEnAccionDTO;
 import com.professional.model.entities.Cliente;
-import com.professional.model.entities.EstadoTrabajo;
+import com.professional.model.enums.EstadoTrabajo;
 import com.professional.model.entities.TrabajoIndEnAccion;
 import com.professional.model.entities.TrabajoIndependiente;
 import com.professional.model.services.ClienteService;

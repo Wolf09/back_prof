@@ -1,7 +1,7 @@
 package com.professional.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.professional.model.entities.EstadoTrabajo;
+import com.professional.model.enums.EstadoTrabajo;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 

@@ -7,15 +7,11 @@ import jakarta.validation.constraints.NotNull;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 
-/*
-TODO estoy en la pantalla de inicio, la seguiridad ya se hizo con los tokens, aunque hay un detalla que corregir
- la consulta debe listar todos los TrabajoIndependiente y TrabajoEmpresa por la descripcion es recomendable usar like
- y deben ser ordenados por su calificacion: averageRating se debe listar solamente los Activos=true
- */
 @Entity
 @Table(name = "trabajos_independiente")
 public class TrabajoIndependiente implements Serializable {
@@ -27,20 +23,25 @@ public class TrabajoIndependiente implements Serializable {
     @NotBlank(message = "La descripción del trabajo es obligatoria")
     private String descripcion;
 
-    // Nuevo campo para almacenar el promedio de calificaciones
+    // almacena el promedio de las calificaciones recibidas para este trabajo
     @Column(name = "average_rating", nullable = false)
     private Double averageRating;
 
     // Nuevo campo para manejo lógico de eliminación
     @Column(name = "activo", nullable = false)
     private Boolean activo;
+
+    @Column(name = "precio", nullable = false)
+    private Double precio;
+    @Column(name = "fecha_creacion", nullable = false, updatable = false)
+    private LocalDateTime fechaCreacion;
+
     // Relación Muchos a Uno con Independiente
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "independiente_id", nullable = false)
     @NotNull(message = "El independiente es obligatorio")
     @JsonIgnore
     private Independiente independiente;
-
 
     // Relación Uno a Muchos con HistorialIndependientes
     @OneToMany(mappedBy = "trabajo", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -68,6 +69,7 @@ public class TrabajoIndependiente implements Serializable {
     public void establecerAverage(){
         this.averageRating = 5.0;
         this.activo=true;
+        this.fechaCreacion = LocalDateTime.now();
     }
 
     // Getters y Setters
@@ -108,6 +110,14 @@ public class TrabajoIndependiente implements Serializable {
 
     public void setActivo(Boolean activo) {
         this.activo = activo;
+    }
+
+    public Double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(Double precio) {
+        this.precio = precio;
     }
 
     public List<HistorialIndependientes> getHistorialIndependientes() {
@@ -161,8 +171,14 @@ public class TrabajoIndependiente implements Serializable {
         historial.setTrabajo(null);
     }
 
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
 
-    // toString (opcional)
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+// toString (opcional)
 
     @Override
     public String toString() {

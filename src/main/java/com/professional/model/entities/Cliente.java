@@ -49,6 +49,10 @@ public class Cliente implements Serializable {
     @NotNull
     private Boolean activo;
 
+    @NotNull
+    @Column(name = "tipo_usuario", nullable = false)
+    private String tipoUsuario;
+
     // Relaciones con otras entidades
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
@@ -142,6 +146,14 @@ public class Cliente implements Serializable {
 
     public void setActivo(Boolean activo) {
         this.activo = activo;
+    }
+
+    public String getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(String tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
     }
 
     public List<HistorialIndependientes> getHistorialIndependientes() {

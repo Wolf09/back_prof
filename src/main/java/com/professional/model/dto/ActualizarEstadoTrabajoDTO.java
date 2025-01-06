@@ -1,6 +1,6 @@
 package com.professional.model.dto;
 
-import com.professional.model.entities.EstadoTrabajo;
+import com.professional.model.enums.EstadoTrabajo;
 import jakarta.validation.constraints.NotNull;
 
 public class ActualizarEstadoTrabajoDTO {

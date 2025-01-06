@@ -1,6 +1,8 @@
 package com.professional.model.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
 
 /**
@@ -23,6 +25,10 @@ public class VerificationToken {
     @Column(nullable = false)
     private LocalDateTime fechaExpiracion;
 
+    @NotNull
+    @Column(name = "tipo_usuario", nullable = false)
+    private String tipoUsuario;
+
     // Constructor por defecto
     public VerificationToken() {
     }
@@ -41,7 +47,6 @@ public class VerificationToken {
     }
 
     // No se incluye setId ya que es autogenerado
-
     public String getToken() {
         return token;
     }
@@ -64,6 +69,18 @@ public class VerificationToken {
 
     public void setFechaExpiracion(LocalDateTime fechaExpiracion) {
         this.fechaExpiracion = fechaExpiracion;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(String tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
     }
 }
 

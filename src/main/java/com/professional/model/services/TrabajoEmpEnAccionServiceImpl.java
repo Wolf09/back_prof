@@ -1,9 +1,9 @@
 package com.professional.model.services;
 
-import com.professional.controller.exceptions.InvalidOperationException;
 import com.professional.model.dto.HistorialDTO;
 import com.professional.model.dto.TrabajoEnAccionDTO;
 import com.professional.model.entities.*;
+import com.professional.model.enums.EstadoTrabajo;
 import com.professional.model.exceptions.ResourceNotFoundException;
 import com.professional.model.repositories.TrabajoEmpEnAccionRepository;
 import org.springframework.beans.factory.annotation.Autowired;

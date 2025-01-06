@@ -2,6 +2,7 @@ package com.professional.model.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.professional.model.enums.EstadoTrabajo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 

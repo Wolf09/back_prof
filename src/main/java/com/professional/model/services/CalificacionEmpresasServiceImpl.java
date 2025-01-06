@@ -1,7 +1,7 @@
 package com.professional.model.services;
 
 import com.professional.model.entities.CalificacionEmpresas;
-import com.professional.model.entities.EstadoTrabajo;
+import com.professional.model.enums.EstadoTrabajo;
 import com.professional.model.entities.TrabajoEmpresa;
 import com.professional.model.entities.Cliente;
 import com.professional.model.exceptions.ResourceNotFoundException;

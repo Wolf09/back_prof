@@ -1,5 +1,6 @@
 package com.professional.model.services;
 
+import com.professional.model.auth.GeneradorJwt;
 import com.professional.model.dto.RegistroDTO;
 import com.professional.model.dto.LoginDTO;
 import com.professional.model.entities.Cliente;
@@ -16,9 +17,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.time.LocalDateTime;
-
+// todo: al registrar un nuevo usuario se debe controlar las fechas de pago USD de inicio y fin
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -53,17 +55,10 @@ public class AuthServiceImpl implements AuthService {
         String tipoUsuario = registroDTO.getTipoUsuario();
 
         switch (tipoUsuario.toLowerCase()) {
-            case "cliente":
-                registrarCliente(registroDTO);
-                break;
-            case "empresa":
-                registrarEmpresa(registroDTO);
-                break;
-            case "independiente":
-                registrarIndependiente(registroDTO);
-                break;
-            default:
-                throw new IllegalArgumentException("Tipo de usuario no válido");
+            case "cliente" -> registrarCliente(registroDTO);
+            case "empresa" -> registrarEmpresa(registroDTO);
+            case "independiente" -> registrarIndependiente(registroDTO);
+            default -> throw new IllegalArgumentException("Tipo de usuario no válido");
         }
     }
 
@@ -78,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
 
         Cliente guardado = clienteRepository.save(cliente);
 
-        enviarCorreoConfirmacion(guardado.getCorreo(), generarToken(guardado.getCorreo()));
+        enviarCorreoConfirmacion(guardado.getCorreo(), generarToken(guardado.getCorreo(),LocalDateTime.now().plusHours(72),guardado.getTipoUsuario()));
     }
 
     private void registrarEmpresa(RegistroDTO dto) {
@@ -96,7 +91,7 @@ public class AuthServiceImpl implements AuthService {
 
         Empresa guardada = empresaRepository.save(empresa);
 
-        enviarCorreoConfirmacion(guardada.getCorreo(), generarToken(guardada.getCorreo()));
+        enviarCorreoConfirmacion(guardada.getCorreo(), generarToken(guardada.getCorreo(),LocalDateTime.now().plusHours(72),guardada.getTipoUsuario()));
     }
 
     private void registrarIndependiente(RegistroDTO dto) {
@@ -112,15 +107,15 @@ public class AuthServiceImpl implements AuthService {
 
         Independiente guardado = independienteRepository.save(independiente);
 
-        enviarCorreoConfirmacion(guardado.getCorreo(), generarToken(guardado.getCorreo()));
+        enviarCorreoConfirmacion(guardado.getCorreo(), generarToken(guardado.getCorreo(),LocalDateTime.now().plusHours(72),guardado.getTipoUsuario()));
     }
 
-    private String generarToken(String correo) {
-        String token = UUID.randomUUID().toString();
+    private String generarToken(String correo, LocalDateTime fechaExpiracion, String tipoUsuario) {
+        String token = GeneradorJwt.generarToken(correo,fechaExpiracion,tipoUsuario);
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);
         verificationToken.setCorreo(correo);
-        verificationToken.setFechaExpiracion(LocalDateTime.now().plusHours(24));
+        verificationToken.setFechaExpiracion(fechaExpiracion);
         verificationTokenRepository.save(verificationToken);
         return token;
     }
@@ -193,6 +188,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public String autenticarUsuario(LoginDTO loginDTO) {
+        Optional<VerificationToken> verificationToken;
         String correo = loginDTO.getCorreo();
         String password = loginDTO.getPassword();
 
@@ -206,16 +202,21 @@ public class AuthServiceImpl implements AuthService {
 
         if (cliente != null && cliente.getActivo()) {
             if (passwordEncoder.matches(password, cliente.getPassword())) {
-                // Generar y retornar token de autenticación (JWT o similar)
-                return "Token_de_Cliente";
+                verificationToken = verificationTokenRepository.findByCorreo(cliente.getCorreo());
+                verificationToken.ifPresent(verificationTokenRepository::delete);
+                return generarToken(cliente.getCorreo(),LocalDateTime.now().plusHours(72),cliente.getTipoUsuario());
             }
         } else if (empresa != null && empresa.getActivo()) {
             if (passwordEncoder.matches(password, empresa.getPassword())) {
-                return "Token_de_Empresa";
+                verificationToken = verificationTokenRepository.findByCorreo(empresa.getCorreo());
+                verificationToken.ifPresent(verificationTokenRepository::delete);
+                return generarToken(empresa.getCorreo(),LocalDateTime.now().plusHours(72),empresa.getTipoUsuario());
             }
         } else if (independiente != null && independiente.getActivo()) {
             if (passwordEncoder.matches(password, independiente.getPassword())) {
-                return "Token_de_Independiente";
+                verificationToken = verificationTokenRepository.findByCorreo(independiente.getCorreo());
+                verificationToken.ifPresent(verificationTokenRepository::delete);
+                return generarToken(independiente.getCorreo(),LocalDateTime.now().plusHours(72),independiente.getTipoUsuario());
             }
         }
 

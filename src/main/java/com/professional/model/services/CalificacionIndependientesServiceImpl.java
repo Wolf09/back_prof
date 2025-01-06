@@ -2,6 +2,7 @@ package com.professional.model.services;
 
 import com.professional.controller.exceptions.InvalidOperationException;
 import com.professional.model.entities.*;
+import com.professional.model.enums.EstadoTrabajo;
 import com.professional.model.exceptions.ResourceNotFoundException;
 
 import com.professional.model.repositories.CalificacionIndependientesRepository;

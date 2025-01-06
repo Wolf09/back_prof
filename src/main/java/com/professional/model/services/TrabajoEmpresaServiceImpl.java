@@ -69,7 +69,7 @@ public class TrabajoEmpresaServiceImpl implements TrabajoEmpresaService {
                 .orElseThrow(() -> new ResourceNotFoundException("TrabajoEmpresa no encontrado con ID: " + id));
 
         // Actualizar campos permitidos
-        existente.setTrabajo(trabajoEmpresaDetalles.getTrabajo());
+        existente.setDescripcion(trabajoEmpresaDetalles.getDescripcion());
         existente.setEmpresa(trabajoEmpresaDetalles.getEmpresa());
         existente.setCliente(trabajoEmpresaDetalles.getCliente());
         // El averageRating no se actualiza directamente, se recalcula mediante las calificaciones
