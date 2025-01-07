@@ -135,10 +135,6 @@ public class IndependienteServiceImpl implements IndependienteService {
             existente.setActivo(independienteDetalles.getActivo());
         }
 
-        if (independienteDetalles.getPagado() != null) {
-            existente.setPagado(independienteDetalles.getPagado());
-        }
-
         // Si se actualiza la contraseña, encriptarla
         if (independienteDetalles.getPassword() != null && !independienteDetalles.getPassword().isEmpty()) {
             existente.setPassword(passwordEncoder.encode(independienteDetalles.getPassword()));

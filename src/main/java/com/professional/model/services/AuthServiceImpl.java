@@ -206,13 +206,13 @@ public class AuthServiceImpl implements AuthService {
                 verificationToken.ifPresent(verificationTokenRepository::delete);
                 return generarToken(cliente.getCorreo(),LocalDateTime.now().plusHours(72),cliente.getTipoUsuario());
             }
-        } else if (empresa != null && empresa.getActivo()) {
+        } else if (empresa != null && empresa.getActivo() && !empresa.getFechaPagoFin().isAfter(LocalDateTime.now())) {
             if (passwordEncoder.matches(password, empresa.getPassword())) {
                 verificationToken = verificationTokenRepository.findByCorreo(empresa.getCorreo());
                 verificationToken.ifPresent(verificationTokenRepository::delete);
                 return generarToken(empresa.getCorreo(),LocalDateTime.now().plusHours(72),empresa.getTipoUsuario());
             }
-        } else if (independiente != null && independiente.getActivo()) {
+        } else if (independiente != null && independiente.getActivo() && !independiente.getFechaPagoFin().isAfter(LocalDateTime.now())) {
             if (passwordEncoder.matches(password, independiente.getPassword())) {
                 verificationToken = verificationTokenRepository.findByCorreo(independiente.getCorreo());
                 verificationToken.ifPresent(verificationTokenRepository::delete);

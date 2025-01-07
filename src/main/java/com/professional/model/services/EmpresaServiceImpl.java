@@ -133,10 +133,6 @@ public class EmpresaServiceImpl implements EmpresaService {
             existente.setActivo(empresaDetalles.getActivo());
         }
 
-        if (empresaDetalles.getPagado() != null) {
-            existente.setPagado(empresaDetalles.getPagado());
-        }
-
         if (empresaDetalles.getRegistroDeEmpresa() != null && !empresaDetalles.getRegistroDeEmpresa().isEmpty()) {
             existente.setRegistroDeEmpresa(empresaDetalles.getRegistroDeEmpresa());
         }

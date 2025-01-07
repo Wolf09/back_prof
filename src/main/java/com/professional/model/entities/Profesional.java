@@ -57,8 +57,6 @@ public abstract class Profesional {
     @NotNull
     @Column(name = "activo", nullable = false)
     protected Boolean activo;
-    @NotNull
-    private Boolean pagado;
 
     @NotNull
     @Column(name = "tipo_usuario", nullable = false)
@@ -69,6 +67,8 @@ public abstract class Profesional {
     protected void onCreate() {
         this.activo = true;
         this.fechaApertura = LocalDateTime.now();
+        this.fechaPagoInicio= LocalDateTime.now();
+        this.fechaPagoFin= LocalDateTime.now().plusMonths(3);
     }
 
     public String getNombres() {
@@ -189,14 +189,6 @@ public abstract class Profesional {
 
     public void setActivo(Boolean activo) {
         this.activo = activo;
-    }
-
-    public Boolean getPagado() {
-        return pagado;
-    }
-
-    public void setPagado(Boolean pagado) {
-        this.pagado = pagado;
     }
 
     public String getTipoUsuario() {
