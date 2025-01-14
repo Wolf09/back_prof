@@ -1,5 +1,6 @@
 package com.professional.model.dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -32,6 +33,19 @@ public class RegistroDTO {
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{8,60}$",
             message = "La contraseña debe incluir al menos una letra mayúscula, un número y un carácter especial")
     private String password;
+
+    private String fotoRepresentante;
+
+    private String cartaPresentacion;
+
+    private String mision;
+
+    private String vision;
+
+
+    private String dniAnverso;
+
+    private String dniReverso;
 
     // Campos específicos
     private String profesion; // Para Independiente
@@ -136,5 +150,53 @@ public class RegistroDTO {
 
     public void setAreaTrabajo(String areaTrabajo) {
         this.areaTrabajo = areaTrabajo;
+    }
+
+    public String getFotoRepresentante() {
+        return fotoRepresentante;
+    }
+
+    public void setFotoRepresentante(String fotoRepresentante) {
+        this.fotoRepresentante = fotoRepresentante;
+    }
+
+    public String getCartaPresentacion() {
+        return cartaPresentacion;
+    }
+
+    public void setCartaPresentacion(String cartaPresentacion) {
+        this.cartaPresentacion = cartaPresentacion;
+    }
+
+    public String getMision() {
+        return mision;
+    }
+
+    public void setMision(String mision) {
+        this.mision = mision;
+    }
+
+    public String getVision() {
+        return vision;
+    }
+
+    public void setVision(String vision) {
+        this.vision = vision;
+    }
+
+    public String getDniAnverso() {
+        return dniAnverso;
+    }
+
+    public void setDniAnverso(String dniAnverso) {
+        this.dniAnverso = dniAnverso;
+    }
+
+    public String getDniReverso() {
+        return dniReverso;
+    }
+
+    public void setDniReverso(String dniReverso) {
+        this.dniReverso = dniReverso;
     }
 }

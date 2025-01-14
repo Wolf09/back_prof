@@ -82,18 +82,26 @@ public class AuthServiceImpl implements AuthService {
         empresa.setApellidos(dto.getApellidos());
         empresa.setCelular(dto.getCelular());
         empresa.setCorreo(dto.getCorreo());
+        empresa.setFotoRepresentante(dto.getFotoRepresentante());
         empresa.setPassword(passwordEncoder.encode(dto.getPassword()));
+        empresa.setCartaPresentacion(dto.getCartaPresentacion());
+        empresa.setMision(dto.getMision());
+        empresa.setVision(dto.getVision());
+        empresa.setDniAnverso(dto.getDniAnverso());
+        empresa.setDniReverso(dto.getDniReverso());
         empresa.setNombreEmpresa(dto.getNombreEmpresa());
         empresa.setRegistroDeEmpresa(dto.getRegistroDeEmpresa());
         empresa.setLicenciaComercial(dto.getLicenciaComercial());
         empresa.setAreaTrabajo(dto.getAreaTrabajo());
         empresa.setActivo(false); // Se activará tras confirmar el correo
+        empresa.setTipoUsuario(dto.getTipoUsuario());
 
         Empresa guardada = empresaRepository.save(empresa);
 
         enviarCorreoConfirmacion(guardada.getCorreo(), generarToken(guardada.getCorreo(),LocalDateTime.now().plusHours(72),guardada.getTipoUsuario()));
     }
 
+    // todo: faltan datos en Independiente
     private void registrarIndependiente(RegistroDTO dto) {
         Independiente independiente = new Independiente();
         independiente.setNombres(dto.getNombres());
@@ -206,13 +214,13 @@ public class AuthServiceImpl implements AuthService {
                 verificationToken.ifPresent(verificationTokenRepository::delete);
                 return generarToken(cliente.getCorreo(),LocalDateTime.now().plusHours(72),cliente.getTipoUsuario());
             }
-        } else if (empresa != null && empresa.getActivo() && !empresa.getFechaPagoFin().isAfter(LocalDateTime.now())) {
+        } else if (empresa != null && empresa.getActivo()) {
             if (passwordEncoder.matches(password, empresa.getPassword())) {
                 verificationToken = verificationTokenRepository.findByCorreo(empresa.getCorreo());
                 verificationToken.ifPresent(verificationTokenRepository::delete);
                 return generarToken(empresa.getCorreo(),LocalDateTime.now().plusHours(72),empresa.getTipoUsuario());
             }
-        } else if (independiente != null && independiente.getActivo() && !independiente.getFechaPagoFin().isAfter(LocalDateTime.now())) {
+        } else if (independiente != null && independiente.getActivo()) {
             if (passwordEncoder.matches(password, independiente.getPassword())) {
                 verificationToken = verificationTokenRepository.findByCorreo(independiente.getCorreo());
                 verificationToken.ifPresent(verificationTokenRepository::delete);
