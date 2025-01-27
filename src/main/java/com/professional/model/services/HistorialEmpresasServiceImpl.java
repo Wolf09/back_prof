@@ -73,6 +73,25 @@ public class HistorialEmpresasServiceImpl implements HistorialEmpresasService {
         return historialEmpresasRepository.save(historialEmpresas);
     }
 
+    @Transactional
+    public HistorialDTO createHistorialEmpresasDTO(HistorialEmpresas historialEmpresas) {
+        HistorialDTO historialDTO=null;
+        Cliente cliente = clienteRepository.findById(historialEmpresas.getCliente().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con ID: " + historialEmpresas.getCliente().getId()));
+        TrabajoEmpresa trabajoEmpresa= trabajoEmpresaRepository.findById(historialEmpresas.getTrabajo().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("TrabajoIndependiente no encontrado con ID: " + historialEmpresas.getTrabajo().getId()));
+
+        historialEmpresas.setCliente(cliente);
+        historialEmpresas.setTrabajo(trabajoEmpresa);
+        historialEmpresasRepository.save(historialEmpresas);
+        historialDTO.setId(historialEmpresas.getId());
+        historialDTO.setClienteId(historialEmpresas.getCliente().getId());
+        historialDTO.setFechaSolicitud(historialEmpresas.getFechaSolicitud());
+        historialDTO.setTrabajoId(historialEmpresas.getTrabajo().getId());
+        historialDTO.setComentarios(historialEmpresas.getComentarios());
+        return historialDTO;
+    }
+
 
     /**
      * {@inheritDoc}

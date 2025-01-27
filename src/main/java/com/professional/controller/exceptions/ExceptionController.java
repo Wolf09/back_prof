@@ -72,7 +72,7 @@ public class ExceptionController {
     }
 
     // Manejador Existente: Exception, IOException, ServletException
-    @ExceptionHandler({Exception.class, IOException.class, ServletException.class})
+    @ExceptionHandler({IOException.class, ServletException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Map<String, String> datosFaltantes(Exception ex){
         logger.error("Exception: ", ex);

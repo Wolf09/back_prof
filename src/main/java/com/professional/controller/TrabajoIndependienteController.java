@@ -52,7 +52,7 @@ public class TrabajoIndependienteController {
     }
 
     @Transactional(readOnly = true)
-    @GetMapping("/listar")
+    @GetMapping("/listar/independientes")
     public ResponseEntity<List<TrabajoIndependiente>> listarTrabajosIndependientes(){
         List<TrabajoIndependiente> lista= trabajoIndependienteService.getAllTrabajosIndependientes()
                 .stream()
@@ -100,7 +100,7 @@ public class TrabajoIndependienteController {
     }
 
     @Transactional(readOnly = true)
-    @GetMapping("/listar")
+    @GetMapping("/listar/empresas")
     public ResponseEntity<List<TrabajoIndependiente>> listarTrabajosEmpresa() {
         List<TrabajoIndependiente> listaActivos = trabajoIndependienteService.getAllTrabajosIndependientesActivos();
         return new ResponseEntity<>(listaActivos, HttpStatus.OK);

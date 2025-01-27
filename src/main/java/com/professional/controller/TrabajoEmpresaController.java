@@ -141,12 +141,7 @@ public class TrabajoEmpresaController {
      * @param trabajo Nombre del trabajo.
      * @return ResponseEntity con la lista de TrabajosEmpresa que coinciden.
      */
-    @Transactional(readOnly = true)
-    @GetMapping("/buscar-por-trabajo")
-    public ResponseEntity<List<TrabajoEmpresa>> buscarPorTrabajo(@RequestParam String trabajo) {
-        List<TrabajoEmpresa> trabajos = trabajoEmpresaService.findByTrabajo(trabajo);
-        return new ResponseEntity<>(trabajos, HttpStatus.OK);
-    }
+
 
     /**
      * Buscar TrabajosEmpresa por ID de Empresa.

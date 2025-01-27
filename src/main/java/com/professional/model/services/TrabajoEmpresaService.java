@@ -3,6 +3,7 @@ package com.professional.model.services;
 import com.professional.model.entities.Cliente;
 import com.professional.model.entities.TrabajoEmpresa;
 import com.professional.model.entities.Empresa;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -56,21 +57,6 @@ public interface TrabajoEmpresaService {
      */
     void deleteTrabajoEmpresa(Long id);
 
-    /**
-     * Buscar trabajos de empresa por nombre.
-     *
-     * @param trabajo Nombre del trabajo.
-     * @return Lista de trabajos que coinciden con el nombre.
-     */
-    List<TrabajoEmpresa> findByTrabajo(String trabajo);
-
-    /**
-     * Verificar si existe un trabajo de empresa con un nombre específico.
-     *
-     * @param trabajo Nombre del trabajo.
-     * @return true si existe, false de lo contrario.
-     */
-    boolean existsByTrabajo(String trabajo);
 
     /**
      * Obtener todos los TrabajosEmpresa asociados a una Empresa específica.

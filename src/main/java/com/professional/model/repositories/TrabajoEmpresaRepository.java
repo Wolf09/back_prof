@@ -13,13 +13,7 @@ import java.util.Optional;
 @Repository
 public interface TrabajoEmpresaRepository extends JpaRepository<TrabajoEmpresa, Long> {
 
-    /**
-     * Buscar trabajos de empresa por nombre.
-     *
-     * @param trabajo Nombre del trabajo.
-     * @return Lista de trabajos que coinciden con el nombre.
-     */
-    List<TrabajoEmpresa> findByTrabajo(String trabajo);
+
 
     /**
      * Buscar trabajos de empresa por empresa.
@@ -52,13 +46,8 @@ public interface TrabajoEmpresaRepository extends JpaRepository<TrabajoEmpresa, 
      */
     Optional<TrabajoEmpresa> findById(Long id);
 
-    /**
-     * Verificar si existe un trabajo de empresa con un nombre específico.
-     *
-     * @param trabajo Nombre del trabajo.
-     * @return true si existe, false de lo contrario.
-     */
-    boolean existsByTrabajo(String trabajo);
+
+
     Optional<TrabajoEmpEnAccion> findByIdAndActivoTrue(Long id);
 
     /**

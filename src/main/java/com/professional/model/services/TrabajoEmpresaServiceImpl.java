@@ -87,6 +87,9 @@ public class TrabajoEmpresaServiceImpl implements TrabajoEmpresaService {
         trabajoEmpresaRepository.save(existente);
     }
 
+
+
+
     @Override
     @Transactional(readOnly = true)
     public List<TrabajoEmpresa> getTrabajosEmpresaByCliente(Cliente cliente) {
@@ -98,23 +101,8 @@ public class TrabajoEmpresaServiceImpl implements TrabajoEmpresaService {
         return trabajos;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<TrabajoEmpresa> findByTrabajo(String trabajo) {
-        return trabajoEmpresaRepository.findByTrabajo(trabajo);
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public boolean existsByTrabajo(String trabajo) {
-        return trabajoEmpresaRepository.existsByTrabajo(trabajo);
-    }
+
 
     /**
      * {@inheritDoc}

@@ -87,8 +87,8 @@ public class TrabajoEmpresa implements Serializable {
         return descripcion;
     }
 
-    public void setDescripcion(String trabajo) {
-        this.descripcion = trabajo;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public Double getAverageRating() {

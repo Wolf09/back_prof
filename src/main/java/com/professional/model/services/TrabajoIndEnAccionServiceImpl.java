@@ -185,6 +185,6 @@ public class TrabajoIndEnAccionServiceImpl implements TrabajoIndEnAccionService 
     @Override
     @Transactional(readOnly = true)
     public List<TrabajoIndEnAccion> getTrabajosEnAccionByCliente(Cliente cliente) {
-        return trabajoIndEnAccionRepository.findByTrabajoIndependiente_Cliente(cliente);
+        return trabajoIndEnAccionRepository.findByCliente(cliente);
     }
 }

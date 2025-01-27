@@ -84,6 +84,28 @@ public class HistorialIndependientesServiceImpl implements HistorialIndependient
         return historialIndependientesRepository.save(historialIndependientes);
     }
 
+    @Override
+    @Transactional
+    public HistorialDTO createHistorialIndependientesDTO(HistorialIndependientes historialIndependientes) {
+        HistorialDTO historialDTO=null;
+        Cliente cliente = clienteRepository.findById(historialIndependientes.getCliente().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con ID: " + historialIndependientes.getCliente().getId()));
+
+        // Verificar que el TrabajoIndependiente exista
+        TrabajoIndependiente trabajo = trabajoIndependienteRepository.findById(historialIndependientes.getTrabajo().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("TrabajoIndependiente no encontrado con ID: " + historialIndependientes.getTrabajo().getId()));
+
+        // Asignar las entidades verificadas
+        historialIndependientes.setCliente(cliente);
+        historialIndependientes.setTrabajo(trabajo);
+        historialIndependientesRepository.save(historialIndependientes);
+        historialDTO.setId(historialIndependientes.getId());
+        historialDTO.setClienteId(historialIndependientes.getCliente().getId());
+        historialDTO.setFechaSolicitud(historialIndependientes.getFechaSolicitud());
+        historialDTO.setTrabajoId(historialIndependientes.getTrabajo().getId());
+        historialDTO.setComentarios(historialIndependientes.getComentarios());
+        return historialDTO;
+    }
 
     /**
      * {@inheritDoc}

@@ -82,8 +82,8 @@ public class TrabajoIndependiente implements Serializable {
         return descripcion;
     }
 
-    public void setDescripcion(String trabajo) {
-        this.descripcion = trabajo;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public Double getAverageRating() {
@@ -184,7 +184,7 @@ public class TrabajoIndependiente implements Serializable {
     public String toString() {
         return "TrabajoIndependiente{" +
                 "id=" + id +
-                ", trabajo='" + descripcion + '\'' +
+                ", descripcion='" + descripcion + '\'' +
                 ", averageRating=" + averageRating +
                 '}';
     }

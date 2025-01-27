@@ -70,6 +70,7 @@ public class AuthServiceImpl implements AuthService {
         cliente.setCorreo(dto.getCorreo());
         cliente.setPassword(passwordEncoder.encode(dto.getPassword()));
         cliente.setActivo(false); // Se activará tras confirmar el correo
+        cliente.setTipoUsuario(dto.getTipoUsuario());
 
         Cliente guardado = clienteRepository.save(cliente);
 
@@ -101,7 +102,6 @@ public class AuthServiceImpl implements AuthService {
         enviarCorreoConfirmacion(guardada.getCorreo(), generarToken(guardada.getCorreo(),LocalDateTime.now().plusHours(72),guardada.getTipoUsuario()));
     }
 
-    // todo: faltan datos en Independiente
     private void registrarIndependiente(RegistroDTO dto) {
         Independiente independiente = new Independiente();
         independiente.setNombres(dto.getNombres());
@@ -109,9 +109,15 @@ public class AuthServiceImpl implements AuthService {
         independiente.setCelular(dto.getCelular());
         independiente.setCorreo(dto.getCorreo());
         independiente.setPassword(passwordEncoder.encode(dto.getPassword()));
+        independiente.setCartaPresentacion(dto.getCartaPresentacion());
+        independiente.setMision(dto.getMision());
+        independiente.setVision(dto.getVision());
+        independiente.setDniAnverso(dto.getDniAnverso());
+        independiente.setDniReverso(dto.getDniReverso());
         independiente.setProfesion(dto.getProfesion());
         independiente.setFotoTitulo(dto.getFotoTitulo());
         independiente.setActivo(false); // Se activará tras confirmar el correo
+        independiente.setTipoUsuario(dto.getTipoUsuario());
 
         Independiente guardado = independienteRepository.save(independiente);
 

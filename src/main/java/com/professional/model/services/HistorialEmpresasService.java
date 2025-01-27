@@ -70,4 +70,6 @@ public interface HistorialEmpresasService {
 
     @Transactional(readOnly = true)
     List<HistorialEmpresas> getHistorialEmpresasByCliente(Cliente cliente);
+
+    HistorialDTO createHistorialEmpresasDTO(HistorialEmpresas historial);
 }

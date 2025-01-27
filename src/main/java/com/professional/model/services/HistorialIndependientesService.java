@@ -62,4 +62,6 @@ public interface HistorialIndependientesService {
      * @return Lista de HistorialIndependientes activos encontrados.
      */
     List<HistorialIndependientes> findByClienteAndTrabajo(Long clienteId, Long trabajoId);
+
+    HistorialDTO createHistorialIndependientesDTO(HistorialIndependientes historial);
 }

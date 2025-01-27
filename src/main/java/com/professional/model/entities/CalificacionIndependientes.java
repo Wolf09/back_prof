@@ -37,6 +37,12 @@ public class CalificacionIndependientes implements Serializable {
     @JsonIgnore
     private TrabajoIndEnAccion trabajoIndEnAccion;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trabajo_id", nullable = false)
+    @NotNull(message = "El trabajo es obligatorio")
+    @JsonIgnore
+    private TrabajoIndependiente trabajo;
+
     @Column(name = "rating", nullable = false)
     @NotNull(message = "La calificación es obligatoria")
     @Min(value = 1, message = "La calificación mínima es 1 estrella")
@@ -103,6 +109,14 @@ public class CalificacionIndependientes implements Serializable {
 
     public void setTrabajoIndEnAccion(TrabajoIndEnAccion trabajoIndEnAccion) {
         this.trabajoIndEnAccion = trabajoIndEnAccion;
+    }
+
+    public TrabajoIndependiente getTrabajo() {
+        return trabajo;
+    }
+
+    public void setTrabajo(TrabajoIndependiente trabajo) {
+        this.trabajo = trabajo;
     }
 
     public LocalDateTime getFechaCalificacion() {

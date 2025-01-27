@@ -27,14 +27,19 @@ public class SpringSecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"),  // TODO esto se debe borrar y agregar otro que permita ver la pantalla de inicio sin restricciones
-                                AntPathRequestMatcher.antMatcher("/auth/login")).permitAll()
+                        //.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"),  // TODO esto se debe borrar y agregar otro que permita ver la pantalla de inicio sin restricciones
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/auth/login"),
+                                AntPathRequestMatcher.antMatcher("/auth/registro"),
+                                AntPathRequestMatcher.antMatcher("/auth/confirmar-cuenta")).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilter(new JwtValidationFilter(authenticationManager()))
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"))
-                        .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/auth/login")))
+                        .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/auth/login"))
+                        .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/auth/registro"))
+                        .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/auth/confirmar-cuenta"))
+                )
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();

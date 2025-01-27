@@ -53,5 +53,5 @@ public interface TrabajoIndEnAccionRepository extends JpaRepository<TrabajoIndEn
      * @param cliente Cliente asociado a los trabajos en acción.
      * @return Lista de trabajos en acción asociados al cliente.
      */
-    List<TrabajoIndEnAccion> findByTrabajoIndependiente_Cliente(Cliente cliente);
+    List<TrabajoIndEnAccion> findByCliente(Cliente cliente);
 }

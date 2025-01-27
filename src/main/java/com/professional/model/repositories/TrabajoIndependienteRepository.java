@@ -9,13 +9,6 @@ import java.util.Optional;
 @Repository
 public interface TrabajoIndependienteRepository extends JpaRepository<TrabajoIndependiente, Long> {
 
-    /**
-     * Buscar trabajos independientes por nombre.
-     *
-     * @param trabajo Nombre del trabajo.
-     * @return Lista de trabajos que coinciden con el nombre.
-     */
-    List<TrabajoIndependiente> findByTrabajo(String trabajo);
 
     /**
      * Buscar un trabajo independiente por su ID.
@@ -40,13 +33,7 @@ public interface TrabajoIndependienteRepository extends JpaRepository<TrabajoInd
      * @return Optional de TrabajoIndependiente.
      */
     Optional<TrabajoIndependiente> findByIdAndActivoTrue(Long id);
-    /**
-     * Verificar si existe un trabajo independiente con un nombre específico.
-     *
-     * @param trabajo Nombre del trabajo.
-     * @return true si existe, false de lo contrario.
-     */
-    boolean existsByTrabajo(String trabajo);
+
 
     /**
      * Busca trabajos independientes por descripción utilizando LIKE y filtra por activo=true.
