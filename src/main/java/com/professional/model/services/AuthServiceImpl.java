@@ -53,6 +53,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public void registrarUsuario(RegistroDTO registroDTO) {
         String tipoUsuario = registroDTO.getTipoUsuario();
+        System.out.println("registrarUsuario: "+registroDTO.getTipoUsuario());
 
         switch (tipoUsuario.toLowerCase()) {
             case "cliente" -> registrarCliente(registroDTO);
@@ -74,6 +75,7 @@ public class AuthServiceImpl implements AuthService {
 
         Cliente guardado = clienteRepository.save(cliente);
 
+        System.out.println("Cliente guardado: "+guardado.getTipoUsuario());
         enviarCorreoConfirmacion(guardado.getCorreo(), generarToken(guardado.getCorreo(),LocalDateTime.now().plusHours(72),guardado.getTipoUsuario()));
     }
 
@@ -130,6 +132,7 @@ public class AuthServiceImpl implements AuthService {
         verificationToken.setToken(token);
         verificationToken.setCorreo(correo);
         verificationToken.setFechaExpiracion(fechaExpiracion);
+        verificationToken.setTipoUsuario(tipoUsuario);
         verificationTokenRepository.save(verificationToken);
         return token;
     }
