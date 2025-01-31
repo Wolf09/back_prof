@@ -172,27 +172,24 @@ public class AuthServiceImpl implements AuthService {
     private boolean activarUsuario(String correo) {
         boolean activado = false;
 
-        Cliente cliente = clienteRepository.findByCorreo(correo)
-                .orElseThrow(() -> new ResourceNotFoundException("Ese correo ya esta registrado."));
-        if (cliente != null) {
-            cliente.setActivo(true);
-            clienteRepository.save(cliente);
+        Optional<Cliente> cliente = clienteRepository.findByCorreo(correo);
+        if (cliente.isPresent()) {
+            cliente.get().setActivo(true);
+            clienteRepository.save(cliente.get());
             activado = true;
         }
 
-        Empresa empresa = empresaRepository.findByCorreo(correo)
-                .orElseThrow(() -> new ResourceNotFoundException("Ese correo ya esta registrado."));
-        if (empresa != null) {
-            empresa.setActivo(true);
-            empresaRepository.save(empresa);
+        Optional<Empresa> empresa = empresaRepository.findByCorreo(correo);
+        if (empresa.isPresent()) {
+            empresa.get().setActivo(true);
+            empresaRepository.save(empresa.get());
             activado = true;
         }
 
-        Independiente independiente = independienteRepository.findByCorreo(correo)
-                .orElseThrow(() -> new ResourceNotFoundException("Ese correo ya esta registrado."));
-        if (independiente != null) {
-            independiente.setActivo(true);
-            independienteRepository.save(independiente);
+        Optional<Independiente> independiente = independienteRepository.findByCorreo(correo);
+        if (independiente.isPresent()) {
+            independiente.get().setActivo(true);
+            independienteRepository.save(independiente.get());
             activado = true;
         }
 
@@ -209,35 +206,40 @@ public class AuthServiceImpl implements AuthService {
         String correo = loginDTO.getCorreo();
         String password = loginDTO.getPassword();
 
-        // Buscar el usuario en las tres tablas
-        Cliente cliente = clienteRepository.findByCorreo(correo)
-                .orElseThrow(() -> new ResourceNotFoundException("Ese correo ya esta registrado."));
-        Empresa empresa = empresaRepository.findByCorreo(correo)
-                .orElseThrow(() -> new ResourceNotFoundException("Ese correo ya esta registrado."));
-        Independiente independiente = independienteRepository.findByCorreo(correo)
-                .orElseThrow(() -> new ResourceNotFoundException("Ese correo ya esta registrado."));
+        try{
+            // Buscar el usuario en las tres tablas
+            Cliente cliente = clienteRepository.findByCorreo(correo)
+                    .orElseThrow(() -> new ResourceNotFoundException("Correo/Contraseña Incorrectos, O no existe usuario con ese correo"));
+            Empresa empresa = empresaRepository.findByCorreo(correo)
+                    .orElseThrow(() -> new ResourceNotFoundException("Correo/Contraseña Incorrectos, O no existe usuario con ese correo"));
+            Independiente independiente = independienteRepository.findByCorreo(correo)
+                    .orElseThrow(() -> new ResourceNotFoundException("Correo/Contraseña Incorrectos, O no existe usuario con ese correo"));
 
-        if (cliente != null && cliente.getActivo()) {
-            if (passwordEncoder.matches(password, cliente.getPassword())) {
-                verificationToken = verificationTokenRepository.findByCorreo(cliente.getCorreo());
-                verificationToken.ifPresent(verificationTokenRepository::delete);
-                return generarToken(cliente.getCorreo(),LocalDateTime.now().plusHours(72),cliente.getTipoUsuario());
+            if (cliente != null && cliente.getActivo()) {
+                if (passwordEncoder.matches(password, cliente.getPassword())) {
+                    verificationToken = verificationTokenRepository.findByCorreo(cliente.getCorreo());
+                    verificationToken.ifPresent(verificationTokenRepository::delete);
+                    return generarToken(cliente.getCorreo(),LocalDateTime.now().plusHours(72),cliente.getTipoUsuario());
+                }
+            } else if (empresa != null && empresa.getActivo()) {
+                if (passwordEncoder.matches(password, empresa.getPassword())) {
+                    verificationToken = verificationTokenRepository.findByCorreo(empresa.getCorreo());
+                    verificationToken.ifPresent(verificationTokenRepository::delete);
+                    return generarToken(empresa.getCorreo(),LocalDateTime.now().plusHours(72),empresa.getTipoUsuario());
+                }
+            } else if (independiente != null && independiente.getActivo()) {
+                if (passwordEncoder.matches(password, independiente.getPassword())) {
+                    verificationToken = verificationTokenRepository.findByCorreo(independiente.getCorreo());
+                    verificationToken.ifPresent(verificationTokenRepository::delete);
+                    return generarToken(independiente.getCorreo(),LocalDateTime.now().plusHours(72),independiente.getTipoUsuario());
+                }
             }
-        } else if (empresa != null && empresa.getActivo()) {
-            if (passwordEncoder.matches(password, empresa.getPassword())) {
-                verificationToken = verificationTokenRepository.findByCorreo(empresa.getCorreo());
-                verificationToken.ifPresent(verificationTokenRepository::delete);
-                return generarToken(empresa.getCorreo(),LocalDateTime.now().plusHours(72),empresa.getTipoUsuario());
-            }
-        } else if (independiente != null && independiente.getActivo()) {
-            if (passwordEncoder.matches(password, independiente.getPassword())) {
-                verificationToken = verificationTokenRepository.findByCorreo(independiente.getCorreo());
-                verificationToken.ifPresent(verificationTokenRepository::delete);
-                return generarToken(independiente.getCorreo(),LocalDateTime.now().plusHours(72),independiente.getTipoUsuario());
-            }
+
+            throw new IllegalArgumentException("Credenciales inválidas o cuenta no confirmada");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
         }
-
-        throw new IllegalArgumentException("Credenciales inválidas o cuenta no confirmada");
+        return "";
     }
 }
 
