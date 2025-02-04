@@ -27,6 +27,9 @@ public interface IndependienteService {
      */
     Independiente getIndependienteById(Long id);
 
+    @Transactional(readOnly = true)
+    Independiente findByCorreo(String correo);
+
     /**
      * Crear un nuevo Independiente.
      *

@@ -196,50 +196,88 @@ public class AuthServiceImpl implements AuthService {
         return activado;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+//    /**
+//     * {@inheritDoc}
+//     */
+//    @Override
+//    @Transactional
+//    public String autenticarUsuario(LoginDTO loginDTO) {
+//        Optional<VerificationToken> verificationToken;
+//        String correo = loginDTO.getCorreo();
+//        String password = loginDTO.getPassword();
+//
+//        try{
+//            // Buscar el usuario en las tres tablas
+//            Cliente cliente = clienteRepository.findByCorreo(correo)
+//                    .orElseThrow(() -> new ResourceNotFoundException("Correo/Contraseña Incorrectos, O no existe usuario con ese correo"));
+//            Empresa empresa = empresaRepository.findByCorreo(correo)
+//                    .orElseThrow(() -> new ResourceNotFoundException("Correo/Contraseña Incorrectos, O no existe usuario con ese correo"));
+//            Independiente independiente = independienteRepository.findByCorreo(correo)
+//                    .orElseThrow(() -> new ResourceNotFoundException("Correo/Contraseña Incorrectos, O no existe usuario con ese correo"));
+//
+//            if (cliente != null && cliente.getActivo()) {
+//                if (passwordEncoder.matches(password, cliente.getPassword())) {
+//                    verificationToken = verificationTokenRepository.findByCorreo(cliente.getCorreo());
+//                    verificationToken.ifPresent(verificationTokenRepository::delete);
+//                    return generarToken(cliente.getCorreo(),LocalDateTime.now().plusHours(72),cliente.getTipoUsuario());
+//                }
+//            } else if (empresa != null && empresa.getActivo()) {
+//                if (passwordEncoder.matches(password, empresa.getPassword())) {
+//                    verificationToken = verificationTokenRepository.findByCorreo(empresa.getCorreo());
+//                    verificationToken.ifPresent(verificationTokenRepository::delete);
+//                    return generarToken(empresa.getCorreo(),LocalDateTime.now().plusHours(72),empresa.getTipoUsuario());
+//                }
+//            } else if (independiente != null && independiente.getActivo()) {
+//                if (passwordEncoder.matches(password, independiente.getPassword())) {
+//                    verificationToken = verificationTokenRepository.findByCorreo(independiente.getCorreo());
+//                    verificationToken.ifPresent(verificationTokenRepository::delete);
+//                    return generarToken(independiente.getCorreo(),LocalDateTime.now().plusHours(72),independiente.getTipoUsuario());
+//                }
+//            }
+//
+//            throw new IllegalArgumentException("Credenciales inválidas o cuenta no confirmada");
+//        }catch (Exception e){
+//            System.out.println(e.getMessage());
+//        }
+//        return "";
+//    }
+
+
     @Override
     @Transactional
     public String autenticarUsuario(LoginDTO loginDTO) {
-        Optional<VerificationToken> verificationToken;
         String correo = loginDTO.getCorreo();
         String password = loginDTO.getPassword();
-
-        try{
-            // Buscar el usuario en las tres tablas
-            Cliente cliente = clienteRepository.findByCorreo(correo)
-                    .orElseThrow(() -> new ResourceNotFoundException("Correo/Contraseña Incorrectos, O no existe usuario con ese correo"));
-            Empresa empresa = empresaRepository.findByCorreo(correo)
-                    .orElseThrow(() -> new ResourceNotFoundException("Correo/Contraseña Incorrectos, O no existe usuario con ese correo"));
-            Independiente independiente = independienteRepository.findByCorreo(correo)
-                    .orElseThrow(() -> new ResourceNotFoundException("Correo/Contraseña Incorrectos, O no existe usuario con ese correo"));
-
-            if (cliente != null && cliente.getActivo()) {
-                if (passwordEncoder.matches(password, cliente.getPassword())) {
-                    verificationToken = verificationTokenRepository.findByCorreo(cliente.getCorreo());
-                    verificationToken.ifPresent(verificationTokenRepository::delete);
-                    return generarToken(cliente.getCorreo(),LocalDateTime.now().plusHours(72),cliente.getTipoUsuario());
-                }
-            } else if (empresa != null && empresa.getActivo()) {
-                if (passwordEncoder.matches(password, empresa.getPassword())) {
-                    verificationToken = verificationTokenRepository.findByCorreo(empresa.getCorreo());
-                    verificationToken.ifPresent(verificationTokenRepository::delete);
-                    return generarToken(empresa.getCorreo(),LocalDateTime.now().plusHours(72),empresa.getTipoUsuario());
-                }
-            } else if (independiente != null && independiente.getActivo()) {
-                if (passwordEncoder.matches(password, independiente.getPassword())) {
-                    verificationToken = verificationTokenRepository.findByCorreo(independiente.getCorreo());
-                    verificationToken.ifPresent(verificationTokenRepository::delete);
-                    return generarToken(independiente.getCorreo(),LocalDateTime.now().plusHours(72),independiente.getTipoUsuario());
-                }
+        // Buscar el usuario en cada tabla de forma independiente
+        Optional<Cliente> clienteOpt = clienteRepository.findByCorreo(correo);
+        Optional<Empresa> empresaOpt = empresaRepository.findByCorreo(correo);
+        Optional<Independiente> independienteOpt = independienteRepository.findByCorreo(correo);
+        // Verificar si se encontró algún usuario
+        if (clienteOpt.isPresent()) {
+            Cliente cliente = clienteOpt.get();
+            if (cliente.getActivo() && passwordEncoder.matches(password, cliente.getPassword())) {
+                Optional<VerificationToken> verificationToken = verificationTokenRepository.findByCorreo(cliente.getCorreo());
+                verificationToken.ifPresent(verificationTokenRepository::delete);
+                return generarToken(cliente.getCorreo(), LocalDateTime.now().plusHours(72), cliente.getTipoUsuario());
             }
-
-            throw new IllegalArgumentException("Credenciales inválidas o cuenta no confirmada");
-        }catch (Exception e){
-            System.out.println(e.getMessage());
+        } else if (empresaOpt.isPresent()) {
+            Empresa empresa = empresaOpt.get();
+            if (empresa.getActivo() && passwordEncoder.matches(password, empresa.getPassword())) {
+                Optional<VerificationToken> verificationToken = verificationTokenRepository.findByCorreo(empresa.getCorreo());
+                verificationToken.ifPresent(verificationTokenRepository::delete);
+                return generarToken(empresa.getCorreo(), LocalDateTime.now().plusHours(72), empresa.getTipoUsuario());
+            }
+        } else if (independienteOpt.isPresent()) {
+            Independiente independiente = independienteOpt.get();
+            if (independiente.getActivo() && passwordEncoder.matches(password, independiente.getPassword())) {
+                Optional<VerificationToken> verificationToken = verificationTokenRepository.findByCorreo(independiente.getCorreo());
+                verificationToken.ifPresent(verificationTokenRepository::delete);
+                return generarToken(independiente.getCorreo(), LocalDateTime.now().plusHours(72), independiente.getTipoUsuario());
+            }
         }
-        return "";
+
+        throw new IllegalArgumentException("Credenciales inválidas o cuenta no confirmada");
     }
+
 }
 

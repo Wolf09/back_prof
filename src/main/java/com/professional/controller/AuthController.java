@@ -10,8 +10,10 @@ import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -43,7 +45,9 @@ public class AuthController {
 
         try {
             authService.registrarUsuario(registroDTO);
-            return new ResponseEntity<>("Registro exitoso. Por favor, verifica tu correo para confirmar tu cuenta.", HttpStatus.OK);
+            Map<String, String> response = new HashMap<>();
+            response.put("data","Registro exitoso. Por favor, verifica tu correo para confirmar tu cuenta.");
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception ex) {
             List<Error> errores = new ArrayList<>();
             errores.add(new Error(ex.getMessage()));
@@ -61,7 +65,9 @@ public class AuthController {
     public ResponseEntity<?> confirmarCuenta(@RequestParam("token") String token) {
         try {
             authService.confirmarCuenta(token);
-            return new ResponseEntity<>("Cuenta confirmada exitosamente.", HttpStatus.OK);
+            Map<String, String> response = new HashMap<>();
+            response.put("data","Cuenta confirmada exitosamente.");
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(new Error(ex.getMessage()), HttpStatus.BAD_REQUEST);
         }
@@ -86,7 +92,9 @@ public class AuthController {
 
         try {
             String token = authService.autenticarUsuario(loginDTO);
-            return new ResponseEntity<>(token, HttpStatus.OK);
+            Map<String, String> response = new HashMap<>();
+            response.put("token", token);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(new Error(ex.getMessage()), HttpStatus.UNAUTHORIZED);
         }

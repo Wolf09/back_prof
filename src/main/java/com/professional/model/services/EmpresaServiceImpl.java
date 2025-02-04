@@ -58,6 +58,13 @@ public class EmpresaServiceImpl implements EmpresaService {
 
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public Empresa findByCorreo(String correo) {
+        return empresaRepository.findByCorreo(correo)
+                .orElseThrow(() -> new ResourceNotFoundException("Empresa no encontrada con correo: " + correo));
+    }
+
     /**
      * {@inheritDoc}
      */

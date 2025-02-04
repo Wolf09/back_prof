@@ -3,6 +3,7 @@ package com.professional.model.services;
 import com.professional.model.dto.TrabajoDTO;
 import com.professional.model.entities.Cliente;
 import com.professional.model.enums.RangoCalificacion;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,6 +40,9 @@ public interface ClienteService {
      * @return Cliente encontrado.
      */
     Cliente findClienteByCorreo(String correo);
+
+    @Transactional(readOnly = true)
+    Cliente findByCorreo(String correo);
 
     /**
      * Crear un nuevo Cliente.

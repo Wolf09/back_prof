@@ -56,6 +56,12 @@ public class IndependienteServiceImpl implements IndependienteService {
         return independiente;
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public Independiente findByCorreo(String correo) {
+        return independienteRepository.findByCorreo(correo)
+                .orElseThrow(() -> new ResourceNotFoundException("Empresa no encontrada con correo: " + correo));
+    }
 
     /**
      * {@inheritDoc}

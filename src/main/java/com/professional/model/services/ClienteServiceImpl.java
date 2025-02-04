@@ -79,6 +79,12 @@ public class ClienteServiceImpl implements ClienteService {
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado o dado de Baja con correo: " + correo));
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public Cliente findByCorreo(String correo) {
+        return clienteRepository.findByCorreo(correo)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con correo: " + correo));
+    }
     /**
      * {@inheritDoc}
      */

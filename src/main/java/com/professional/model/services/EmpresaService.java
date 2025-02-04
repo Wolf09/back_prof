@@ -2,6 +2,7 @@ package com.professional.model.services;
 
 import com.professional.model.entities.Empresa;
 import com.professional.model.entities.Independiente;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,9 @@ public interface EmpresaService {
      * @return Empresa encontrada.
      */
     Empresa getEmpresaById(Long id);
+
+    @Transactional(readOnly = true)
+    Empresa findByCorreo(String correo);
 
     /**
      * Crear una nueva Empresa.
