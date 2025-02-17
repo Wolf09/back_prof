@@ -1,5 +1,7 @@
 package com.professional.model.services;
 
+import com.professional.model.dto.FiltrosConsultasEmpresasDTO;
+import com.professional.model.dto.FiltrosConsultasIndependientesDTO;
 import com.professional.model.dto.TrabajoDTO;
 import com.professional.model.entities.Cliente;
 import com.professional.model.enums.RangoCalificacion;
@@ -134,5 +136,11 @@ public interface ClienteService {
      * @return Lista combinada de TrabajoDTO ordenados por fecha de creación ascendente.
      */
     List<TrabajoDTO> listarTrabajosPorDescripcionOrdenadosPorFechaCreacionAsc(String descripcion);
+
+
+
+    List<FiltrosConsultasIndependientesDTO> listarFiltrosConsultasIndependientesParametros(String descripcion, String areaTrabajo, String filtro, String calificacion);
+
+    List<FiltrosConsultasEmpresasDTO> listarFiltrosConsultasEmpresas(String descripcion, String areaTrabajo);
 
 }

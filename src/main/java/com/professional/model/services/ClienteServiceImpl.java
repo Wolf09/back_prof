@@ -1,5 +1,7 @@
 package com.professional.model.services;
 
+import com.professional.model.dto.FiltrosConsultasEmpresasDTO;
+import com.professional.model.dto.FiltrosConsultasIndependientesDTO;
 import com.professional.model.dto.TrabajoDTO;
 import com.professional.model.entities.Cliente;
 import com.professional.model.entities.TrabajoEmpresa;
@@ -428,4 +430,39 @@ public class ClienteServiceImpl implements ClienteService {
 
         return trabajosCombinados;
     }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<FiltrosConsultasIndependientesDTO> listarFiltrosConsultasIndependientesParametros(String descripcion, String areaTrabajo, String filtro, String calificacion) {
+        if (descripcion == null || descripcion.trim().isEmpty()) {
+            throw new IllegalArgumentException("La descripción no puede estar vacía.");
+        }
+        if (filtro.equals("asc")&& calificacion.equals("4")){
+            return trabajoIndependienteRepository.findFiltrosByDescripcionPrecioAsc4(descripcion,areaTrabajo);
+        }else if (filtro.equals("desc")&& calificacion.equals("4")){
+            return trabajoIndependienteRepository.findFiltrosByDescripcionPrecioDesc4(descripcion,areaTrabajo);
+        }else if (filtro.equals("asc")&& calificacion.equals("3")){
+            return trabajoIndependienteRepository.findFiltrosByDescripcionPrecioAsc3(descripcion,areaTrabajo);
+        }else if (filtro.equals("desc")&& calificacion.equals("3")){
+            return trabajoIndependienteRepository.findFiltrosByDescripcionPrecioDesc3(descripcion,areaTrabajo);
+        }else if (filtro.equals("ventas")&& calificacion.equals("4")){
+            return trabajoIndependienteRepository.findFiltrosByVentas4(descripcion,areaTrabajo);
+        }else if (filtro.equals("ventas")&& calificacion.equals("3")){
+            return trabajoIndependienteRepository.findFiltrosByVentas3(descripcion,areaTrabajo);
+        }
+
+        return trabajoIndependienteRepository.findFiltrosByDescripcion(descripcion,areaTrabajo);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<FiltrosConsultasEmpresasDTO> listarFiltrosConsultasEmpresas(String descripcion, String areaTrabajo) {
+        if (descripcion == null || descripcion.trim().isEmpty()) {
+            throw new IllegalArgumentException("La descripción no puede estar vacía.");
+        }
+
+        return trabajoEmpresaRepository.findFiltrosByDescripcion(descripcion,areaTrabajo);
+    }
+
 }

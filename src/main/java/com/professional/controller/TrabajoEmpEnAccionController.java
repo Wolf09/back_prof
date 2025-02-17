@@ -2,6 +2,7 @@ package com.professional.controller;
 
 import com.professional.model.dto.Error;
 import com.professional.model.entities.Cliente;
+import com.professional.model.entities.HistorialEmpresas;
 import com.professional.model.enums.EstadoTrabajo;
 import com.professional.model.entities.TrabajoEmpEnAccion;
 import com.professional.model.entities.TrabajoEmpresa;
@@ -208,5 +209,33 @@ public class TrabajoEmpEnAccionController {
         List<TrabajoEmpEnAccion> trabajos = trabajoEmpEnAccionService.getAllTrabajosEmpEnAccion();
         return new ResponseEntity<>(trabajos, HttpStatus.OK);
     }
+
+    /**
+     * Actualizar el EstadoTrabajo de un TrabajoIndEnAccion específico.
+     *
+     * @param id                     ID del TrabajoIndEnAccion a actualizar.
+     * @param estadoTrabajo estadoTrabajo que contiene el nuevo estado.
+     * @return ResponseEntity con el TrabajoEnAccionDTO actualizado o errores de validación.
+     */
+    @Transactional
+    @PutMapping("/actualizar-estado/{id}")
+    public ResponseEntity<?> actualizarHistorialEstadoTrabajo(@PathVariable Long id, EstadoTrabajo estadoTrabajo) {
+
+        try{
+            HistorialEmpresas actualizado = trabajoEmpEnAccionService.updateEstadoTrabajo(id, estadoTrabajo);
+            return new ResponseEntity<>(actualizado, HttpStatus.OK);
+        }catch (Exception ex) {
+            List<Error> errores = new ArrayList<>();
+            errores.add(new Error(ex.getMessage()));
+            if (ex instanceof com.professional.model.exceptions.ResourceNotFoundException) {
+                return new ResponseEntity<>(errores, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(errores, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
+
 }
 

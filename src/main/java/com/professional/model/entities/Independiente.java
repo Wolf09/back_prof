@@ -22,6 +22,10 @@ public class Independiente extends Profesional implements Serializable {
     @Column(name = "foto_Titulo")
     private String fotoTitulo;
 
+    @Column(name = "area_trabajo")
+    @NotBlank
+    private String areaTrabajo;
+
     // Relación Uno a Muchos con TrabajoIndependiente
     @OneToMany(mappedBy = "independiente", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore // Evita ciclos infinitos al serializar a JSON
@@ -62,6 +66,14 @@ public class Independiente extends Profesional implements Serializable {
 
     public void setTrabajosIndependientes(List<TrabajoIndependiente> trabajosIndependientes) {
         this.trabajosIndependientes = trabajosIndependientes;
+    }
+
+    public String getAreaTrabajo() {
+        return areaTrabajo;
+    }
+
+    public void setAreaTrabajo(String areaTrabajo) {
+        this.areaTrabajo = areaTrabajo;
     }
 
     // Métodos para gestionar la relación con TrabajoIndependiente

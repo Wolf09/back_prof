@@ -36,6 +36,9 @@ public class TrabajoIndependiente implements Serializable {
     @Column(name = "fecha_creacion", nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
 
+    @Column(name = "ventas", nullable = false)
+    private Long ventas;
+
     // Relación Muchos a Uno con Independiente
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "independiente_id", nullable = false)
@@ -69,6 +72,7 @@ public class TrabajoIndependiente implements Serializable {
     public void establecerAverage(){
         this.averageRating = 5.0;
         this.activo=true;
+        this.ventas=0L;
         this.fechaCreacion = LocalDateTime.now();
     }
 
@@ -146,6 +150,14 @@ public class TrabajoIndependiente implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getVentas() {
+        return ventas;
+    }
+
+    public void setVentas(Long ventas) {
+        this.ventas = ventas;
     }
 
     // Métodos para gestionar las relaciones

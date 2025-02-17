@@ -1,8 +1,10 @@
 package com.professional.model.services;
 
 import com.professional.model.entities.Cliente;
+import com.professional.model.entities.HistorialEmpresas;
 import com.professional.model.entities.TrabajoEmpresa;
 import com.professional.model.entities.Empresa;
+import com.professional.model.enums.EstadoTrabajo;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -72,6 +74,7 @@ public interface TrabajoEmpresaService {
      * @return Lista de TrabajoEmpresa.
      */
     List<TrabajoEmpresa> getTrabajosEmpresaByCliente(Cliente cliente);
+
 
 }
 

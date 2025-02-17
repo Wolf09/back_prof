@@ -4,6 +4,7 @@ import com.professional.model.dto.ActualizarEstadoTrabajoDTO;
 import com.professional.model.dto.Error;
 import com.professional.model.dto.TrabajoEnAccionDTO;
 import com.professional.model.entities.Cliente;
+import com.professional.model.entities.HistorialIndependientes;
 import com.professional.model.enums.EstadoTrabajo;
 import com.professional.model.entities.TrabajoIndEnAccion;
 import com.professional.model.entities.TrabajoIndependiente;
@@ -214,25 +215,15 @@ public class TrabajoIndEnAccionController {
      * Actualizar el EstadoTrabajo de un TrabajoIndEnAccion específico.
      *
      * @param id                     ID del TrabajoIndEnAccion a actualizar.
-     * @param actualizarEstadoTrabajoDTO DTO que contiene el nuevo estado.
-     * @param result                 Resultado de la validación.
+     * @param estadoTrabajo estadoTrabajo que contiene el nuevo estado.
      * @return ResponseEntity con el TrabajoEnAccionDTO actualizado o errores de validación.
      */
     @Transactional
     @PutMapping("/actualizar-estado/{id}")
-    public ResponseEntity<?> actualizarEstadoTrabajo(@PathVariable Long id,
-                                                     @Valid @RequestBody ActualizarEstadoTrabajoDTO actualizarEstadoTrabajoDTO,
-                                                     BindingResult result) {
-        if (result.hasErrors()) {
-            List<Error> errores = new ArrayList<>();
-            result.getFieldErrors().forEach(err -> {
-                errores.add(new Error(err.getDefaultMessage()));
-            });
-            return new ResponseEntity<>(errores, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> actualizarHistorialEstadoTrabajo(@PathVariable Long id, EstadoTrabajo estadoTrabajo) {
 
         try {
-            TrabajoEnAccionDTO actualizado = trabajoIndEnAccionService.updateEstadoTrabajo(id, actualizarEstadoTrabajoDTO.getEstadoTrabajo());
+            HistorialIndependientes actualizado = trabajoIndEnAccionService.updateEstadoTrabajo(id, estadoTrabajo);
             return new ResponseEntity<>(actualizado, HttpStatus.OK);
         } catch (Exception ex) {
             List<Error> errores = new ArrayList<>();

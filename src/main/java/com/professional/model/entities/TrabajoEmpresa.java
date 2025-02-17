@@ -31,6 +31,9 @@ public class TrabajoEmpresa implements Serializable {
 
     @Column(name = "precio", nullable = false)
     private Double precio;
+
+    @Column(name = "ventas", nullable = false)
+    private Long ventas;
     @Column(name = "fecha_creacion", nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
 
@@ -74,6 +77,7 @@ public class TrabajoEmpresa implements Serializable {
 
         this.averageRating = 5.0;
         this.activo=true;
+        this.ventas=0L;
         this.fechaCreacion = LocalDateTime.now();
     }
 
@@ -158,7 +162,16 @@ public class TrabajoEmpresa implements Serializable {
     public void setPrecio(Double precio) {
         this.precio = precio;
     }
-// Métodos para gestionar las relaciones
+
+    public Long getVentas() {
+        return ventas;
+    }
+
+    public void setVentas(Long ventas) {
+        this.ventas = ventas;
+    }
+
+    // Métodos para gestionar las relaciones
 
     public void addTrabajoEmpEnAccion(TrabajoEmpEnAccion trabajoEmpEnAccion){
         trabajoEmpEnAccions.add(trabajoEmpEnAccion);

@@ -1,6 +1,8 @@
 package com.professional.controller;
 
 import com.professional.model.dto.Error;
+import com.professional.model.dto.FiltrosConsultasEmpresasDTO;
+import com.professional.model.dto.FiltrosConsultasIndependientesDTO;
 import com.professional.model.entities.Cliente;
 import com.professional.model.enums.RangoCalificacion;
 import com.professional.model.services.ClienteService;
@@ -224,6 +226,20 @@ public class ClienteController {
 
         List<TrabajoDTO> trabajos = clienteService.listarTrabajosPorDescripcionOrdenadosPorFechaCreacionAsc(descripcion);
         return new ResponseEntity<>(trabajos, HttpStatus.OK);
+    }
+
+    @GetMapping("/filtroConsultasIndependientes")
+    public ResponseEntity<List<FiltrosConsultasIndependientesDTO>> listarFiltrosIndependientes(@RequestParam String descripcion,@RequestParam String areaTrabajo,
+                                                                    @RequestParam String filtro,@RequestParam String calificacion) {
+        List<FiltrosConsultasIndependientesDTO> lista = clienteService.listarFiltrosConsultasIndependientesParametros(descripcion, areaTrabajo,
+                                                                    filtro, calificacion);
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/filtroConsultasEmpresas")
+    public ResponseEntity<List<FiltrosConsultasEmpresasDTO>> listarFiltrosEmpresas(@RequestParam String descripcion, @RequestParam String areaTrabajo) {
+        List<FiltrosConsultasEmpresasDTO> lista = clienteService.listarFiltrosConsultasEmpresas(descripcion, areaTrabajo);
+        return ResponseEntity.ok(lista);
     }
 
 }

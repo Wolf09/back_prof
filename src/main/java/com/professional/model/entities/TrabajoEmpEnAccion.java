@@ -40,6 +40,12 @@ public class TrabajoEmpEnAccion implements Serializable {
     @Column(name = "activo", nullable = false)
     private Boolean activo;
 
+    // Relación Muchos a Uno con Cliente (creador del TrabajoIndEnAccion)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cliente_id", nullable = false)
+    @JsonIgnore
+    private Cliente cliente;
+
     @PrePersist
     protected void onCreate() {
         if (this.estadoTrabajo == null) {
@@ -93,6 +99,14 @@ public class TrabajoEmpEnAccion implements Serializable {
 
     public void setActivo(Boolean activo) {
         this.activo = activo;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     // Método para inicializar el estado anterior después de cargar la entidad

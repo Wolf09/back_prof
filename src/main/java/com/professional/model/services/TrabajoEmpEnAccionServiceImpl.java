@@ -71,9 +71,11 @@ public class TrabajoEmpEnAccionServiceImpl implements TrabajoEmpEnAccionService 
     @Override
     @Transactional
     public TrabajoEmpEnAccion updateTrabajoEmpEnAccion(Long id, TrabajoEmpEnAccion trabajoEmpEnAccionDetalles) {
+        HistorialEmpresas historialEmpresas=null;
         TrabajoEmpEnAccion existente = trabajoEmpEnAccionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TrabajoEmpEnAccion no encontrado con ID: " + id));
 
+        historialEmpresas=this.updateEstadoTrabajo(id,trabajoEmpEnAccionDetalles.getEstadoTrabajo());
         existente.setEstadoTrabajo(trabajoEmpEnAccionDetalles.getEstadoTrabajo());
         if (existente.getEstadoTrabajo() == EstadoTrabajo.FINALIZADO) {
             existente.setEstadoTrabajo(EstadoTrabajo.FINALIZADO);
@@ -113,43 +115,31 @@ public class TrabajoEmpEnAccionServiceImpl implements TrabajoEmpEnAccionService 
      * {@inheritDoc}
      */
     @Override
-    @Transactional
-    public TrabajoEnAccionDTO updateEstadoTrabajo(Long id, EstadoTrabajo estadoTrabajo) {
-        TrabajoEmpEnAccion trabajoEmpEnAccion = trabajoEmpEnAccionRepository.findById(id)
+    public HistorialEmpresas updateEstadoTrabajo(Long id, EstadoTrabajo estadoTrabajo) {
+        TrabajoEmpEnAccion trabajoEmpEnAccion=trabajoEmpEnAccionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TrabajoEmpEnAccion no encontrado con ID: " + id));
 
-        EstadoTrabajo oldEstado = trabajoEmpEnAccion.getEstadoTrabajo();
+        EstadoTrabajo oldEstado= trabajoEmpEnAccion.getEstadoTrabajo();
         trabajoEmpEnAccion.setEstadoTrabajo(estadoTrabajo);
         trabajoEmpEnAccion.setFechaCambio(LocalDateTime.now());
-        TrabajoEmpEnAccion actualizado = trabajoEmpEnAccionRepository.save(trabajoEmpEnAccion);
+        TrabajoEmpEnAccion actualizado= trabajoEmpEnAccionRepository.save(trabajoEmpEnAccion);
+        HistorialEmpresas historialEmpresas=null;
+        if (estadoTrabajo == EstadoTrabajo.FINALIZADO && oldEstado != EstadoTrabajo.FINALIZADO){
 
-        HistorialDTO historialDTO = null;
-        // Verificar si el estado se ha cambiado a FINALIZADO
-        if (estadoTrabajo == EstadoTrabajo.FINALIZADO && oldEstado != EstadoTrabajo.FINALIZADO) {
-            // Crear un nuevo HistorialEmpresas
-            TrabajoEmpresa trabajoEmpresa = trabajoEmpEnAccion.getTrabajoEmpresa();
-            Cliente cliente = trabajoEmpresa.getCliente(); // Asume que TrabajoEmpresa tiene un campo Cliente
+            TrabajoEmpresa trabajoEmpresa= trabajoEmpEnAccion.getTrabajoEmpresa();
+            trabajoEmpresa.setVentas(trabajoEmpresa.getVentas()+1L);
+            Cliente cliente= trabajoEmpEnAccion.getCliente();
 
-            HistorialEmpresas historial = new HistorialEmpresas();
+            HistorialEmpresas historial= new HistorialEmpresas();
             historial.setCliente(cliente);
             historial.setTrabajo(trabajoEmpresa);
             historial.setFechaSolicitud(LocalDateTime.now());
             historial.setActivo(true);
 
-            historialDTO=historialService.createHistorialEmpresasDTO(historial);
-        }
-        // Mapear la entidad actualizada a DTO
-        TrabajoEnAccionDTO trabajoDTO = new TrabajoEnAccionDTO();
-        trabajoDTO.setId(actualizado.getId());
-        trabajoDTO.setEstadoTrabajo(actualizado.getEstadoTrabajo());
-        trabajoDTO.setFechaCambio(actualizado.getFechaCambio());
-        trabajoDTO.setActivo(actualizado.getActivo());
+            historialEmpresas= historialService.createHistorialEmpresas(historial);
 
-        if (historialDTO != null) {
-            trabajoDTO.setHistorial(historialDTO);
         }
-
-        return trabajoDTO;
+        return historialEmpresas;
     }
 
     /**

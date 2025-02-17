@@ -1,6 +1,9 @@
 package com.professional.model.repositories;
+import com.professional.model.dto.FiltrosConsultasIndependientesDTO;
 import com.professional.model.entities.TrabajoIndependiente;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -52,5 +55,124 @@ public interface TrabajoIndependienteRepository extends JpaRepository<TrabajoInd
      */
     List<TrabajoIndependiente> findByDescripcionContainingIgnoreCaseAndActivoTrueAndAverageRatingBetween(
             String descripcion, Double minRating, Double maxRating);
+
+    /**
+     * Consulta personalizada que devuelve los datos requeridos en el DTO,
+     * haciendo join con la entidad Independiente. findFiltrosByDescripcion
+     */
+    @Query("select new com.professional.model.dto.FiltrosConsultasIndependientesDTO(" +
+            "i.id, t.id, i.nombres, i.apellidos, i.fotoRepresentante, i.tipoUsuario, i.profesion, i.areaTrabajo, " +
+            "t.descripcion, t.averageRating, t.precio) " +
+            "from TrabajoIndependiente t " +
+            "join t.independiente i " +
+            "where lower(t.descripcion) like lower(concat('%', :descripcion, '%')) " +
+            "and lower(i.areaTrabajo) like lower(concat('%', :areaTrabajo, '%')) " +
+            "and t.activo = true "+
+            "and i.activo=true")
+    List<FiltrosConsultasIndependientesDTO> findFiltrosByDescripcion(@Param("descripcion") String descripcion,@Param("areaTrabajo") String areaTrabajo);
+
+    /**
+     * Consulta personalizada que devuelve los datos requeridos en el DTO,
+     * haciendo join con la entidad Independiente. findFiltrosByDescripcionPrecioAsc4
+     * TODO: implementar desde aqui igual para las busquedas en: TrabajoEmpresaRepository
+     */
+    @Query("select new com.professional.model.dto.FiltrosConsultasIndependientesDTO(" +
+            "i.id, t.id, i.nombres, i.apellidos, i.fotoRepresentante, i.tipoUsuario, i.profesion, i.areaTrabajo, " +
+            "t.descripcion, t.averageRating, t.precio) " +
+            "from TrabajoIndependiente t " +
+            "join t.independiente i " +
+            "where lower(t.descripcion) like lower(concat('%', :descripcion, '%')) " +
+            "and lower(i.areaTrabajo) like lower(concat('%', :areaTrabajo, '%')) " +
+            "and t.activo = true "+
+            "and i.activo=true "+
+            "and t.averageRating >= 4.0 " +
+            "order by t.precio asc")
+    List<FiltrosConsultasIndependientesDTO> findFiltrosByDescripcionPrecioAsc4(@Param("descripcion") String descripcion,@Param("areaTrabajo") String areaTrabajo);
+
+    /**
+     * Consulta personalizada que devuelve los datos requeridos en el DTO,
+     * haciendo join con la entidad Independiente. findFiltrosByDescripcionPrecioAsc3
+     */
+    @Query("select new com.professional.model.dto.FiltrosConsultasIndependientesDTO(" +
+            "i.id, t.id, i.nombres, i.apellidos, i.fotoRepresentante, i.tipoUsuario, i.profesion, i.areaTrabajo, " +
+            "t.descripcion, t.averageRating, t.precio) " +
+            "from TrabajoIndependiente t " +
+            "join t.independiente i " +
+            "where lower(t.descripcion) like lower(concat('%', :descripcion, '%')) " +
+            "and lower(i.areaTrabajo) like lower(concat('%', :areaTrabajo, '%')) " +
+            "and t.activo = true "+
+            "and i.activo=true "+
+            "and t.averageRating >= 3.0 " +
+            "order by t.precio asc")
+    List<FiltrosConsultasIndependientesDTO> findFiltrosByDescripcionPrecioAsc3(@Param("descripcion") String descripcion,@Param("areaTrabajo") String areaTrabajo);
+
+    /**
+     * Consulta personalizada que devuelve los datos requeridos en el DTO,
+     * haciendo join con la entidad Independiente. findFiltrosByDescripcionPrecioDesc4
+     */
+    @Query("select new com.professional.model.dto.FiltrosConsultasIndependientesDTO(" +
+            "i.id, t.id, i.nombres, i.apellidos, i.fotoRepresentante, i.tipoUsuario, i.profesion, i.areaTrabajo, " +
+            "t.descripcion, t.averageRating, t.precio) " +
+            "from TrabajoIndependiente t " +
+            "join t.independiente i " +
+            "where lower(t.descripcion) like lower(concat('%', :descripcion, '%')) " +
+            "and lower(i.areaTrabajo) like lower(concat('%', :areaTrabajo, '%')) " +
+            "and t.activo = true "+
+            "and i.activo=true "+
+            "and t.averageRating >= 4.0 " +
+            "order by t.precio desc")
+    List<FiltrosConsultasIndependientesDTO> findFiltrosByDescripcionPrecioDesc4(@Param("descripcion") String descripcion,@Param("areaTrabajo") String areaTrabajo);
+
+    /**
+     * Consulta personalizada que devuelve los datos requeridos en el DTO,
+     * haciendo join con la entidad Independiente. findFiltrosByDescripcionPrecioDesc3
+     */
+    @Query("select new com.professional.model.dto.FiltrosConsultasIndependientesDTO(" +
+            "i.id, t.id, i.nombres, i.apellidos, i.fotoRepresentante, i.tipoUsuario, i.profesion, i.areaTrabajo, " +
+            "t.descripcion, t.averageRating, t.precio) " +
+            "from TrabajoIndependiente t " +
+            "join t.independiente i " +
+            "where lower(t.descripcion) like lower(concat('%', :descripcion, '%')) " +
+            "and lower(i.areaTrabajo) like lower(concat('%', :areaTrabajo, '%')) " +
+            "and t.activo = true "+
+            "and i.activo=true "+
+            "and t.averageRating >= 3.0 " +
+            "order by t.precio desc")
+    List<FiltrosConsultasIndependientesDTO> findFiltrosByDescripcionPrecioDesc3(@Param("descripcion") String descripcion,@Param("areaTrabajo") String areaTrabajo);
+
+
+    @Query("select distinct new com.professional.model.dto.FiltrosConsultasIndependientesDTO(" +
+            "i.id, t.id, i.nombres, i.apellidos, i.fotoRepresentante, i.tipoUsuario, i.profesion, i.areaTrabajo, " +
+            "t.descripcion, t.averageRating, t.precio, t.ventas) " +
+            "from TrabajoIndEnAccion a " +
+            "join a.trabajoIndependiente t " +
+            "join t.independiente i " +
+            "where lower(t.descripcion) like lower(concat('%', :descripcion, '%')) " +
+            "and lower(i.areaTrabajo) like lower(concat('%', :areaTrabajo, '%')) " +
+            "and a.activo = true " +
+            "and t.activo = true " +
+            "and i.activo = true " +
+            "and t.averageRating >= 3.0 " +
+            "order by t.ventas asc")
+    List<FiltrosConsultasIndependientesDTO> findFiltrosByVentas3(@Param("descripcion") String descripcion,
+                                                                                @Param("areaTrabajo") String areaTrabajo);
+
+    @Query("select distinct new com.professional.model.dto.FiltrosConsultasIndependientesDTO(" +
+            "i.id, t.id, i.nombres, i.apellidos, i.fotoRepresentante, i.tipoUsuario, i.profesion, i.areaTrabajo, " +
+            "t.descripcion, t.averageRating, t.precio, t.ventas) " +
+            "from TrabajoIndEnAccion a " +
+            "join a.trabajoIndependiente t " +
+            "join t.independiente i " +
+            "where lower(t.descripcion) like lower(concat('%', :descripcion, '%')) " +
+            "and lower(i.areaTrabajo) like lower(concat('%', :areaTrabajo, '%')) " +
+            "and a.activo = true " +
+            "and t.activo = true " +
+            "and i.activo = true " +
+            "and t.averageRating >= 4.0 " +
+            "order by t.ventas asc")
+    List<FiltrosConsultasIndependientesDTO> findFiltrosByVentas4(@Param("descripcion") String descripcion,
+                                                                 @Param("areaTrabajo") String areaTrabajo);
+
+
 }
 

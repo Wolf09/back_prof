@@ -71,7 +71,7 @@ public class TrabajoIndEnAccionServiceImpl implements TrabajoIndEnAccionService 
      */
     @Override
     @Transactional
-    public TrabajoEnAccionDTO updateEstadoTrabajo(Long id, EstadoTrabajo estadoTrabajo) {
+    public HistorialIndependientes updateEstadoTrabajo(Long id, EstadoTrabajo estadoTrabajo) {
         TrabajoIndEnAccion trabajoIndEnAccion = trabajoIndEnAccionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TrabajoIndEnAccion no encontrado con ID: " + id));
 
@@ -80,10 +80,11 @@ public class TrabajoIndEnAccionServiceImpl implements TrabajoIndEnAccionService 
         trabajoIndEnAccion.setFechaCambio(LocalDateTime.now());
         TrabajoIndEnAccion actualizado = trabajoIndEnAccionRepository.save(trabajoIndEnAccion);
 
-        HistorialDTO historialDTO = null;
+        HistorialIndependientes historialIndependientes = null;
         if (estadoTrabajo == EstadoTrabajo.FINALIZADO && oldEstado != EstadoTrabajo.FINALIZADO) {
             // Crear una nueva instancia de HistorialIndependientes
             TrabajoIndependiente trabajoIndependiente = trabajoIndEnAccion.getTrabajoIndependiente();
+            trabajoIndependiente.setVentas(trabajoIndependiente.getVentas()+1L);
             Cliente cliente = trabajoIndEnAccion.getCliente();
 
             HistorialIndependientes historial = new HistorialIndependientes();
@@ -92,21 +93,9 @@ public class TrabajoIndEnAccionServiceImpl implements TrabajoIndEnAccionService 
             historial.setFechaSolicitud(LocalDateTime.now());
             historial.setActivo(true); // Asegurar que el historial está activo
 
-            historialDTO = historialService.createHistorialIndependientesDTO(historial);
+            historialIndependientes = historialService.createHistorialIndependientes(historial);
         }
-
-        // Mapear la entidad actualizada a DTO
-        TrabajoEnAccionDTO trabajoDTO = new TrabajoEnAccionDTO();
-        trabajoDTO.setId(actualizado.getId());
-        trabajoDTO.setEstadoTrabajo(actualizado.getEstadoTrabajo());
-        trabajoDTO.setFechaCambio(actualizado.getFechaCambio());
-        trabajoDTO.setActivo(actualizado.getActivo());
-
-        if (historialDTO != null) {
-            trabajoDTO.setHistorial(historialDTO);
-        }
-
-        return trabajoDTO;
+        return historialIndependientes;
     }
 
     /**
@@ -118,12 +107,15 @@ public class TrabajoIndEnAccionServiceImpl implements TrabajoIndEnAccionService 
     @Transactional
     @PreAuthorize("hasRole('INDEPENDIENTE')")
     public TrabajoIndEnAccion updateTrabajoEnAccion(Long id, TrabajoIndEnAccion trabajoEnAccionDetalles) {
+        HistorialIndependientes historialIndependientes = null;
         TrabajoIndEnAccion existente = trabajoIndEnAccionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TrabajoIndEnAccion no encontrado con ID: " + id));
 
+        historialIndependientes=this.updateEstadoTrabajo(id,trabajoEnAccionDetalles.getEstadoTrabajo());
         // Actualizar campos permitidos
         existente.setTrabajoIndependiente(trabajoEnAccionDetalles.getTrabajoIndependiente());
         existente.setEstadoTrabajo(trabajoEnAccionDetalles.getEstadoTrabajo());
+
 
         // Nota: fechaCambio es updatable = false en la entidad, así que no se actualiza.
 

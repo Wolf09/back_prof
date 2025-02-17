@@ -36,7 +36,6 @@ public class TrabajoIndEnAccion implements Serializable {
     // Relación Muchos a Uno con Cliente (creador del TrabajoIndEnAccion)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
-    @NotNull(message = "El cliente es obligatorio")
     @JsonIgnore
     private Cliente cliente;
 

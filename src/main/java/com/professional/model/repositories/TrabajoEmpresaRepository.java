@@ -1,10 +1,14 @@
 package com.professional.model.repositories;
 
+import com.professional.model.dto.FiltrosConsultasEmpresasDTO;
+import com.professional.model.dto.FiltrosConsultasIndependientesDTO;
 import com.professional.model.entities.Cliente;
 import com.professional.model.entities.Empresa;
 import com.professional.model.entities.TrabajoEmpEnAccion;
 import com.professional.model.entities.TrabajoEmpresa;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -68,6 +72,24 @@ public interface TrabajoEmpresaRepository extends JpaRepository<TrabajoEmpresa, 
      */
     List<TrabajoEmpresa> findByDescripcionContainingIgnoreCaseAndActivoTrueAndAverageRatingBetween(
             String descripcion, Double minRating, Double maxRating);
+
+    /**
+     * Consulta personalizada que devuelve los datos requeridos en el DTO,
+     * haciendo join con la entidad Independiente.
+     */
+    @Query("select new com.professional.model.dto.FiltrosConsultasEmpresasDTO("+
+            "e.nombreEmpresa,e.fotoRepresentante,e.tipoUsuario,e.areaTrabajo, "+
+            "t.descripcion, t.averageRating, t.precio) " +
+            "from TrabajoEmpresa t "+
+            "join t.empresa e "+
+            "where lower(t.descripcion) like lower(concat('%', :descripcion, '%')) " +
+            "and lower(e.areaTrabajo) like lower(concat('%', :areaTrabajo, '%')) " +
+            "and e.activo = true "+
+            "and e.activo=true")
+    List<FiltrosConsultasEmpresasDTO> findFiltrosByDescripcion(@Param("descripcion") String descripcion, @Param("areaTrabajo") String areaTrabajo);
+
+
+
 
 }
 
