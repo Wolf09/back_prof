@@ -107,6 +107,8 @@ public class EmpresaServiceImpl implements EmpresaService {
         existente.setCartaPresentacion(empresaDetalles.getCartaPresentacion());
         existente.setNombreEmpresa(empresaDetalles.getNombreEmpresa());
         existente.setAreaTrabajo(empresaDetalles.getAreaTrabajo());
+        existente.setPais(empresaDetalles.getPais());
+        existente.setCiudad(empresaDetalles.getCiudad());
 
         // Actualizar campos opcionales solo si no son null o vacíos
         if (empresaDetalles.getMision() != null && !empresaDetalles.getMision().isEmpty()) {

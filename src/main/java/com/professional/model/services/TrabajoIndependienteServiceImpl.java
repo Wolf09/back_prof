@@ -1,8 +1,10 @@
 package com.professional.model.services;
 
+import com.professional.model.dto.TrabajoIndependienteDTO;
 import com.professional.model.entities.Independiente;
 import com.professional.model.entities.TrabajoIndependiente;
 import com.professional.model.exceptions.ResourceNotFoundException;
+import com.professional.model.repositories.IndependienteRepository;
 import com.professional.model.repositories.TrabajoIndependienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,12 @@ import java.util.List;
 public class TrabajoIndependienteServiceImpl implements TrabajoIndependienteService {
 
     private final TrabajoIndependienteRepository trabajoIndependienteRepository;
+    private final IndependienteRepository independienteRepository;
 
     @Autowired
-    public TrabajoIndependienteServiceImpl(TrabajoIndependienteRepository trabajoIndependienteRepository) {
+    public TrabajoIndependienteServiceImpl(TrabajoIndependienteRepository trabajoIndependienteRepository, IndependienteRepository independienteRepository) {
         this.trabajoIndependienteRepository = trabajoIndependienteRepository;
+        this.independienteRepository = independienteRepository;
     }
 
     /**
@@ -44,8 +48,10 @@ public class TrabajoIndependienteServiceImpl implements TrabajoIndependienteServ
      */
     @Override
     @Transactional
-    public TrabajoIndependiente createTrabajoIndependiente(TrabajoIndependiente trabajoIndependiente) {
+    public TrabajoIndependiente createTrabajoIndependiente(Long id,TrabajoIndependiente trabajoIndependiente) {
+        Independiente independiente= independienteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Independiente no encontrado con ID: " + id));
         trabajoIndependiente.setActivo(true);
+        trabajoIndependiente.setIndependiente(independiente);
         return trabajoIndependienteRepository.save(trabajoIndependiente);
     }
 
@@ -98,5 +104,14 @@ public class TrabajoIndependienteServiceImpl implements TrabajoIndependienteServ
                 .filter(trabajo -> trabajo.getIndependiente().getId().equals(independiente.getId()) && trabajo.getActivo())
                 .toList();
     }
+
+
+
+
+
+
+
+
+
 }
 

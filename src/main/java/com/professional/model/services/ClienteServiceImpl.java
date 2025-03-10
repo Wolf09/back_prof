@@ -456,13 +456,27 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<FiltrosConsultasEmpresasDTO> listarFiltrosConsultasEmpresas(String descripcion, String areaTrabajo) {
+    public List<FiltrosConsultasEmpresasDTO> listarFiltrosConsultasEmpresasParametros(String descripcion, String areaTrabajo, String filtro, String calificacion) {
         if (descripcion == null || descripcion.trim().isEmpty()) {
             throw new IllegalArgumentException("La descripción no puede estar vacía.");
         }
+        if (filtro.equals("asc")&&calificacion.equals("4")){
+            return trabajoEmpresaRepository.findFiltrosByDescripcionPrecioAsc4(descripcion,areaTrabajo);
+        }else if(filtro.equals("desc")&&calificacion.equals("4")){
+            return trabajoEmpresaRepository.findFiltrosByDescripcionPrecioDesc4(descripcion,areaTrabajo);
+        }else if (filtro.equals("asc")&&calificacion.equals("3")){
+            return trabajoEmpresaRepository.findFiltrosByDescripcionPrecioAsc3(descripcion,areaTrabajo);
+        } else if (filtro.equals("desc")&&calificacion.equals("3")) {
+            return trabajoEmpresaRepository.findFiltrosByDescripcionPrecioDesc3(descripcion,areaTrabajo);
+        } else if (filtro.equals("ventas")&&calificacion.equals("4")) {
+            return trabajoEmpresaRepository.findFiltrosByVentas4(descripcion,areaTrabajo);
+        } else if (filtro.equals("ventas")&& calificacion.equals("3")) {
+            return trabajoEmpresaRepository.findFiltrosByVentas3(descripcion,areaTrabajo);
+        }
+
 
         return trabajoEmpresaRepository.findFiltrosByDescripcion(descripcion,areaTrabajo);
     }
+
 
 }

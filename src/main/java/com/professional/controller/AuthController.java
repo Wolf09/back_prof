@@ -4,28 +4,30 @@ import com.professional.model.dto.RegistroDTO;
 import com.professional.model.dto.LoginDTO;
 import com.professional.model.dto.Error;
 import com.professional.model.services.AuthService;
+import jakarta.validation.Validator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/auth")
 public class AuthController {
 
     private final AuthService authService;
+    private final Validator validator;
 
     @Autowired
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, Validator validator) {
         this.authService = authService;
+        this.validator = validator;
     }
-
     /**
      * Registro de nuevos usuarios.
      *

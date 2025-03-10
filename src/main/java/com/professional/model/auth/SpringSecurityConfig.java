@@ -5,11 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
@@ -24,21 +29,36 @@ public class SpringSecurityConfig {
     }
 
     @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:4200");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+    @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests(auth -> auth
-                        //.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"),  // TODO esto se debe borrar y agregar otro que permita ver la pantalla de inicio sin restricciones
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/auth/login"),
                                 AntPathRequestMatcher.antMatcher("/auth/registro"),
+                                AntPathRequestMatcher.antMatcher("/up/**"),
                                 AntPathRequestMatcher.antMatcher("/auth/confirmar-cuenta")).permitAll()
+                        .requestMatchers("/trabajo-independiente/**").hasRole("INDEPENDIENTE")
                         .anyRequest().authenticated()
                 )
-                .addFilter(new JwtValidationFilter(authenticationManager()))
+                .cors(Customizer.withDefaults())
+                //.addFilter(new JwtValidationFilter(authenticationManager()))
+                .addFilterBefore(new JwtValidationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"))
                         .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/auth/login"))
                         .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/auth/registro"))
+                        .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/up/**"))
                         .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/auth/confirmar-cuenta"))
+                        .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/trabajo-independiente/**"))
                 )
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

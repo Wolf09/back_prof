@@ -27,6 +27,7 @@ import java.util.List;
  * Controlador para gestionar las operaciones CRUD de la entidad TrabajoIndEnAccion.
  */
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/trabajo-ind-en-accion")
 public class TrabajoIndEnAccionController {
 

@@ -25,7 +25,6 @@ public class FiltrosConsultasEmpresasDTO {
     @Column(name = "tipo_usuario", nullable = false)
     private String tipoUsuario;
     @Column(name = "area_trabajo")
-    @NotBlank
     private String areaTrabajo;
 
     @NotBlank(message = "La descripción del trabajo es obligatoria")
@@ -38,7 +37,12 @@ public class FiltrosConsultasEmpresasDTO {
     @Column(name = "precio", nullable = false)
     private Double precio;
 
-    public FiltrosConsultasEmpresasDTO(String nombreEmpresa, String fotoRepresentante, String tipoUsuario, String areaTrabajo, String descripcion, Double averageRating, Double precio) {
+    @Column(name = "ventas", nullable = false)
+    private Long ventas;
+
+    public FiltrosConsultasEmpresasDTO(Long idEmpresa, Long idTrabajoEmp, String nombreEmpresa, String fotoRepresentante, String tipoUsuario, String areaTrabajo, String descripcion, Double averageRating, Double precio) {
+        this.idEmpresa = idEmpresa;
+        this.idTrabajoEmp = idTrabajoEmp;
         this.nombreEmpresa = nombreEmpresa;
         this.fotoRepresentante = fotoRepresentante;
         this.tipoUsuario = tipoUsuario;
@@ -46,6 +50,19 @@ public class FiltrosConsultasEmpresasDTO {
         this.descripcion = descripcion;
         this.averageRating = averageRating;
         this.precio = precio;
+    }
+
+    public FiltrosConsultasEmpresasDTO(Long idEmpresa, Long idTrabajoEmp, String nombreEmpresa, String fotoRepresentante, String tipoUsuario, String areaTrabajo, String descripcion, Double averageRating, Double precio, Long ventas) {
+        this.idEmpresa = idEmpresa;
+        this.idTrabajoEmp = idTrabajoEmp;
+        this.nombreEmpresa = nombreEmpresa;
+        this.fotoRepresentante = fotoRepresentante;
+        this.tipoUsuario = tipoUsuario;
+        this.areaTrabajo = areaTrabajo;
+        this.descripcion = descripcion;
+        this.averageRating = averageRating;
+        this.precio = precio;
+        this.ventas = ventas;
     }
 
     public FiltrosConsultasEmpresasDTO() {
@@ -105,5 +122,29 @@ public class FiltrosConsultasEmpresasDTO {
 
     public void setTipoUsuario(String tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
+    }
+
+    public Long getIdEmpresa() {
+        return idEmpresa;
+    }
+
+    public void setIdEmpresa(Long idEmpresa) {
+        this.idEmpresa = idEmpresa;
+    }
+
+    public Long getIdTrabajoEmp() {
+        return idTrabajoEmp;
+    }
+
+    public void setIdTrabajoEmp(Long idTrabajoEmp) {
+        this.idTrabajoEmp = idTrabajoEmp;
+    }
+
+    public Long getVentas() {
+        return ventas;
+    }
+
+    public void setVentas(Long ventas) {
+        this.ventas = ventas;
     }
 }

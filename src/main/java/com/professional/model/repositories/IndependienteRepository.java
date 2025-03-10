@@ -1,5 +1,6 @@
 package com.professional.model.repositories;
 
+import com.professional.model.dto.TrabajoIndependienteDTO;
 import com.professional.model.entities.Independiente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

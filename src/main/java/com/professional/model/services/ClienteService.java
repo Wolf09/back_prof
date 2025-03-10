@@ -141,6 +141,6 @@ public interface ClienteService {
 
     List<FiltrosConsultasIndependientesDTO> listarFiltrosConsultasIndependientesParametros(String descripcion, String areaTrabajo, String filtro, String calificacion);
 
-    List<FiltrosConsultasEmpresasDTO> listarFiltrosConsultasEmpresas(String descripcion, String areaTrabajo);
+    List<FiltrosConsultasEmpresasDTO> listarFiltrosConsultasEmpresasParametros(String descripcion, String areaTrabajo, String filtro, String calificacion);
 
 }

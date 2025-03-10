@@ -20,6 +20,10 @@ public class TrabajoIndependiente implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "La descripción corta es obligatoria")
+    @Column(name = "descripcion_corta")
+    private String descripcionCorta;
+
     @NotBlank(message = "La descripción del trabajo es obligatoria")
     private String descripcion;
 
@@ -42,7 +46,6 @@ public class TrabajoIndependiente implements Serializable {
     // Relación Muchos a Uno con Independiente
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "independiente_id", nullable = false)
-    @NotNull(message = "El independiente es obligatorio")
     @JsonIgnore
     private Independiente independiente;
 
@@ -191,6 +194,15 @@ public class TrabajoIndependiente implements Serializable {
         this.fechaCreacion = fechaCreacion;
     }
 // toString (opcional)
+
+
+    public String getDescripcionCorta() {
+        return descripcionCorta;
+    }
+
+    public void setDescripcionCorta(String descripcionCorta) {
+        this.descripcionCorta = descripcionCorta;
+    }
 
     @Override
     public String toString() {

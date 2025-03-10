@@ -24,6 +24,7 @@ import java.util.List;
  * Controlador para gestionar las operaciones CRUD de la entidad Cliente.
  */
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/clientes")
 public class ClienteController {
 
@@ -237,8 +238,10 @@ public class ClienteController {
     }
 
     @GetMapping("/filtroConsultasEmpresas")
-    public ResponseEntity<List<FiltrosConsultasEmpresasDTO>> listarFiltrosEmpresas(@RequestParam String descripcion, @RequestParam String areaTrabajo) {
-        List<FiltrosConsultasEmpresasDTO> lista = clienteService.listarFiltrosConsultasEmpresas(descripcion, areaTrabajo);
+    public ResponseEntity<List<FiltrosConsultasEmpresasDTO>> listarFiltrosEmpresas(@RequestParam String descripcion,@RequestParam String areaTrabajo,
+                                                                                   @RequestParam String filtro,@RequestParam String calificacion) {
+        List<FiltrosConsultasEmpresasDTO> lista = clienteService.listarFiltrosConsultasEmpresasParametros(descripcion, areaTrabajo,
+                                                                    filtro,calificacion);
         return ResponseEntity.ok(lista);
     }
 

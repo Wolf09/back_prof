@@ -1,5 +1,6 @@
 package com.professional.model.repositories;
 import com.professional.model.dto.FiltrosConsultasIndependientesDTO;
+import com.professional.model.dto.TrabajoIndependienteDTO;
 import com.professional.model.entities.TrabajoIndependiente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -55,6 +56,21 @@ public interface TrabajoIndependienteRepository extends JpaRepository<TrabajoInd
      */
     List<TrabajoIndependiente> findByDescripcionContainingIgnoreCaseAndActivoTrueAndAverageRatingBetween(
             String descripcion, Double minRating, Double maxRating);
+
+
+    /**
+     * Consulta personalizada para mis-trabajos-independientes
+     */
+    @Query("select new com.professional.model.dto.TrabajoIndependienteDTO(" +
+            "i.id, t.id, i.profesion, i.nombres, i.apellidos, i.cartaPresentacion, i.mision, i.vision, i.pais, " +
+            "i.ciudad, i.areaTrabajo,t.fechaCreacion, t.descripcionCorta, t.descripcion, t.averageRating, t.precio, t.ventas, i.fotoTitulo) " +
+            "from TrabajoIndependiente t " +
+            "join t.independiente i " +
+            "where t.activo = true "+
+            "and i.activo=true "+
+            "and t.independiente.id= :id")
+    List<TrabajoIndependienteDTO> misTrabajosIndependientes(@Param("id") Long id);
+
 
     /**
      * Consulta personalizada que devuelve los datos requeridos en el DTO,

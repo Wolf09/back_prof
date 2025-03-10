@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/trabajo-independiente")
 public class TrabajoIndependienteController {
     private final TrabajoIndependienteService trabajoIndependienteService;
@@ -30,8 +31,8 @@ public class TrabajoIndependienteController {
     }
 
     @Transactional
-    @PostMapping("/crear")
-    public ResponseEntity<?> crearTrabajoIndependiente(@Valid @RequestBody TrabajoIndependiente trabajoIndependiente,
+    @PostMapping("/crear/{id}")
+    public ResponseEntity<?> crearTrabajoIndependiente(@PathVariable Long id,@Valid @RequestBody TrabajoIndependiente trabajoIndependiente,
                                                         BindingResult result){
         if (result.hasErrors()){
             List<Error> errores = new ArrayList<>();
@@ -41,13 +42,7 @@ public class TrabajoIndependienteController {
             return new ResponseEntity<>(errores, HttpStatus.BAD_REQUEST);
         }
 
-        // Asegurarse de que el Independiente existe y está activo
-        Independiente independiente = independienteService.getIndependienteById(trabajoIndependiente.getIndependiente().getId());
-
-        // Asignar el Independiente al TrabajoIndependiente
-        trabajoIndependiente.setIndependiente(independiente);
-        trabajoIndependiente.setActivo(true);
-        TrabajoIndependiente creado= trabajoIndependienteService.createTrabajoIndependiente(trabajoIndependiente);
+        TrabajoIndependiente creado= trabajoIndependienteService.createTrabajoIndependiente(id,trabajoIndependiente);
         return new ResponseEntity<>(creado, HttpStatus.CREATED);
     }
 
@@ -93,7 +88,7 @@ public class TrabajoIndependienteController {
     }
 
     @Transactional
-    @DeleteMapping("/eliminar/{id}")
+    @PostMapping("/eliminar/{id}")
     public ResponseEntity<?> eliminarTrabajoIndependiente(@PathVariable Long id){
         trabajoIndependienteService.deleteTrabajoIndependiente(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

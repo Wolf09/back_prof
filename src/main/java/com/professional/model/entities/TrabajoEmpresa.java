@@ -18,6 +18,10 @@ public class TrabajoEmpresa implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+    @NotBlank(message = "La descripción corta es obligatoria")
+    @Column(name = "descripcion_corta")
+    private String descripcionCorta;
     @NotBlank(message = "La descripción del trabajo es obligatoria")
     private String descripcion;
 
@@ -209,6 +213,14 @@ public class TrabajoEmpresa implements Serializable {
 
     public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public String getDescripcionCorta() {
+        return descripcionCorta;
+    }
+
+    public void setDescripcionCorta(String descripcionCorta) {
+        this.descripcionCorta = descripcionCorta;
     }
 
     // Serial UID

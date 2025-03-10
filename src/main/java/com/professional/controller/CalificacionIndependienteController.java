@@ -23,6 +23,7 @@ import java.util.List;
  * Controlador para gestionar las operaciones CRUD de la entidad CalificacionIndependientes.
  */
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/calificaciones-independientes")
 public class CalificacionIndependienteController {
 

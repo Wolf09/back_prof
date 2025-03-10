@@ -16,17 +16,17 @@ public class VerificationToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column( unique = true)
     private String token;
 
-    @Column(nullable = false)
+    @Column()
     private String correo;
 
-    @Column(nullable = false)
+    @Column()
     private LocalDateTime fechaExpiracion;
 
     @NotNull
-    @Column(name = "tipo_usuario", nullable = false)
+    @Column(name = "tipo_usuario")
     private String tipoUsuario;
 
     // Constructor por defecto

@@ -72,11 +72,14 @@ public class AuthServiceImpl implements AuthService {
         cliente.setPassword(passwordEncoder.encode(dto.getPassword()));
         cliente.setActivo(false); // Se activará tras confirmar el correo
         cliente.setTipoUsuario(dto.getTipoUsuario());
+        cliente.setPais(dto.getPais());
+        cliente.setCiudad(dto.getCiudad());
 
         Cliente guardado = clienteRepository.save(cliente);
 
         System.out.println("Cliente guardado: "+guardado.getTipoUsuario());
-        enviarCorreoConfirmacion(guardado.getCorreo(), generarToken(guardado.getCorreo(),LocalDateTime.now().plusHours(72),guardado.getTipoUsuario()));
+        enviarCorreoConfirmacion(guardado.getCorreo(), generarToken(guardado.getCorreo(),LocalDateTime.now().plusHours(72),guardado.getTipoUsuario(),
+                guardado.getPais(),guardado.getCiudad(),guardado.getId()));
     }
 
     private void registrarEmpresa(RegistroDTO dto) {
@@ -98,10 +101,13 @@ public class AuthServiceImpl implements AuthService {
         empresa.setAreaTrabajo(dto.getAreaTrabajo());
         empresa.setActivo(false); // Se activará tras confirmar el correo
         empresa.setTipoUsuario(dto.getTipoUsuario());
+        empresa.setPais(dto.getPais());
+        empresa.setCiudad(dto.getCiudad());
 
         Empresa guardada = empresaRepository.save(empresa);
 
-        enviarCorreoConfirmacion(guardada.getCorreo(), generarToken(guardada.getCorreo(),LocalDateTime.now().plusHours(72),guardada.getTipoUsuario()));
+        enviarCorreoConfirmacion(guardada.getCorreo(), generarToken(guardada.getCorreo(),LocalDateTime.now().plusHours(72),guardada.getTipoUsuario(),
+                guardada.getPais(),guardada.getCiudad(),guardada.getId()));
     }
 
     private void registrarIndependiente(RegistroDTO dto) {
@@ -118,16 +124,20 @@ public class AuthServiceImpl implements AuthService {
         independiente.setDniReverso(dto.getDniReverso());
         independiente.setProfesion(dto.getProfesion());
         independiente.setFotoTitulo(dto.getFotoTitulo());
+        independiente.setAreaTrabajo(dto.getAreaTrabajo());
         independiente.setActivo(false); // Se activará tras confirmar el correo
         independiente.setTipoUsuario(dto.getTipoUsuario());
+        independiente.setPais(dto.getPais());
+        independiente.setCiudad(dto.getCiudad());
 
         Independiente guardado = independienteRepository.save(independiente);
 
-        enviarCorreoConfirmacion(guardado.getCorreo(), generarToken(guardado.getCorreo(),LocalDateTime.now().plusHours(72),guardado.getTipoUsuario()));
+        enviarCorreoConfirmacion(guardado.getCorreo(), generarToken(guardado.getCorreo(),LocalDateTime.now().plusHours(72),guardado.getTipoUsuario(),
+                guardado.getPais(),guardado.getCiudad(),guardado.getId()));
     }
 
-    private String generarToken(String correo, LocalDateTime fechaExpiracion, String tipoUsuario) {
-        String token = GeneradorJwt.generarToken(correo,fechaExpiracion,tipoUsuario);
+    private String generarToken(String correo, LocalDateTime fechaExpiracion, String tipoUsuario,String pais,String ciudad, Long id) {
+        String token = GeneradorJwt.generarToken(correo,fechaExpiracion,tipoUsuario,pais,ciudad,id);
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);
         verificationToken.setCorreo(correo);
@@ -258,21 +268,24 @@ public class AuthServiceImpl implements AuthService {
             if (cliente.getActivo() && passwordEncoder.matches(password, cliente.getPassword())) {
                 Optional<VerificationToken> verificationToken = verificationTokenRepository.findByCorreo(cliente.getCorreo());
                 verificationToken.ifPresent(verificationTokenRepository::delete);
-                return generarToken(cliente.getCorreo(), LocalDateTime.now().plusHours(72), cliente.getTipoUsuario());
+                return generarToken(cliente.getCorreo(), LocalDateTime.now().plusHours(72), cliente.getTipoUsuario(),
+                                    cliente.getPais(),cliente.getCiudad(),cliente.getId());
             }
         } else if (empresaOpt.isPresent()) {
             Empresa empresa = empresaOpt.get();
             if (empresa.getActivo() && passwordEncoder.matches(password, empresa.getPassword())) {
                 Optional<VerificationToken> verificationToken = verificationTokenRepository.findByCorreo(empresa.getCorreo());
                 verificationToken.ifPresent(verificationTokenRepository::delete);
-                return generarToken(empresa.getCorreo(), LocalDateTime.now().plusHours(72), empresa.getTipoUsuario());
+                return generarToken(empresa.getCorreo(), LocalDateTime.now().plusHours(72), empresa.getTipoUsuario(),
+                        empresa.getPais(),empresa.getCiudad(),empresa.getId());
             }
         } else if (independienteOpt.isPresent()) {
             Independiente independiente = independienteOpt.get();
             if (independiente.getActivo() && passwordEncoder.matches(password, independiente.getPassword())) {
                 Optional<VerificationToken> verificationToken = verificationTokenRepository.findByCorreo(independiente.getCorreo());
                 verificationToken.ifPresent(verificationTokenRepository::delete);
-                return generarToken(independiente.getCorreo(), LocalDateTime.now().plusHours(72), independiente.getTipoUsuario());
+                return generarToken(independiente.getCorreo(), LocalDateTime.now().plusHours(72), independiente.getTipoUsuario(),
+                        independiente.getPais(),independiente.getCiudad(),independiente.getId());
             }
         }
 

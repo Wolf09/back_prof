@@ -105,7 +105,6 @@ public class TrabajoIndEnAccionServiceImpl implements TrabajoIndEnAccionService 
      */
     @Override
     @Transactional
-    @PreAuthorize("hasRole('INDEPENDIENTE')")
     public TrabajoIndEnAccion updateTrabajoEnAccion(Long id, TrabajoIndEnAccion trabajoEnAccionDetalles) {
         HistorialIndependientes historialIndependientes = null;
         TrabajoIndEnAccion existente = trabajoIndEnAccionRepository.findById(id)

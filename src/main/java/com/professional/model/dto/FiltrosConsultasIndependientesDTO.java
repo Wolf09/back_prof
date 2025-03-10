@@ -35,7 +35,6 @@ public class FiltrosConsultasIndependientesDTO {
     private String profesion;
 
     @Column(name = "area_trabajo")
-    @NotBlank
     private String areaTrabajo;
 
     @NotBlank(message = "La descripción del trabajo es obligatoria")

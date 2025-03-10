@@ -1,6 +1,7 @@
 package com.professional.controller;
 
 import com.professional.model.dto.Error;
+import com.professional.model.dto.TrabajoIndependienteDTO;
 import com.professional.model.entities.Independiente;
 import com.professional.model.entities.TrabajoIndependiente;
 import com.professional.model.services.IndependienteService;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/independiente")
 public class IndependienteController {
 
@@ -67,6 +69,20 @@ public class IndependienteController {
     @GetMapping("/{id}/trabajos")
     public ResponseEntity<List<TrabajoIndependiente>> obtenerTrabajosIndependientes(@PathVariable Long id) {
         List<TrabajoIndependiente> trabajos = independienteService.getTrabajosIndependientesByIndependiente(id);
+        return new ResponseEntity<>(trabajos, HttpStatus.OK);
+    }
+
+
+    /**
+     * Obtener todos los TrabajosIndependienteDTO de un Independiente, incluyendo las calificaciones y los Clientes que las realizaron.
+     *
+     * @param id ID del Independiente.
+     * @return ResponseEntity con la lista de TrabajosIndependiente y sus calificaciones.
+     */
+    @Transactional(readOnly = true)
+    @GetMapping("/mistrabajos/{id}")
+    public ResponseEntity<List<TrabajoIndependienteDTO>> misTrabajosIndependientes(@PathVariable Long id) {
+        List<TrabajoIndependienteDTO> trabajos = independienteService.misTrabajosIndependientes(id);
         return new ResponseEntity<>(trabajos, HttpStatus.OK);
     }
 

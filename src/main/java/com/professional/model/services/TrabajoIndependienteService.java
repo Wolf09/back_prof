@@ -28,7 +28,7 @@ public interface TrabajoIndependienteService {
      * @param trabajoIndependiente Datos del Trabajo Independiente a crear.
      * @return Trabajo Independiente creado.
      */
-    TrabajoIndependiente createTrabajoIndependiente(TrabajoIndependiente trabajoIndependiente);
+    TrabajoIndependiente createTrabajoIndependiente(Long id,TrabajoIndependiente trabajoIndependiente);
 
     /**
      * Actualizar un Trabajo Independiente existente.

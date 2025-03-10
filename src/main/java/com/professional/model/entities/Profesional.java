@@ -32,7 +32,8 @@ public abstract class Profesional {
             message = "La contraseña debe incluir al menos una letra mayúscula, un número y un carácter especial")
     @Column(length = 200) // Para acomodar el hash de BCrypt
     private String password;
-    @NotBlank
+
+    //@NotBlank
     @Column(name = "carta_presentacion")
     private String cartaPresentacion;
 
@@ -40,25 +41,30 @@ public abstract class Profesional {
 
     private String vision;
 
+    private String pais;
+
+    private String ciudad;
+
     @Column(name = "dni_anverso")
     private String dniAnverso;
 
     @Column(name = "dni_reverso")
     private String dniReverso;
-    @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "fecha_apertura")
     private LocalDateTime fechaApertura;
-    @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "fecha_pago_inicio")
     private LocalDateTime fechaPagoInicio;
-    @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "fecha_pago_fin")
     private LocalDateTime fechaPagoFin;
-    @NotNull
+    //@NotNull
     @Column(name = "activo", nullable = false)
     protected Boolean activo;
 
-    @NotNull
+    //@NotNull
     @Column(name = "tipo_usuario", nullable = false)
     private String tipoUsuario;
 
@@ -197,5 +203,21 @@ public abstract class Profesional {
 
     public void setTipoUsuario(String tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
+    }
+
+    public String getPais() {
+        return pais;
+    }
+
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
+
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
     }
 }

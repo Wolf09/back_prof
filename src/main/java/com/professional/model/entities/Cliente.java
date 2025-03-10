@@ -42,16 +42,22 @@ public class Cliente implements Serializable {
     @Column(length = 200) // Para acomodar el hash de BCrypt
     private String password;
 
-    @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "fecha_apertura", nullable = false, updatable = false)
     private LocalDateTime fechaApertura;
 
     @NotNull
     private Boolean activo;
 
-    @NotNull
+    @NotBlank(message = "El tipoUsuario no debe estar en blanco")
     @Column(name = "tipo_usuario", nullable = false)
     private String tipoUsuario;
+
+    @NotBlank(message = "El Pais no debe estar en blanco")
+    private String pais;
+
+    @NotBlank(message = "La ciudad no debe estar en blanco")
+    private String ciudad;
 
     // Relaciones con otras entidades
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -154,6 +160,22 @@ public class Cliente implements Serializable {
 
     public void setTipoUsuario(String tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
+    }
+
+    public String getPais() {
+        return pais;
+    }
+
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
+
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
     }
 
     public List<HistorialIndependientes> getHistorialIndependientes() {

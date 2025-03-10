@@ -1,5 +1,6 @@
 package com.professional.model.services;
 
+import com.professional.model.dto.TrabajoIndependienteDTO;
 import com.professional.model.entities.Independiente;
 import com.professional.model.entities.TrabajoIndependiente;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +55,8 @@ public interface IndependienteService {
      */
     void deleteIndependiente(Long id);
 
-    @Transactional(readOnly = true)
     List<TrabajoIndependiente> getTrabajosIndependientesByIndependiente(Long independienteId);
+
+    List<TrabajoIndependienteDTO> misTrabajosIndependientes(Long independienteId);
 }
 

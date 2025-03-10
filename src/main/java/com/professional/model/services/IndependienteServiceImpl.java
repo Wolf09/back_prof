@@ -1,10 +1,12 @@
 package com.professional.model.services;
 
 import com.professional.controller.exceptions.ResourceAlreadyExistsException;
+import com.professional.model.dto.TrabajoIndependienteDTO;
 import com.professional.model.entities.Independiente;
 import com.professional.model.entities.TrabajoIndependiente;
 import com.professional.model.exceptions.ResourceNotFoundException;
 import com.professional.model.repositories.IndependienteRepository;
+import com.professional.model.repositories.TrabajoIndependienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -20,14 +22,17 @@ public class IndependienteServiceImpl implements IndependienteService {
 
     private final IndependienteRepository independienteRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TrabajoIndependienteRepository trabajoIndependienteRepository;
+
     private final TrabajoIndependienteService trabajoIndependienteService;
 
     @Autowired
     public IndependienteServiceImpl(IndependienteRepository independienteRepository,
-                                    PasswordEncoder passwordEncoder, TrabajoIndependienteService trabajoIndependienteService) {
+                                    PasswordEncoder passwordEncoder, TrabajoIndependienteService trabajoIndependienteService, TrabajoIndependienteRepository trabajoIndependienteRepository, TrabajoIndependienteService trabajoIndependienteService1) {
         this.independienteRepository = independienteRepository;
         this.passwordEncoder = passwordEncoder;
-        this.trabajoIndependienteService = trabajoIndependienteService;
+        this.trabajoIndependienteRepository = trabajoIndependienteRepository;
+        this.trabajoIndependienteService = trabajoIndependienteService1;
     }
 
     /**
@@ -106,6 +111,8 @@ public class IndependienteServiceImpl implements IndependienteService {
         existente.setCelular(independienteDetalles.getCelular());
         existente.setCorreo(independienteDetalles.getCorreo());
         existente.setCartaPresentacion(independienteDetalles.getCartaPresentacion());
+        existente.setPais(independienteDetalles.getPais());
+        existente.setCiudad(independienteDetalles.getCiudad());
 
         if (independienteDetalles.getMision() != null && !independienteDetalles.getMision().isEmpty()) {
             existente.setMision(independienteDetalles.getMision());
@@ -176,6 +183,22 @@ public class IndependienteServiceImpl implements IndependienteService {
         Independiente independiente = getIndependienteById(independienteId);
         return trabajoIndependienteService.getTrabajosIndependientesByIndependiente(independiente);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoIndependienteDTO> misTrabajosIndependientes(Long independienteId) {
+        Independiente independiente = getIndependienteById(independienteId);
+        if (independiente == null) {
+            throw new ResourceNotFoundException("Independiente no encontrado con ID: " + independienteId);
+        }
+        // Invocar el método del repositorio que retorna la lista de DTOs
+        return trabajoIndependienteRepository.misTrabajosIndependientes(independienteId);
+    }
+
+
+
+
+
 
 }
 
