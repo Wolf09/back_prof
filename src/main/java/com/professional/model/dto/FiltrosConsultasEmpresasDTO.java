@@ -1,8 +1,6 @@
 package com.professional.model.dto;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -40,19 +38,11 @@ public class FiltrosConsultasEmpresasDTO {
     @Column(name = "ventas", nullable = false)
     private Long ventas;
 
-    public FiltrosConsultasEmpresasDTO(Long idEmpresa, Long idTrabajoEmp, String nombreEmpresa, String fotoRepresentante, String tipoUsuario, String areaTrabajo, String descripcion, Double averageRating, Double precio) {
-        this.idEmpresa = idEmpresa;
-        this.idTrabajoEmp = idTrabajoEmp;
-        this.nombreEmpresa = nombreEmpresa;
-        this.fotoRepresentante = fotoRepresentante;
-        this.tipoUsuario = tipoUsuario;
-        this.areaTrabajo = areaTrabajo;
-        this.descripcion = descripcion;
-        this.averageRating = averageRating;
-        this.precio = precio;
-    }
+    private String pais;
 
-    public FiltrosConsultasEmpresasDTO(Long idEmpresa, Long idTrabajoEmp, String nombreEmpresa, String fotoRepresentante, String tipoUsuario, String areaTrabajo, String descripcion, Double averageRating, Double precio, Long ventas) {
+    private String ciudad;
+
+    public FiltrosConsultasEmpresasDTO(Long idEmpresa, Long idTrabajoEmp, String nombreEmpresa, String fotoRepresentante, String tipoUsuario, String areaTrabajo, String descripcion, Double averageRating, Double precio, Long ventas, String pais, String ciudad) {
         this.idEmpresa = idEmpresa;
         this.idTrabajoEmp = idTrabajoEmp;
         this.nombreEmpresa = nombreEmpresa;
@@ -63,7 +53,11 @@ public class FiltrosConsultasEmpresasDTO {
         this.averageRating = averageRating;
         this.precio = precio;
         this.ventas = ventas;
+        this.pais = pais;
+        this.ciudad = ciudad;
     }
+
+
 
     public FiltrosConsultasEmpresasDTO() {
     }
@@ -146,5 +140,21 @@ public class FiltrosConsultasEmpresasDTO {
 
     public void setVentas(Long ventas) {
         this.ventas = ventas;
+    }
+
+    public String getPais() {
+        return pais;
+    }
+
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
+
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
     }
 }

@@ -1,5 +1,6 @@
 package com.professional.model.services;
 
+import com.professional.model.dto.TrabajoEmpresaDTO;
 import com.professional.model.entities.Empresa;
 import com.professional.model.entities.Independiente;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,5 +54,6 @@ public interface EmpresaService {
      * @param id ID de la Empresa a eliminar.
      */
     void deleteEmpresa(Long id);
+    List<TrabajoEmpresaDTO> misTrabajosEmpresas(Long empresaId);
 }
 

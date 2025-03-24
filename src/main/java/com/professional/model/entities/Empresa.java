@@ -25,6 +25,9 @@ public class Empresa extends Profesional implements Serializable {
     @Column(name = "licencia_comercial")
     private String licenciaComercial;
 
+    @Column(name = "foto_Titulo")
+    private String fotoTitulo;
+
     @Column(name = "area_trabajo")
     @NotBlank
     private String areaTrabajo;
@@ -97,6 +100,13 @@ public class Empresa extends Profesional implements Serializable {
         trabajoEmpresa.setEmpresa(null);
     }
 
+    public String getFotoTitulo() {
+        return fotoTitulo;
+    }
+
+    public void setFotoTitulo(String fotoTitulo) {
+        this.fotoTitulo = fotoTitulo;
+    }
 
     @Serial
     private static final long serialVersionUID = 1L;

@@ -50,6 +50,8 @@ public class RegistroDTO {
 
     private String ciudad;
 
+    private String direccion;
+
     private String dniAnverso;
     private String dniReverso;
 
@@ -226,5 +228,13 @@ public class RegistroDTO {
 
     public void setCiudad(String ciudad) {
         this.ciudad = ciudad;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 }

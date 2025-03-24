@@ -142,6 +142,15 @@ public class TrabajoEmpEnAccionServiceImpl implements TrabajoEmpEnAccionService 
         return historialEmpresas;
     }
 
+    @Override
+    public void updateEstadoTrabajoEnAccion(Long id, EstadoTrabajo estadoTrabajo){
+        TrabajoEmpEnAccion trabajoEmpEnAccion=trabajoEmpEnAccionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("TrabajoEmpEnAccion no encontrado con ID: " + id));
+        trabajoEmpEnAccion.setEstadoTrabajo(estadoTrabajo);
+        trabajoEmpEnAccionRepository.save(trabajoEmpEnAccion);
+
+    }
+
     /**
      * {@inheritDoc}
      */

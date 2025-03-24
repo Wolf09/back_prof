@@ -2,44 +2,31 @@ package com.professional.model.dto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
-public class FiltrosConsultasIndependientesDTO {
+public class FiltroTrabajoEmpresaDTO {
 
     @Id
-    private Long idIndependiente;
+    private Long idEmpresa;
 
     @Id
-    private Long idTrabajoInd;
+    private Long idTrabajoEmp;
 
-    @NotBlank(message = "El nombre es obligatorio")
-    @Size(min = 2, max = 60, message = "El nombre debe tener entre 2 y 60 caracteres")
-    private String nombres;
-
-    @NotBlank(message = "Los apellidos son obligatorios")
-    @Size(min = 2, max = 60, message = "Los apellidos deben tener entre 2 y 60 caracteres")
-    private String apellidos;
+    @Column(name = "nombre_empresa")
+    private String nombreEmpresa;
 
     @Column(name = "foto_representante")
     private String fotoRepresentante;
 
-    @NotNull
+
     @Column(name = "tipo_usuario", nullable = false)
     private String tipoUsuario;
-
-    @NotBlank
-    private String profesion;
-
     @Column(name = "area_trabajo")
     private String areaTrabajo;
 
-    private String pais;
 
-    private String ciudad;
+    @Column(name = "descripcion_corta")
+    private String descripcionCorta;
 
-    @NotBlank(message = "La descripción del trabajo es obligatoria")
     private String descripcion;
 
     // almacena el promedio de las calificaciones recibidas para este trabajo
@@ -52,48 +39,51 @@ public class FiltrosConsultasIndependientesDTO {
     @Column(name = "ventas", nullable = false)
     private Long ventas;
 
-    public FiltrosConsultasIndependientesDTO(Long idIndependiente, Long idTrabajoInd, String nombres, String apellidos, String fotoRepresentante, String tipoUsuario, String profesion, String areaTrabajo, String pais, String ciudad, String descripcion, Double averageRating, Double precio, Long ventas) {
-        this.idIndependiente = idIndependiente;
-        this.idTrabajoInd = idTrabajoInd;
-        this.nombres = nombres;
-        this.apellidos = apellidos;
+    private String pais;
+
+    private String ciudad;
+
+    private String celular;
+
+    public FiltroTrabajoEmpresaDTO(Long idEmpresa, Long idTrabajoEmp, String nombreEmpresa, String fotoRepresentante, String tipoUsuario, String areaTrabajo, String descripcionCorta, String descripcion, Double averageRating, Double precio, Long ventas, String pais, String ciudad, String celular) {
+        this.idEmpresa = idEmpresa;
+        this.idTrabajoEmp = idTrabajoEmp;
+        this.nombreEmpresa = nombreEmpresa;
         this.fotoRepresentante = fotoRepresentante;
         this.tipoUsuario = tipoUsuario;
-        this.profesion = profesion;
         this.areaTrabajo = areaTrabajo;
-        this.pais = pais;
-        this.ciudad = ciudad;
+        this.descripcionCorta = descripcionCorta;
         this.descripcion = descripcion;
         this.averageRating = averageRating;
         this.precio = precio;
         this.ventas = ventas;
+        this.pais = pais;
+        this.ciudad = ciudad;
+        this.celular = celular;
     }
 
-    public FiltrosConsultasIndependientesDTO() {
+    public Long getIdEmpresa() {
+        return idEmpresa;
     }
 
-    public String getNombres() {
-        return nombres;
+    public void setIdEmpresa(Long idEmpresa) {
+        this.idEmpresa = idEmpresa;
     }
 
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
+    public Long getIdTrabajoEmp() {
+        return idTrabajoEmp;
     }
 
-    public Long getVentas() {
-        return ventas;
+    public void setIdTrabajoEmp(Long idTrabajoEmp) {
+        this.idTrabajoEmp = idTrabajoEmp;
     }
 
-    public void setVentas(Long ventas) {
-        this.ventas = ventas;
+    public String getNombreEmpresa() {
+        return nombreEmpresa;
     }
 
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
+    public void setNombreEmpresa(String nombreEmpresa) {
+        this.nombreEmpresa = nombreEmpresa;
     }
 
     public String getFotoRepresentante() {
@@ -112,20 +102,20 @@ public class FiltrosConsultasIndependientesDTO {
         this.tipoUsuario = tipoUsuario;
     }
 
-    public String getProfesion() {
-        return profesion;
-    }
-
-    public void setProfesion(String profesion) {
-        this.profesion = profesion;
-    }
-
     public String getAreaTrabajo() {
         return areaTrabajo;
     }
 
     public void setAreaTrabajo(String areaTrabajo) {
         this.areaTrabajo = areaTrabajo;
+    }
+
+    public String getDescripcionCorta() {
+        return descripcionCorta;
+    }
+
+    public void setDescripcionCorta(String descripcionCorta) {
+        this.descripcionCorta = descripcionCorta;
     }
 
     public String getDescripcion() {
@@ -152,20 +142,12 @@ public class FiltrosConsultasIndependientesDTO {
         this.precio = precio;
     }
 
-    public Long getIdIndependiente() {
-        return idIndependiente;
+    public Long getVentas() {
+        return ventas;
     }
 
-    public void setIdIndependiente(Long idIndependiente) {
-        this.idIndependiente = idIndependiente;
-    }
-
-    public Long getIdTrabajoInd() {
-        return idTrabajoInd;
-    }
-
-    public void setIdTrabajoInd(Long idTrabajoInd) {
-        this.idTrabajoInd = idTrabajoInd;
+    public void setVentas(Long ventas) {
+        this.ventas = ventas;
     }
 
     public String getPais() {
@@ -183,4 +165,13 @@ public class FiltrosConsultasIndependientesDTO {
     public void setCiudad(String ciudad) {
         this.ciudad = ciudad;
     }
+
+    public String getCelular() {
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
+    }
+
 }

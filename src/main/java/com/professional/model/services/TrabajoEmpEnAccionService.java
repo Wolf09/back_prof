@@ -90,4 +90,6 @@ public interface TrabajoEmpEnAccionService {
      * @return Lista de TrabajoEmpEnAccion asociados al cliente.
      */
     List<TrabajoEmpEnAccion> getTrabajosEmpEnAccionByCliente(Cliente cliente);
+
+    void updateEstadoTrabajoEnAccion(Long id, EstadoTrabajo estadoTrabajo);
 }

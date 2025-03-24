@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.Formula;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -26,32 +27,31 @@ public class TrabajoEmpresa implements Serializable {
     private String descripcion;
 
     // almacena el promedio de las calificaciones recibidas para este trabajo
-    @Column(name = "average_rating", nullable = false)
+    @Column(name = "average_rating")
     private Double averageRating;
 
     // Nuevo campo para manejo lógico de eliminación
-    @Column(name = "activo", nullable = false)
+    @Column(name = "activo")
     private Boolean activo;
 
-    @Column(name = "precio", nullable = false)
+    @Column(name = "precio")
     private Double precio;
 
-    @Column(name = "ventas", nullable = false)
+    @Formula("(select count(*) from trabajos_emp_en_accion tia where tia.trabajo_empresa_id = id)")
+    @Column(name = "ventas")
     private Long ventas;
-    @Column(name = "fecha_creacion", nullable = false, updatable = false)
+    @Column(name = "fecha_creacion", updatable = false)
     private LocalDateTime fechaCreacion;
 
     // Relación Muchos a Uno con Empresa
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "empresa_id", nullable = false)
-    @NotNull(message = "La empresa es obligatoria")
+    @JoinColumn(name = "empresa_id")
     @JsonIgnore
     private Empresa empresa;
 
     // Relación Muchos a Uno con Cliente
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id", nullable = false)
-    @NotNull(message = "El cliente es obligatorio")
+    @JoinColumn(name = "cliente_id")
     @JsonIgnore
     private Cliente cliente;
 

@@ -1,5 +1,7 @@
 package com.professional.model.services;
 
+import com.professional.model.dto.TrabajoEmpresaDTO;
+import com.professional.model.dto.TrabajoEmpresaEnAccionDTO;
 import com.professional.model.entities.*;
 import com.professional.model.enums.EstadoTrabajo;
 import com.professional.model.exceptions.ResourceNotFoundException;
@@ -60,13 +62,12 @@ public class TrabajoEmpresaServiceImpl implements TrabajoEmpresaService {
 
     @Override
     @Transactional
-    public TrabajoEmpresa createTrabajoEmpresa(TrabajoEmpresa trabajoEmpresa) {
+    public TrabajoEmpresa createTrabajoEmpresa(Long id,TrabajoEmpresa trabajoEmpresa) {
 
-        Empresa empresa = empresaService.getEmpresaById(trabajoEmpresa.getEmpresa().getId());
+        Empresa empresa = empresaService.getEmpresaById(id);
         trabajoEmpresa.setEmpresa(empresa);
         trabajoEmpresa.setActivo(true);
         trabajoEmpresa.setAverageRating(5.0);
-        trabajoEmpresa.setActivo(true);
         return trabajoEmpresaRepository.save(trabajoEmpresa);
     }
 
@@ -120,4 +121,17 @@ public class TrabajoEmpresaServiceImpl implements TrabajoEmpresaService {
     public List<TrabajoEmpresa> getTrabajosEmpresaByEmpresa(Empresa empresa) {
         return trabajoEmpresaRepository.findByEmpresa(empresa);
     }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoEmpresaEnAccionDTO> misTrabajosEmpresasEnAccion(Long trabajoEmpresaId) {
+        TrabajoEmpresa tempresa = getTrabajoEmpresaById(trabajoEmpresaId);
+        if (tempresa == null) {
+            throw new ResourceNotFoundException("Trabajo Empresa no encontrado con ID: " + trabajoEmpresaId);
+        }
+        return trabajoEmpEnAccionRepository.misTrabajosEmpresas(trabajoEmpresaId);
+    }
+
+
 }

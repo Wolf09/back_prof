@@ -1,6 +1,7 @@
 package com.professional.controller;
 
 import com.professional.model.dto.Error;
+import com.professional.model.dto.TrabajoEmpresaEnAccionDTO;
 import com.professional.model.entities.Independiente;
 import com.professional.model.entities.TrabajoIndependiente;
 import com.professional.model.services.IndependienteService;
@@ -127,6 +128,13 @@ public class TrabajoIndependienteController {
         }
         TrabajoIndependiente creado= trabajoIndependienteService.saveTrabajoIndependiente(trabajoIndependiente);
         return new ResponseEntity<>(creado, HttpStatus.CREATED);
+    }
+
+    @Transactional
+    @GetMapping("/mis-trabajos-en-accion/{id}")
+    public ResponseEntity<List<TrabajoEmpresaEnAccionDTO>> misTrabajosIndependientesEnAccion(@PathVariable Long id){
+        List<TrabajoEmpresaEnAccionDTO> trabajos= trabajoIndependienteService.misTrabajosIndependientesEnAccion(id);
+        return new ResponseEntity<>(trabajos,HttpStatus.OK);
     }
 
 

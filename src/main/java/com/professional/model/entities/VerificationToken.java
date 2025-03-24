@@ -16,7 +16,7 @@ public class VerificationToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column( unique = true)
+    @Column(length = 1000)
     private String token;
 
     @Column()

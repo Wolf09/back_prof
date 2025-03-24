@@ -1,8 +1,6 @@
 package com.professional.model.services;
 
-import com.professional.model.dto.FiltrosConsultasEmpresasDTO;
-import com.professional.model.dto.FiltrosConsultasIndependientesDTO;
-import com.professional.model.dto.TrabajoDTO;
+import com.professional.model.dto.*;
 import com.professional.model.entities.Cliente;
 import com.professional.model.enums.RangoCalificacion;
 import org.springframework.transaction.annotation.Transactional;
@@ -138,9 +136,13 @@ public interface ClienteService {
     List<TrabajoDTO> listarTrabajosPorDescripcionOrdenadosPorFechaCreacionAsc(String descripcion);
 
 
+    List<FiltrosConsultasIndependientesDTO> listarFiltrosConsultasIndependientesParametros(String pais, String ciudad, String descripcion, String filtro, String calificacion);
 
-    List<FiltrosConsultasIndependientesDTO> listarFiltrosConsultasIndependientesParametros(String descripcion, String areaTrabajo, String filtro, String calificacion);
 
-    List<FiltrosConsultasEmpresasDTO> listarFiltrosConsultasEmpresasParametros(String descripcion, String areaTrabajo, String filtro, String calificacion);
+    List<FiltrosConsultasEmpresasDTO> listarFiltrosConsultasEmpresasParametros(String pais, String ciudad, String descripcion, String filtro, String calificacion);
+
+    FiltroTrabajoEmpresaDTO obtenerTrabajosEmpPorCliente(Long idTrabajoEmpresa);
+
+    FiltroTrabajoIndependienteDTO obtenerTrabajosIndPorCliente(Long idTrabajoIndependiente);
 
 }

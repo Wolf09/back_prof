@@ -1,5 +1,6 @@
 package com.professional.model.services;
 
+import com.professional.model.dto.TrabajoEmpresaEnAccionDTO;
 import com.professional.model.entities.Cliente;
 import com.professional.model.entities.HistorialEmpresas;
 import com.professional.model.entities.TrabajoEmpresa;
@@ -41,7 +42,7 @@ public interface TrabajoEmpresaService {
      * @param trabajoEmpresa Datos del TrabajoEmpresa a crear.
      * @return TrabajoEmpresa creado.
      */
-    TrabajoEmpresa createTrabajoEmpresa(TrabajoEmpresa trabajoEmpresa);
+    TrabajoEmpresa createTrabajoEmpresa(Long id, TrabajoEmpresa trabajoEmpresa);
 
     /**
      * Actualizar un TrabajoEmpresa existente.
@@ -74,6 +75,8 @@ public interface TrabajoEmpresaService {
      * @return Lista de TrabajoEmpresa.
      */
     List<TrabajoEmpresa> getTrabajosEmpresaByCliente(Cliente cliente);
+
+    List<TrabajoEmpresaEnAccionDTO> misTrabajosEmpresasEnAccion(Long trabajoEmpresaId);
 
 
 }

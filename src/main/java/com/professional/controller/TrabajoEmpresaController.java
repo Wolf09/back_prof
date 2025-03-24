@@ -1,6 +1,7 @@
 package com.professional.controller;
 
 import com.professional.model.dto.Error;
+import com.professional.model.dto.TrabajoEmpresaEnAccionDTO;
 import com.professional.model.entities.Cliente;
 import com.professional.model.entities.Empresa;
 import com.professional.model.entities.TrabajoEmpresa;
@@ -46,8 +47,8 @@ public class TrabajoEmpresaController {
      * @return ResponseEntity con el TrabajoEmpresa creado o errores de validación.
      */
     @Transactional
-    @PostMapping("/crear")
-    public ResponseEntity<?> crearTrabajoEmpresa(@Valid @RequestBody TrabajoEmpresa trabajoEmpresa, BindingResult result) {
+    @PostMapping("/crear/{id}")
+    public ResponseEntity<?> crearTrabajoEmpresa(@PathVariable Long id,@Valid @RequestBody TrabajoEmpresa trabajoEmpresa, BindingResult result) {
         if (result.hasErrors()) {
             List<Error> errores = new ArrayList<>();
             result.getFieldErrors().forEach(err -> {
@@ -57,7 +58,7 @@ public class TrabajoEmpresaController {
         }
         // Asegurar que 'activo' esté establecido en true
         trabajoEmpresa.setActivo(true);
-        TrabajoEmpresa creado = trabajoEmpresaService.createTrabajoEmpresa(trabajoEmpresa);
+        TrabajoEmpresa creado = trabajoEmpresaService.createTrabajoEmpresa(id,trabajoEmpresa);
         return new ResponseEntity<>(creado, HttpStatus.CREATED);
     }
 
@@ -130,7 +131,7 @@ public class TrabajoEmpresaController {
      * @return ResponseEntity con el estado de la operación.
      */
     @Transactional
-    @DeleteMapping("/eliminar/{id}")
+    @PostMapping("/eliminar/{id}")
     public ResponseEntity<?> eliminarTrabajoEmpresa(@PathVariable Long id) {
         trabajoEmpresaService.deleteTrabajoEmpresa(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -190,5 +191,15 @@ public class TrabajoEmpresaController {
 
         return new ResponseEntity<>(trabajosActivos, HttpStatus.OK);
     }
+
+    @Transactional
+    @GetMapping("/mis-trabajos-en-accion/{id}")
+    public ResponseEntity<List<TrabajoEmpresaEnAccionDTO>> misTrabajosEmpresasEnAccion(@PathVariable Long id){
+        List<TrabajoEmpresaEnAccionDTO> trabajos= trabajoEmpresaService.misTrabajosEmpresasEnAccion(id);
+        return new ResponseEntity<>(trabajos,HttpStatus.OK);
+
+    }
+
+
 
 }

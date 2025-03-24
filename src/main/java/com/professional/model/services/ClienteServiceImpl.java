@@ -1,8 +1,6 @@
 package com.professional.model.services;
 
-import com.professional.model.dto.FiltrosConsultasEmpresasDTO;
-import com.professional.model.dto.FiltrosConsultasIndependientesDTO;
-import com.professional.model.dto.TrabajoDTO;
+import com.professional.model.dto.*;
 import com.professional.model.entities.Cliente;
 import com.professional.model.entities.TrabajoEmpresa;
 import com.professional.model.entities.TrabajoIndependiente;
@@ -11,6 +9,7 @@ import com.professional.model.exceptions.ResourceNotFoundException;
 import com.professional.model.repositories.ClienteRepository;
 import com.professional.model.repositories.TrabajoEmpresaRepository;
 import com.professional.model.repositories.TrabajoIndependienteRepository;
+import com.professional.model.dto.FiltroTrabajoEmpresaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -127,6 +126,9 @@ public class ClienteServiceImpl implements ClienteService {
         existente.setCelular(clienteDetalles.getCelular());
         existente.setCorreo(clienteDetalles.getCorreo());
         existente.setActivo(clienteDetalles.getActivo());
+        existente.setPais(clienteDetalles.getPais());
+        existente.setCiudad(clienteDetalles.getCiudad());
+        existente.setDireccion(clienteDetalles.getDireccion());
 
         // Si se actualiza la contraseña, encriptarla
         if (clienteDetalles.getPassword() != null && !clienteDetalles.getPassword().isEmpty()) {
@@ -432,50 +434,72 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
 
+
     @Override
     @Transactional(readOnly = true)
-    public List<FiltrosConsultasIndependientesDTO> listarFiltrosConsultasIndependientesParametros(String descripcion, String areaTrabajo, String filtro, String calificacion) {
+    public List<FiltrosConsultasIndependientesDTO> listarFiltrosConsultasIndependientesParametros(String pais, String ciudad, String descripcion, String filtro, String calificacion) {
         if (descripcion == null || descripcion.trim().isEmpty()) {
             throw new IllegalArgumentException("La descripción no puede estar vacía.");
         }
         if (filtro.equals("asc")&& calificacion.equals("4")){
-            return trabajoIndependienteRepository.findFiltrosByDescripcionPrecioAsc4(descripcion,areaTrabajo);
+            return trabajoIndependienteRepository.findFiltrosByDescripcionPrecioAsc4(pais,ciudad,descripcion);
         }else if (filtro.equals("desc")&& calificacion.equals("4")){
-            return trabajoIndependienteRepository.findFiltrosByDescripcionPrecioDesc4(descripcion,areaTrabajo);
+            return trabajoIndependienteRepository.findFiltrosByDescripcionPrecioDesc4(pais,ciudad,descripcion);
         }else if (filtro.equals("asc")&& calificacion.equals("3")){
-            return trabajoIndependienteRepository.findFiltrosByDescripcionPrecioAsc3(descripcion,areaTrabajo);
+            return trabajoIndependienteRepository.findFiltrosByDescripcionPrecioAsc3(pais,ciudad,descripcion);
         }else if (filtro.equals("desc")&& calificacion.equals("3")){
-            return trabajoIndependienteRepository.findFiltrosByDescripcionPrecioDesc3(descripcion,areaTrabajo);
+            return trabajoIndependienteRepository.findFiltrosByDescripcionPrecioDesc3(pais,ciudad,descripcion);
         }else if (filtro.equals("ventas")&& calificacion.equals("4")){
-            return trabajoIndependienteRepository.findFiltrosByVentas4(descripcion,areaTrabajo);
+            return trabajoIndependienteRepository.findFiltrosByVentas4(pais,ciudad,descripcion);
         }else if (filtro.equals("ventas")&& calificacion.equals("3")){
-            return trabajoIndependienteRepository.findFiltrosByVentas3(descripcion,areaTrabajo);
+            return trabajoIndependienteRepository.findFiltrosByVentas3(pais,ciudad,descripcion);
         }
 
-        return trabajoIndependienteRepository.findFiltrosByDescripcion(descripcion,areaTrabajo);
+        return trabajoIndependienteRepository.findFiltrosByDescripcion(pais,ciudad,descripcion);
     }
 
     @Override
-    public List<FiltrosConsultasEmpresasDTO> listarFiltrosConsultasEmpresasParametros(String descripcion, String areaTrabajo, String filtro, String calificacion) {
+    @Transactional(readOnly = true)
+    public List<FiltrosConsultasEmpresasDTO> listarFiltrosConsultasEmpresasParametros(String pais, String ciudad, String descripcion, String filtro, String calificacion) {
         if (descripcion == null || descripcion.trim().isEmpty()) {
             throw new IllegalArgumentException("La descripción no puede estar vacía.");
         }
         if (filtro.equals("asc")&&calificacion.equals("4")){
-            return trabajoEmpresaRepository.findFiltrosByDescripcionPrecioAsc4(descripcion,areaTrabajo);
+            return trabajoEmpresaRepository.findFiltrosByDescripcionPrecioAsc4(pais,ciudad,descripcion);
         }else if(filtro.equals("desc")&&calificacion.equals("4")){
-            return trabajoEmpresaRepository.findFiltrosByDescripcionPrecioDesc4(descripcion,areaTrabajo);
+            return trabajoEmpresaRepository.findFiltrosByDescripcionPrecioDesc4(pais,ciudad,descripcion);
         }else if (filtro.equals("asc")&&calificacion.equals("3")){
-            return trabajoEmpresaRepository.findFiltrosByDescripcionPrecioAsc3(descripcion,areaTrabajo);
+            return trabajoEmpresaRepository.findFiltrosByDescripcionPrecioAsc3(pais,ciudad,descripcion);
         } else if (filtro.equals("desc")&&calificacion.equals("3")) {
-            return trabajoEmpresaRepository.findFiltrosByDescripcionPrecioDesc3(descripcion,areaTrabajo);
+            return trabajoEmpresaRepository.findFiltrosByDescripcionPrecioDesc3(pais,ciudad,descripcion);
         } else if (filtro.equals("ventas")&&calificacion.equals("4")) {
-            return trabajoEmpresaRepository.findFiltrosByVentas4(descripcion,areaTrabajo);
+            return trabajoEmpresaRepository.findFiltrosByVentas4(pais,ciudad,descripcion);
         } else if (filtro.equals("ventas")&& calificacion.equals("3")) {
-            return trabajoEmpresaRepository.findFiltrosByVentas3(descripcion,areaTrabajo);
+            return trabajoEmpresaRepository.findFiltrosByVentas3(pais,ciudad,descripcion);
         }
 
 
-        return trabajoEmpresaRepository.findFiltrosByDescripcion(descripcion,areaTrabajo);
+        return trabajoEmpresaRepository.findFiltrosByDescripcion(pais,ciudad,descripcion);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public FiltroTrabajoEmpresaDTO obtenerTrabajosEmpPorCliente(Long idTrabajoEmpresa){
+        if (idTrabajoEmpresa == null){
+            throw new IllegalArgumentException("La descripción no puede estar vacía.");
+        }
+
+        return trabajoEmpresaRepository.findTrabajosEmpByCliente(idTrabajoEmpresa);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public FiltroTrabajoIndependienteDTO obtenerTrabajosIndPorCliente(Long idTrabajoIndependiente){
+        if (idTrabajoIndependiente == null){
+            throw new IllegalArgumentException("La descripción no puede estar vacía.");
+        }
+
+        return trabajoEmpresaRepository.findTrabajosIndByCliente(idTrabajoIndependiente);
     }
 
 

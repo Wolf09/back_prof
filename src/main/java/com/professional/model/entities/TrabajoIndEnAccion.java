@@ -19,23 +19,21 @@ public class TrabajoIndEnAccion implements Serializable {
 
     // Relación Muchos a Uno con TrabajoIndependiente
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trabajo_independiente_id", nullable = false)
-    @NotNull(message = "El trabajo independiente es obligatorio")
+    @JoinColumn(name = "trabajo_independiente_id")
     @JsonIgnore
     private TrabajoIndependiente trabajoIndependiente;
 
-    @NotNull(message = "El estado del trabajo es obligatorio")
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado_trabajo", nullable = false)
+    @Column(name = "estado_trabajo")
     private EstadoTrabajo estadoTrabajo;
 
     @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
-    @Column(name = "fecha_cambio", nullable = false, updatable = false)
+    @Column(name = "fecha_cambio", updatable = false)
     private LocalDateTime fechaCambio;
 
     // Relación Muchos a Uno con Cliente (creador del TrabajoIndEnAccion)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id", nullable = false)
+    @JoinColumn(name = "cliente_id")
     @JsonIgnore
     private Cliente cliente;
 
@@ -43,7 +41,7 @@ public class TrabajoIndEnAccion implements Serializable {
     @Transient
     private EstadoTrabajo estadoTrabajoAnterior;
 
-    @Column(name = "activo", nullable = false)
+    @Column(name = "activo")
     private Boolean activo;
 
     @PrePersist
@@ -87,9 +85,6 @@ public class TrabajoIndEnAccion implements Serializable {
         return fechaCambio;
     }
 
-    // No setter para fechaCambio ya que se establece automáticamente
-
-    // toString (opcional)
 
 
     public void setId(Long id) {

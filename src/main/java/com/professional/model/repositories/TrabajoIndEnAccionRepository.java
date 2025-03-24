@@ -1,10 +1,13 @@
 package com.professional.model.repositories;
 
+import com.professional.model.dto.TrabajoEmpresaEnAccionDTO;
 import com.professional.model.enums.EstadoTrabajo;
 import com.professional.model.entities.TrabajoIndEnAccion;
 import com.professional.model.entities.TrabajoIndependiente;
 import com.professional.model.entities.Cliente; // Asegúrate de importar Cliente
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -54,4 +57,14 @@ public interface TrabajoIndEnAccionRepository extends JpaRepository<TrabajoIndEn
      * @return Lista de trabajos en acción asociados al cliente.
      */
     List<TrabajoIndEnAccion> findByCliente(Cliente cliente);
+
+    @Query("select new com.professional.model.dto.TrabajoEmpresaEnAccionDTO(" +
+            "i.id, i.descripcionCorta, i.descripcion, i.precio,t.id, t.estadoTrabajo) " +
+            "from TrabajoIndEnAccion t " +
+            "join t.trabajoIndependiente i " +
+            "where t.activo = true "+
+            "and i.activo=true "+
+            //"and t.estadoTrabajo='FINALIZADO' "+
+            "and t.trabajoIndependiente.id= :id")
+    List<TrabajoEmpresaEnAccionDTO> misTrabajosIndependientes(@Param("id") Long id);
 }

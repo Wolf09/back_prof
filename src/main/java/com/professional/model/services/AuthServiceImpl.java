@@ -74,6 +74,7 @@ public class AuthServiceImpl implements AuthService {
         cliente.setTipoUsuario(dto.getTipoUsuario());
         cliente.setPais(dto.getPais());
         cliente.setCiudad(dto.getCiudad());
+        cliente.setDireccion(dto.getDireccion());
 
         Cliente guardado = clienteRepository.save(cliente);
 
@@ -103,6 +104,8 @@ public class AuthServiceImpl implements AuthService {
         empresa.setTipoUsuario(dto.getTipoUsuario());
         empresa.setPais(dto.getPais());
         empresa.setCiudad(dto.getCiudad());
+        empresa.setFotoTitulo(dto.getFotoTitulo());
+        empresa.setDireccion(dto.getDireccion());
 
         Empresa guardada = empresaRepository.save(empresa);
 
@@ -117,6 +120,7 @@ public class AuthServiceImpl implements AuthService {
         independiente.setCelular(dto.getCelular());
         independiente.setCorreo(dto.getCorreo());
         independiente.setPassword(passwordEncoder.encode(dto.getPassword()));
+        independiente.setFotoRepresentante(dto.getFotoRepresentante());
         independiente.setCartaPresentacion(dto.getCartaPresentacion());
         independiente.setMision(dto.getMision());
         independiente.setVision(dto.getVision());
@@ -129,6 +133,7 @@ public class AuthServiceImpl implements AuthService {
         independiente.setTipoUsuario(dto.getTipoUsuario());
         independiente.setPais(dto.getPais());
         independiente.setCiudad(dto.getCiudad());
+        independiente.setDireccion(dto.getDireccion());
 
         Independiente guardado = independienteRepository.save(independiente);
 

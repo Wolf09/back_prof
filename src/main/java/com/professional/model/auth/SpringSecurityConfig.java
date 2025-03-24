@@ -46,7 +46,14 @@ public class SpringSecurityConfig {
                                 AntPathRequestMatcher.antMatcher("/auth/registro"),
                                 AntPathRequestMatcher.antMatcher("/up/**"),
                                 AntPathRequestMatcher.antMatcher("/auth/confirmar-cuenta")).permitAll()
-                        .requestMatchers("/trabajo-independiente/**").hasRole("INDEPENDIENTE")
+                        .requestMatchers("/trabajo-independiente/**").hasAnyRole("INDEPENDIENTE","CLIENTE","EMPRESA")
+                        .requestMatchers("/trabajo-empresa/**").hasAnyRole("INDEPENDIENTE","CLIENTE","EMPRESA")
+                        .requestMatchers("/empresa/**").hasAnyRole("INDEPENDIENTE","CLIENTE","EMPRESA")
+                        .requestMatchers("/clientes/**").hasAnyRole("INDEPENDIENTE","CLIENTE","EMPRESA")
+                        .requestMatchers("/independiente/**").hasAnyRole("INDEPENDIENTE","CLIENTE","EMPRESA")
+                        .requestMatchers("/trabajo-emp-en-accion/**").hasAnyRole("INDEPENDIENTE","CLIENTE","EMPRESA")
+                        .requestMatchers("/trabajo-ind-en-accion/**").hasAnyRole("INDEPENDIENTE","CLIENTE","EMPRESA")
+
                         .anyRequest().authenticated()
                 )
                 .cors(Customizer.withDefaults())
@@ -59,6 +66,12 @@ public class SpringSecurityConfig {
                         .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/up/**"))
                         .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/auth/confirmar-cuenta"))
                         .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/trabajo-independiente/**"))
+                        .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/trabajo-empresa/**"))
+                        .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/empresa/**"))
+                        .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/independiente/**"))
+                        .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/trabajo-emp-en-accion/**"))
+                        .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/trabajo-ind-en-accion/**"))
+                        .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/clientes/**"))
                 )
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

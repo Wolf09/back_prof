@@ -17,18 +17,17 @@ public class TrabajoEmpEnAccion implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "El estado del trabajo es obligatorio")
+
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado_trabajo", nullable = false)
+    @Column(name = "estado_trabajo")
     private EstadoTrabajo estadoTrabajo;
 
-    @Column(name = "fecha_cambio", nullable = false, updatable = false)
+    @Column(name = "fecha_cambio", updatable = false)
     private LocalDateTime fechaCambio;
 
     // Relación Muchos a Uno con TrabajoEmpresa
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trabajo_empresa_id", nullable = false)
-    @NotNull(message = "El trabajo empresa es obligatorio")
+    @JoinColumn(name = "trabajo_empresa_id")
     @JsonIgnore
     private TrabajoEmpresa trabajoEmpresa;
 
@@ -37,12 +36,12 @@ public class TrabajoEmpEnAccion implements Serializable {
     private EstadoTrabajo estadoTrabajoAnterior;
 
     // Campo para manejo lógico de eliminación
-    @Column(name = "activo", nullable = false)
+    @Column(name = "activo")
     private Boolean activo;
 
     // Relación Muchos a Uno con Cliente (creador del TrabajoIndEnAccion)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id", nullable = false)
+    @JoinColumn(name = "cliente_id")
     @JsonIgnore
     private Cliente cliente;
 

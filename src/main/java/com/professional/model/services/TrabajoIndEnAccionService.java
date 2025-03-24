@@ -96,4 +96,6 @@ public interface TrabajoIndEnAccionService {
      * @return Lista de TrabajoIndEnAccion asociadas al cliente.
      */
     List<TrabajoIndEnAccion> getTrabajosEnAccionByCliente(Cliente cliente);
+
+    void updateEstadoTrabajoEnAccion(Long id, EstadoTrabajo estadoTrabajo);
 }

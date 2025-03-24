@@ -1,5 +1,6 @@
 package com.professional.model.services;
 
+import com.professional.model.dto.TrabajoEmpresaEnAccionDTO;
 import com.professional.model.entities.Independiente;
 import com.professional.model.entities.TrabajoIndependiente;
 
@@ -58,4 +59,6 @@ public interface TrabajoIndependienteService {
      * @return TrabajoIndependiente guardado.
      */
     TrabajoIndependiente saveTrabajoIndependiente(TrabajoIndependiente trabajoIndependiente);
+
+    List<TrabajoEmpresaEnAccionDTO> misTrabajosIndependientesEnAccion(Long trabajoIndependienteId);
 }

@@ -140,7 +140,7 @@ public class TrabajoEmpEnAccionController {
      * @return ResponseEntity con el estado de la operación.
      */
     @Transactional
-    @DeleteMapping("/eliminar/{id}")
+    @PostMapping("/eliminar/{id}")
     public ResponseEntity<?> eliminarTrabajoEmpEnAccion(@PathVariable Long id) {
         trabajoEmpEnAccionService.deleteTrabajoEmpEnAccion(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -234,6 +234,24 @@ public class TrabajoEmpEnAccionController {
             return new ResponseEntity<>(errores, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Transactional
+    @PutMapping("/actualizar-estadotrabajoenaccion/{id}/{estadoTrabajo}")
+    public ResponseEntity<?> actualizarEstadoTrabajoEnAccion(@PathVariable Long id, @PathVariable EstadoTrabajo estadoTrabajo) {
+        try{
+            trabajoEmpEnAccionService.updateEstadoTrabajoEnAccion(id, estadoTrabajo);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT, HttpStatus.OK);
+        }catch (Exception ex) {
+            List<Error> errores = new ArrayList<>();
+            errores.add(new Error(ex.getMessage()));
+            if (ex instanceof com.professional.model.exceptions.ResourceNotFoundException) {
+                return new ResponseEntity<>(errores, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(errores, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
 
 

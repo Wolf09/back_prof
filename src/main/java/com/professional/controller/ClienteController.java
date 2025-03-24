@@ -1,12 +1,10 @@
 package com.professional.controller;
 
+import com.professional.model.dto.*;
 import com.professional.model.dto.Error;
-import com.professional.model.dto.FiltrosConsultasEmpresasDTO;
-import com.professional.model.dto.FiltrosConsultasIndependientesDTO;
 import com.professional.model.entities.Cliente;
 import com.professional.model.enums.RangoCalificacion;
 import com.professional.model.services.ClienteService;
-import com.professional.model.dto.TrabajoDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -230,19 +228,36 @@ public class ClienteController {
     }
 
     @GetMapping("/filtroConsultasIndependientes")
-    public ResponseEntity<List<FiltrosConsultasIndependientesDTO>> listarFiltrosIndependientes(@RequestParam String descripcion,@RequestParam String areaTrabajo,
+    public ResponseEntity<List<FiltrosConsultasIndependientesDTO>> listarFiltrosIndependientes(@RequestParam String pais,@RequestParam String ciudad,@RequestParam String descripcion,
                                                                     @RequestParam String filtro,@RequestParam String calificacion) {
-        List<FiltrosConsultasIndependientesDTO> lista = clienteService.listarFiltrosConsultasIndependientesParametros(descripcion, areaTrabajo,
+        List<FiltrosConsultasIndependientesDTO> lista = clienteService.listarFiltrosConsultasIndependientesParametros(pais,ciudad,descripcion,
                                                                     filtro, calificacion);
         return ResponseEntity.ok(lista);
     }
 
     @GetMapping("/filtroConsultasEmpresas")
-    public ResponseEntity<List<FiltrosConsultasEmpresasDTO>> listarFiltrosEmpresas(@RequestParam String descripcion,@RequestParam String areaTrabajo,
+    public ResponseEntity<List<FiltrosConsultasEmpresasDTO>> listarFiltrosEmpresas(@RequestParam String pais,@RequestParam String ciudad,@RequestParam String descripcion,
                                                                                    @RequestParam String filtro,@RequestParam String calificacion) {
-        List<FiltrosConsultasEmpresasDTO> lista = clienteService.listarFiltrosConsultasEmpresasParametros(descripcion, areaTrabajo,
+        List<FiltrosConsultasEmpresasDTO> lista = clienteService.listarFiltrosConsultasEmpresasParametros(pais,ciudad,descripcion,
                                                                     filtro,calificacion);
         return ResponseEntity.ok(lista);
     }
+
+    @GetMapping("/trabajoEmpresaPorCliente")
+    public ResponseEntity<FiltroTrabajoEmpresaDTO> obtenerTrabajoEmpresa(@RequestParam Long id){
+        FiltroTrabajoEmpresaDTO trabajos= clienteService.obtenerTrabajosEmpPorCliente(id);
+        return new ResponseEntity<>(trabajos, HttpStatus.OK);
+
+    }
+
+    @GetMapping("/trabajoEmpresaPorIndependiente")
+    public ResponseEntity<FiltroTrabajoIndependienteDTO> obtenerTrabajoIndependiente(@RequestParam Long id){
+        FiltroTrabajoIndependienteDTO trabajos= clienteService.obtenerTrabajosIndPorCliente(id);
+        return new ResponseEntity<>(trabajos, HttpStatus.OK);
+
+    }
+
+
+
 
 }

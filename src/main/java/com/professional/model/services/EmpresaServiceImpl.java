@@ -1,8 +1,10 @@
 package com.professional.model.services;
 
+import com.professional.model.dto.TrabajoEmpresaDTO;
 import com.professional.model.entities.Empresa;
 import com.professional.model.exceptions.ResourceNotFoundException;
 import com.professional.model.repositories.EmpresaRepository;
+import com.professional.model.repositories.TrabajoEmpresaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -19,11 +21,14 @@ public class EmpresaServiceImpl implements EmpresaService {
     private final EmpresaRepository empresaRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final TrabajoEmpresaRepository trabajoEmpresaRepository;
+
     @Autowired
     public EmpresaServiceImpl(EmpresaRepository empresaRepository,
-                              PasswordEncoder passwordEncoder) {
+                              PasswordEncoder passwordEncoder, TrabajoEmpresaRepository trabajoEmpresaRepository) {
         this.empresaRepository = empresaRepository;
         this.passwordEncoder = passwordEncoder;
+        this.trabajoEmpresaRepository = trabajoEmpresaRepository;
     }
 
     /**
@@ -109,6 +114,7 @@ public class EmpresaServiceImpl implements EmpresaService {
         existente.setAreaTrabajo(empresaDetalles.getAreaTrabajo());
         existente.setPais(empresaDetalles.getPais());
         existente.setCiudad(empresaDetalles.getCiudad());
+        existente.setDireccion(empresaDetalles.getDireccion());
 
         // Actualizar campos opcionales solo si no son null o vacíos
         if (empresaDetalles.getMision() != null && !empresaDetalles.getMision().isEmpty()) {
@@ -116,6 +122,9 @@ public class EmpresaServiceImpl implements EmpresaService {
         }
         if (empresaDetalles.getFotoRepresentante() != null && !empresaDetalles.getFotoRepresentante().isEmpty()) {
             existente.setFotoRepresentante(empresaDetalles.getFotoRepresentante());
+        }
+        if (empresaDetalles.getFotoTitulo() != null && !empresaDetalles.getFotoTitulo().isEmpty()) {
+            existente.setFotoTitulo(empresaDetalles.getFotoTitulo());
         }
 
         if (empresaDetalles.getVision() != null && !empresaDetalles.getVision().isEmpty()) {
@@ -172,6 +181,16 @@ public class EmpresaServiceImpl implements EmpresaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Empresa no encontrada con ID: " + id));
         existente.setActivo(false);
         empresaRepository.save(existente);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoEmpresaDTO> misTrabajosEmpresas(Long empresaId){
+        Empresa empresa= getEmpresaById(empresaId);
+        if (empresa == null){
+            throw new ResourceNotFoundException("Empresa no encontrado con ID: " + empresaId);
+        }
+        return trabajoEmpresaRepository.misTrabajosEmpresas(empresaId);
     }
 
 }

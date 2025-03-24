@@ -1,10 +1,11 @@
 package com.professional.model.services;
 
-import com.professional.model.dto.TrabajoIndependienteDTO;
+import com.professional.model.dto.TrabajoEmpresaEnAccionDTO;
 import com.professional.model.entities.Independiente;
 import com.professional.model.entities.TrabajoIndependiente;
 import com.professional.model.exceptions.ResourceNotFoundException;
 import com.professional.model.repositories.IndependienteRepository;
+import com.professional.model.repositories.TrabajoIndEnAccionRepository;
 import com.professional.model.repositories.TrabajoIndependienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,13 @@ public class TrabajoIndependienteServiceImpl implements TrabajoIndependienteServ
     private final TrabajoIndependienteRepository trabajoIndependienteRepository;
     private final IndependienteRepository independienteRepository;
 
+    private final TrabajoIndEnAccionRepository trabajoIndEnAccionRepository;
+
     @Autowired
-    public TrabajoIndependienteServiceImpl(TrabajoIndependienteRepository trabajoIndependienteRepository, IndependienteRepository independienteRepository) {
+    public TrabajoIndependienteServiceImpl(TrabajoIndependienteRepository trabajoIndependienteRepository, IndependienteRepository independienteRepository, TrabajoIndEnAccionRepository trabajoIndEnAccionRepository) {
         this.trabajoIndependienteRepository = trabajoIndependienteRepository;
         this.independienteRepository = independienteRepository;
+        this.trabajoIndEnAccionRepository = trabajoIndEnAccionRepository;
     }
 
     /**
@@ -106,7 +110,15 @@ public class TrabajoIndependienteServiceImpl implements TrabajoIndependienteServ
     }
 
 
-
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrabajoEmpresaEnAccionDTO> misTrabajosIndependientesEnAccion(Long trabajoIndependienteId){
+        TrabajoIndependiente trabajoIndependiente= getTrabajoIndependienteById(trabajoIndependienteId);
+        if (trabajoIndependiente == null) {
+            throw new ResourceNotFoundException("Trabajo Independiente no encontrado con ID: " + trabajoIndependienteId);
+        }
+        return trabajoIndEnAccionRepository.misTrabajosIndependientes(trabajoIndependienteId);
+    }
 
 
 

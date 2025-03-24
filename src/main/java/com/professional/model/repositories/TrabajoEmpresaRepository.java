@@ -1,7 +1,6 @@
 package com.professional.model.repositories;
 
-import com.professional.model.dto.FiltrosConsultasEmpresasDTO;
-import com.professional.model.dto.FiltrosConsultasIndependientesDTO;
+import com.professional.model.dto.*;
 import com.professional.model.entities.Cliente;
 import com.professional.model.entities.Empresa;
 import com.professional.model.entities.TrabajoEmpEnAccion;
@@ -74,103 +73,144 @@ public interface TrabajoEmpresaRepository extends JpaRepository<TrabajoEmpresa, 
             String descripcion, Double minRating, Double maxRating);
 
     /**
+     * Consulta personalizada para mis-trabajos-empresas
+     */
+    @Query("select new com.professional.model.dto.TrabajoEmpresaDTO(" +
+            "i.id, t.id, i.nombres, i.apellidos, i.celular,i.direccion,i.fotoRepresentante,i.cartaPresentacion, i.mision, i.vision, i.pais, " +
+            "i.ciudad, i.nombreEmpresa,i.registroDeEmpresa,i.licenciaComercial,i.fotoTitulo,i.areaTrabajo,t.descripcionCorta, t.descripcion, t.averageRating, t.activo, t.precio,t.ventas) " +
+            "from TrabajoEmpresa t " +
+            "join t.empresa i " +
+            "where t.activo = true "+
+            "and i.activo=true "+
+            "and t.empresa.id= :id")
+    List<TrabajoEmpresaDTO> misTrabajosEmpresas(@Param("id") Long id);
+
+
+    /**
      * Consulta personalizada que devuelve los datos requeridos en el DTO,
      * haciendo join con la entidad Independiente.
      */
     @Query("select new com.professional.model.dto.FiltrosConsultasEmpresasDTO("+
             "e.id,t.id,e.nombreEmpresa,e.fotoRepresentante,e.tipoUsuario,e.areaTrabajo, "+
-            "t.descripcion, t.averageRating, t.precio) " +
+            "t.descripcionCorta, t.averageRating, t.precio,t.ventas,e.pais,e.ciudad) " +
             "from TrabajoEmpresa t "+
             "join t.empresa e "+
-            "where lower(t.descripcion) like lower(concat('%', :descripcion, '%')) " +
-            "and lower(e.areaTrabajo) like lower(concat('%', :areaTrabajo, '%')) " +
+            "where lower(e.pais) like lower(concat('%', :pais, '%')) " +
+            "and lower(e.ciudad) like lower(concat('%', :ciudad, '%')) " +
+            "and lower(t.descripcionCorta) like lower(concat('%', :descripcionCorta, '%')) " +
             "and t.activo = true "+
             "and e.activo=true")
-    List<FiltrosConsultasEmpresasDTO> findFiltrosByDescripcion(@Param("descripcion") String descripcion, @Param("areaTrabajo") String areaTrabajo);
+    List<FiltrosConsultasEmpresasDTO> findFiltrosByDescripcion(@Param("pais") String pais,@Param("ciudad") String ciudad,@Param("descripcionCorta") String descripcionCorta);
 
     @Query("select new com.professional.model.dto.FiltrosConsultasEmpresasDTO("+
             "e.id,t.id,e.nombreEmpresa,e.fotoRepresentante,e.tipoUsuario,e.areaTrabajo, "+
-            "t.descripcion, t.averageRating, t.precio) " +
+            "t.descripcionCorta, t.averageRating, t.precio,t.ventas,e.pais,e.ciudad) " +
             "from TrabajoEmpresa t "+
             "join t.empresa e "+
-            "where lower(t.descripcion) like lower(concat('%', :descripcion, '%')) " +
-            "and lower(e.areaTrabajo) like lower(concat('%', :areaTrabajo, '%')) " +
+            "where lower(e.pais) like lower(concat('%', :pais, '%')) " +
+            "and lower(e.ciudad) like lower(concat('%', :ciudad, '%')) " +
+            "and lower(t.descripcionCorta) like lower(concat('%', :descripcionCorta, '%')) " +
             "and t.activo = true "+
             "and e.activo=true "+
             "and t.averageRating>= 4.0 "+
             "order by t.precio asc")
-    List<FiltrosConsultasEmpresasDTO> findFiltrosByDescripcionPrecioAsc4(@Param("descripcion") String descripcion,@Param("areaTrabajo") String areaTrabajo);
+    List<FiltrosConsultasEmpresasDTO> findFiltrosByDescripcionPrecioAsc4(@Param("pais") String pais,@Param("ciudad") String ciudad,@Param("descripcionCorta") String descripcionCorta);
 
     @Query("select new com.professional.model.dto.FiltrosConsultasEmpresasDTO("+
             "e.id,t.id,e.nombreEmpresa,e.fotoRepresentante,e.tipoUsuario,e.areaTrabajo, "+
-            "t.descripcion, t.averageRating, t.precio) " +
+            "t.descripcionCorta, t.averageRating, t.precio,t.ventas,e.pais,e.ciudad) " +
             "from TrabajoEmpresa t "+
             "join t.empresa e "+
-            "where lower(t.descripcion) like lower(concat('%', :descripcion, '%')) " +
-            "and lower(e.areaTrabajo) like lower(concat('%', :areaTrabajo, '%')) " +
+            "where lower(e.pais) like lower(concat('%', :pais, '%')) " +
+            "and lower(e.ciudad) like lower(concat('%', :ciudad, '%')) " +
+            "and lower(t.descripcionCorta) like lower(concat('%', :descripcionCorta, '%')) " +
             "and t.activo = true "+
             "and e.activo=true "+
             "and t.averageRating>= 3.0 "+
             "order by t.precio asc")
-    List<FiltrosConsultasEmpresasDTO> findFiltrosByDescripcionPrecioAsc3(@Param("descripcion") String descripcion,@Param("areaTrabajo") String areaTrabajo);
+    List<FiltrosConsultasEmpresasDTO> findFiltrosByDescripcionPrecioAsc3(@Param("pais") String pais,@Param("ciudad") String ciudad,@Param("descripcionCorta") String descripcionCorta);
 
 
     @Query("select new com.professional.model.dto.FiltrosConsultasEmpresasDTO("+
             "e.id,t.id,e.nombreEmpresa,e.fotoRepresentante,e.tipoUsuario,e.areaTrabajo, "+
-            "t.descripcion, t.averageRating, t.precio) " +
+            "t.descripcionCorta, t.averageRating, t.precio,t.ventas,e.pais,e.ciudad) " +
             "from TrabajoEmpresa t "+
             "join t.empresa e "+
-            "where lower(t.descripcion) like lower(concat('%', :descripcion, '%')) " +
-            "and lower(e.areaTrabajo) like lower(concat('%', :areaTrabajo, '%')) " +
+            "where lower(e.pais) like lower(concat('%', :pais, '%')) " +
+            "and lower(e.ciudad) like lower(concat('%', :ciudad, '%')) " +
+            "and lower(t.descripcionCorta) like lower(concat('%', :descripcionCorta, '%')) " +
             "and t.activo = true "+
             "and e.activo=true "+
             "and t.averageRating>= 4.0 "+
             "order by t.precio desc")
-    List<FiltrosConsultasEmpresasDTO> findFiltrosByDescripcionPrecioDesc4(@Param("descripcion") String descripcion,@Param("areaTrabajo") String areaTrabajo);
+    List<FiltrosConsultasEmpresasDTO> findFiltrosByDescripcionPrecioDesc4(@Param("pais") String pais,@Param("ciudad") String ciudad,@Param("descripcionCorta") String descripcionCorta);
 
 
     @Query("select new com.professional.model.dto.FiltrosConsultasEmpresasDTO("+
             "e.id,t.id,e.nombreEmpresa,e.fotoRepresentante,e.tipoUsuario,e.areaTrabajo, "+
-            "t.descripcion, t.averageRating, t.precio) " +
+            "t.descripcionCorta, t.averageRating, t.precio,t.ventas,e.pais,e.ciudad) " +
             "from TrabajoEmpresa t "+
             "join t.empresa e "+
-            "where lower(t.descripcion) like lower(concat('%', :descripcion, '%')) " +
-            "and lower(e.areaTrabajo) like lower(concat('%', :areaTrabajo, '%')) " +
+            "where lower(e.pais) like lower(concat('%', :pais, '%')) " +
+            "and lower(e.ciudad) like lower(concat('%', :ciudad, '%')) " +
+            "and lower(t.descripcionCorta) like lower(concat('%', :descripcionCorta, '%')) " +
             "and t.activo = true "+
             "and e.activo=true "+
             "and t.averageRating>= 3.0 "+
             "order by t.precio desc")
-    List<FiltrosConsultasEmpresasDTO> findFiltrosByDescripcionPrecioDesc3(@Param("descripcion") String descripcion,@Param("areaTrabajo") String areaTrabajo);
+    List<FiltrosConsultasEmpresasDTO> findFiltrosByDescripcionPrecioDesc3(@Param("pais") String pais,@Param("ciudad") String ciudad,@Param("descripcionCorta") String descripcionCorta);
 
-    @Query("select distinct new com.professional.model.dto.FiltrosConsultasEmpresasDTO("+
+    @Query("select new com.professional.model.dto.FiltrosConsultasEmpresasDTO("+
             "e.id,t.id,e.nombreEmpresa,e.fotoRepresentante,e.tipoUsuario,e.areaTrabajo, "+
-            "t.descripcion, t.averageRating, t.precio, t.ventas) " +
-            "from TrabajoEmpEnAccion a "+
-            "join a.trabajoEmpresa t "+
+            "t.descripcionCorta, t.averageRating, t.precio,t.ventas,e.pais,e.ciudad) " +
+            "from TrabajoEmpresa t "+
             "join t.empresa e "+
-            "where lower(t.descripcion) like lower(concat('%', :descripcion, '%')) " +
-            "and lower(e.areaTrabajo) like lower(concat('%', :areaTrabajo, '%')) " +
-            "and a.activo = true "+
+            "where lower(e.pais) like lower(concat('%', :pais, '%')) " +
+            "and lower(e.ciudad) like lower(concat('%', :ciudad, '%')) " +
+            "and lower(t.descripcionCorta) like lower(concat('%', :descripcionCorta, '%')) " +
             "and t.activo = true "+
-            "and e.activo = true "+
+            "and e.activo=true "+
             "and t.averageRating>=3.0 "+
             "order by t.ventas asc")
-    List<FiltrosConsultasEmpresasDTO> findFiltrosByVentas3(@Param("descripcion") String descripcion,@Param("areaTrabajo") String areaTrabajo);
+    List<FiltrosConsultasEmpresasDTO> findFiltrosByVentas3(@Param("pais") String pais,@Param("ciudad") String ciudad,@Param("descripcionCorta") String descripcionCorta);
 
-    @Query("select distinct new com.professional.model.dto.FiltrosConsultasEmpresasDTO("+
+    @Query("select new com.professional.model.dto.FiltrosConsultasEmpresasDTO("+
             "e.id,t.id,e.nombreEmpresa,e.fotoRepresentante,e.tipoUsuario,e.areaTrabajo, "+
-            "t.descripcion, t.averageRating, t.precio, t.ventas) " +
-            "from TrabajoEmpEnAccion a "+
-            "join a.trabajoEmpresa t "+
+            "t.descripcionCorta, t.averageRating, t.precio,t.ventas,e.pais,e.ciudad) " +
+            "from TrabajoEmpresa t "+
             "join t.empresa e "+
-            "where lower(t.descripcion) like lower(concat('%', :descripcion, '%')) " +
-            "and lower(e.areaTrabajo) like lower(concat('%', :areaTrabajo, '%')) " +
-            "and a.activo = true "+
+            "where lower(e.pais) like lower(concat('%', :pais, '%')) " +
+            "and lower(e.ciudad) like lower(concat('%', :ciudad, '%')) " +
+            "and lower(t.descripcionCorta) like lower(concat('%', :descripcionCorta, '%')) " +
             "and t.activo = true "+
-            "and e.activo = true "+
+            "and e.activo=true "+
             "and t.averageRating>=4.0 "+
             "order by t.ventas asc")
-    List<FiltrosConsultasEmpresasDTO> findFiltrosByVentas4(@Param("descripcion") String descripcion,@Param("areaTrabajo") String areaTrabajo);
+    List<FiltrosConsultasEmpresasDTO> findFiltrosByVentas4(@Param("pais") String pais,@Param("ciudad") String ciudad,@Param("descripcionCorta") String descripcionCorta);
+
+    @Query("select new com.professional.model.dto.FiltroTrabajoEmpresaDTO("+
+            "e.id,t.id,e.nombreEmpresa,e.fotoRepresentante,e.tipoUsuario,e.areaTrabajo, "+
+            "t.descripcionCorta, t.descripcion,t.averageRating, t.precio,t.ventas,e.pais,e.ciudad,e.celular) " +
+            "from TrabajoEmpresa t "+
+            "join t.empresa e "+
+            "where t.id= :id " +
+            "and t.activo = true "+
+            "and e.activo=true")
+    FiltroTrabajoEmpresaDTO findTrabajosEmpByCliente(@Param("id") Long id);
+
+
+    @Query("select new com.professional.model.dto.FiltroTrabajoIndependienteDTO("+
+            "e.id,t.id,e.nombres,e.apellidos,e.fotoRepresentante,e.tipoUsuario,e.profesion,e.areaTrabajo, "+
+            "e.pais,e.ciudad,t.descripcionCorta, t.descripcion,t.averageRating, t.precio,t.ventas,e.celular) " +
+            "from TrabajoIndependiente t "+
+            "join t.independiente e "+
+            "where t.id= :id " +
+            "and t.activo = true "+
+            "and e.activo=true")
+    FiltroTrabajoIndependienteDTO findTrabajosIndByCliente(@Param("id") Long id);
+
+
+
 
 }
 

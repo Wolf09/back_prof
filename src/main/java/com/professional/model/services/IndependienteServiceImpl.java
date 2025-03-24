@@ -113,6 +113,7 @@ public class IndependienteServiceImpl implements IndependienteService {
         existente.setCartaPresentacion(independienteDetalles.getCartaPresentacion());
         existente.setPais(independienteDetalles.getPais());
         existente.setCiudad(independienteDetalles.getCiudad());
+        existente.setDireccion(independienteDetalles.getDireccion());
 
         if (independienteDetalles.getMision() != null && !independienteDetalles.getMision().isEmpty()) {
             existente.setMision(independienteDetalles.getMision());

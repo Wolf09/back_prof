@@ -1,6 +1,7 @@
 package com.professional.controller;
 
 import com.professional.model.dto.Error;
+import com.professional.model.dto.TrabajoEmpresaDTO;
 import com.professional.model.entities.Empresa;
 import com.professional.model.services.EmpresaService;
 import jakarta.validation.Valid;
@@ -80,6 +81,13 @@ public class EmpresaController {
     public ResponseEntity<List<Empresa>> listarEmpresasTodos(){
         List<Empresa> lista= empresaService.getAllEmpresasTodos();
         return new ResponseEntity<>(lista,HttpStatus.OK);
+    }
+
+    @Transactional
+    @GetMapping("/mistrabajos/{id}")
+    public ResponseEntity<List<TrabajoEmpresaDTO>> misTrabajosEmpresas(@PathVariable Long id){
+        List<TrabajoEmpresaDTO> trabajos= empresaService.misTrabajosEmpresas(id);
+        return new ResponseEntity<>(trabajos,HttpStatus.OK);
     }
 
 }

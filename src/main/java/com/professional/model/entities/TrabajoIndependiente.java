@@ -3,7 +3,7 @@ package com.professional.model.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.Formula;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -28,24 +28,25 @@ public class TrabajoIndependiente implements Serializable {
     private String descripcion;
 
     // almacena el promedio de las calificaciones recibidas para este trabajo
-    @Column(name = "average_rating", nullable = false)
+    @Column(name = "average_rating")
     private Double averageRating;
 
     // Nuevo campo para manejo lógico de eliminación
-    @Column(name = "activo", nullable = false)
+    @Column(name = "activo")
     private Boolean activo;
 
-    @Column(name = "precio", nullable = false)
+    @Column(name = "precio")
     private Double precio;
-    @Column(name = "fecha_creacion", nullable = false, updatable = false)
+    @Column(name = "fecha_creacion", updatable = false)
     private LocalDateTime fechaCreacion;
 
-    @Column(name = "ventas", nullable = false)
+    @Formula("(select count(*) from trabajos_ind_en_accion tia where tia.trabajo_independiente_id = id)")
+    @Column(name = "ventas")
     private Long ventas;
 
     // Relación Muchos a Uno con Independiente
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "independiente_id", nullable = false)
+    @JoinColumn(name = "independiente_id")
     @JsonIgnore
     private Independiente independiente;
 

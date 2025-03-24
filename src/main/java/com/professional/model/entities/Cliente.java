@@ -35,6 +35,8 @@ public class Cliente implements Serializable {
     @Email(message = "El correo debe tener un formato válido")
     private String correo;
 
+    private String direccion;
+
     @NotBlank(message = "La contraseña es obligatoria")
     @Size(min = 8, max = 60, message = "La contraseña debe tener entre 8 y 60 caracteres")
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{8,60}$",
@@ -176,6 +178,14 @@ public class Cliente implements Serializable {
 
     public void setCiudad(String ciudad) {
         this.ciudad = ciudad;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
     public List<HistorialIndependientes> getHistorialIndependientes() {

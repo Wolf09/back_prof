@@ -178,4 +178,15 @@ public class TrabajoIndEnAccionServiceImpl implements TrabajoIndEnAccionService 
     public List<TrabajoIndEnAccion> getTrabajosEnAccionByCliente(Cliente cliente) {
         return trabajoIndEnAccionRepository.findByCliente(cliente);
     }
+
+    @Override
+    public void updateEstadoTrabajoEnAccion(Long id, EstadoTrabajo estadoTrabajo){
+        TrabajoIndEnAccion trabajoIndEnAccion=trabajoIndEnAccionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("TrabajoIndEnAccion no encontrado con ID: " + id));
+        trabajoIndEnAccion.setEstadoTrabajo(estadoTrabajo);
+        trabajoIndEnAccionRepository.save(trabajoIndEnAccion);
+    }
+
+
+
 }

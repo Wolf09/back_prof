@@ -19,7 +19,7 @@ public abstract class Profesional {
     @Column(name = "foto_representante")
     private String fotoRepresentante;
     @NotBlank(message = "El celular es obligatorio")
-    @Pattern(regexp = "^(1|[5-9][0-9]{2})\\d{7,10}$", message = "El celular debe tener un formato válido, por ejemplo: 59170735671")
+    //@Pattern(regexp = "(1|[5-9][0-9]{2})\\d{7,10}$", message = "El celular debe tener un formato válido, solo digitos")
     private String celular;
 
     @NotBlank(message = "El correo es obligatorio")
@@ -44,6 +44,8 @@ public abstract class Profesional {
     private String pais;
 
     private String ciudad;
+
+    private String direccion;
 
     @Column(name = "dni_anverso")
     private String dniAnverso;
@@ -219,5 +221,13 @@ public abstract class Profesional {
 
     public void setCiudad(String ciudad) {
         this.ciudad = ciudad;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 }

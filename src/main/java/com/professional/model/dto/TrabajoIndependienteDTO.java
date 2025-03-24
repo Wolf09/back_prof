@@ -1,9 +1,6 @@
 package com.professional.model.dto;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
@@ -16,6 +13,13 @@ public class TrabajoIndependienteDTO {
     private String profesion;
     private String nombres;
     private String apellidos;
+
+    private String celular;
+
+    private String direccion;
+
+    @Column(name = "foto_representante")
+    private String fotoRepresentante;
     @Column(name = "carta_presentacion")
     private String cartaPresentacion;
     private String mision;
@@ -43,7 +47,7 @@ public class TrabajoIndependienteDTO {
                                    String apellidos, String cartaPresentacion, String mision, String vision,
                                    String pais, String ciudad, String areaTrabajo, LocalDateTime fechaCreacion,
                                    String descripcionCorta, String descripcion, Double averageRating, Double precio,
-                                   Long ventas, String fotoTitulo) {
+                                   Long ventas, String fotoTitulo, String celular, String fotoRepresentante, String direccion) {
         this.idIndependiente = idIndependiente;
         this.idTrabIndependiente = idTrabIndependiente;
         this.profesion = profesion;
@@ -62,6 +66,9 @@ public class TrabajoIndependienteDTO {
         this.precio = precio;
         this.ventas = ventas;
         this.fotoTitulo = fotoTitulo;
+        this.celular = celular;
+        this.fotoRepresentante = fotoRepresentante;
+        this.direccion=direccion;
     }
 
     public TrabajoIndependienteDTO() {
@@ -209,5 +216,29 @@ public class TrabajoIndependienteDTO {
 
     public void setFotoTitulo(String fotoTitulo) {
         this.fotoTitulo = fotoTitulo;
+    }
+
+    public String getCelular() {
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
+    }
+
+    public String getFotoRepresentante() {
+        return fotoRepresentante;
+    }
+
+    public void setFotoRepresentante(String fotoRepresentante) {
+        this.fotoRepresentante = fotoRepresentante;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 }
